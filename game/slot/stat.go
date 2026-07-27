@@ -429,6 +429,15 @@ func (s *StatCascade) SumJH(jid int) (sum uint64) {
 	return
 }
 
+// CascNum returns number of cascades with at least n hits.
+func (s *StatCascade) CascNum(n int) (sum uint64) {
+	sum = s.Casc[n].N.Load()
+	for i := n + 1; i < FallLimit; i++ {
+		sum -= s.Casc[i].N.Load()
+	}
+	return
+}
+
 func (s *StatCascade) RTPsym(cost float64, scat Sym) (lrtp, srtp float64) {
 	for cfn := range s.Casc {
 		var c = &s.Casc[cfn]

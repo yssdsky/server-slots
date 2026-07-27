@@ -192,6 +192,21 @@ func PathName(fpath string) string {
 	return fpath[i:j]
 }
 
+// ExpandHomePath expands '~' in file path to user home directory.
+func ExpandHomePath(path string) (string, error) {
+	if path == "" {
+		return path, nil
+	}
+	if path[0] != '~' {
+		return path, nil
+	}
+	var home, err = os.UserHomeDir()
+	if err != nil {
+		return path, err
+	}
+	return JoinFilePath(home, path[1:]), nil
+}
+
 // VarCharFirst is table for fast check that ASCII code is acceptable first symbol of variable.
 var VarCharFirst [256]bool = func() (a [256]bool) {
 	a['_'] = true

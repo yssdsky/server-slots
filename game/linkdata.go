@@ -52,7 +52,7 @@ const (
 	GPbmode // has non-reels bonus mode
 	GPpick  // has game mode depending on the user's choice
 	GPcasc  // cascade falls present
-	GPcmult // multipliers on cascade avalanche
+	GPcfeat // has features on cascade avalanche levels (like multipliers, freespins, etc.)
 
 	GPfgonce // non-retriggered free games are present
 	GPfgtwic // free games that can be retriggered only once

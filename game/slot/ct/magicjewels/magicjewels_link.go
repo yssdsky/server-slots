@@ -1,6 +1,6 @@
 //go:build !prod || full || ct
 
-package winfeast
+package magicjewels
 
 import (
 	_ "embed"
@@ -8,20 +8,20 @@ import (
 	"github.com/slotopol/server/game"
 )
 
-//go:embed winfeast_data.yaml
+//go:embed magicjewels_data.yaml
 var data []byte
 
 var Info = game.AlgInfo{
 	Aliases: []game.GameAlias{
-		{Prov: "CT Interactive", Name: "Win Feast", LNum: 20, Date: game.Date(2023, 2, 6)},      // see: https://www.livebet.com/casino/slots/ct-interactive/win-feast
-		{Prov: "CT Interactive", Name: "Treasure Chase", LNum: 20, Date: game.Date(2023, 1, 3)}, // see: https://www.livebet.com/casino/slots/ct-interactive/treasure-chase
+		{Prov: "CT Interactive", Name: "Magic Jewels", LNum: 25, Date: game.Date(2015, 9, 30)}, // see: https://www.livebet2.com/casino/slots/ct-interactive/magic-jewels
 	},
 	AlgDescr: game.AlgDescr{
 		GT: game.GTslot,
 		GP: game.GPlpay |
 			game.GPcasc |
-			game.GPscat |
 			game.GPcfeat |
+			game.GPfgseq |
+			game.GPfgmult |
 			game.GPwild,
 		SX: 5,
 		SY: 3,
@@ -34,6 +34,6 @@ var Info = game.AlgInfo{
 
 func init() {
 	Info.SetupFactory(func(sel int) game.Gamble { return NewGame() }, CalcStat)
-	game.DataRouter["ctinteractive/winfeast/rmap"] = &ReelsMap
+	game.DataRouter["ctinteractive/magicjewels/rmap"] = &ReelsMap
 	game.LoadMap = append(game.LoadMap, data)
 }

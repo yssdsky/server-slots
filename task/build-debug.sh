@@ -1,5 +1,5 @@
 #!/bin/bash -u
-# This script compiles project for Windows amd64 with debug information.
+# This script compiles project for default platform with debug information.
 # It produces static C-libraries linkage.
 
 wd=$(realpath -s "$(dirname "$0")/..")
@@ -11,8 +11,13 @@ buildvers=$(git describe --tags)
 # time format acceptable for Date constructors.
 buildtime=$(date +'%FT%T.%3NZ')
 
-go env -w GOOS=windows GOARCH=amd64 CGO_ENABLED=1
-go build -o "$GOPATH/bin/slot_debug.exe" -v\
+go env -w CGO_ENABLED=1
+if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
+  appname="slot_debug.exe"
+else
+  appname="slot_debug"
+fi
+go build -o "$GOPATH/bin/${appname}" -v\
  -tags="jsoniter"\
  -buildvcs=false\
  -ldflags="-linkmode external -extldflags -static\

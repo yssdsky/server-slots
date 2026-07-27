@@ -41,7 +41,7 @@ var FiltMap = map[string]Filter{
 	"bm":     func(gi *GameInfo) bool { return gi.GT == GTslot && gi.GP&GPbmode > 0 },
 	"um":     func(gi *GameInfo) bool { return gi.GT == GTslot && gi.GP&GPpick > 0 },
 	"casc":   func(gi *GameInfo) bool { return gi.GT == GTslot && gi.GP&GPcasc > 0 },
-	"cm":     func(gi *GameInfo) bool { return gi.GT == GTslot && gi.GP&GPcmult > 0 },
+	"cf":     func(gi *GameInfo) bool { return gi.GT == GTslot && gi.GP&GPcfeat > 0 },
 	"fg":     func(gi *GameInfo) bool { return gi.GT == GTslot && gi.GP&GPfgany > 0 },
 	"fgo":    func(gi *GameInfo) bool { return gi.GT == GTslot && gi.GP&GPfgonce > 0 },
 	"fgt":    func(gi *GameInfo) bool { return gi.GT == GTslot && gi.GP&GPfgtwic > 0 },

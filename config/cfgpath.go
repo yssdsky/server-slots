@@ -55,7 +55,7 @@ func InitConfig() {
 
 	// Config path
 	if val := os.Getenv("SLOTOPOL_CFGFILE"); val != "" {
-		CfgFile = val
+		CfgFile, _ = util.ExpandHomePath(val)
 	}
 	if CfgFile != "" {
 		if ok, _ := FileExists(CfgFile); !ok {
@@ -137,7 +137,7 @@ func FileExists(fpath string) (bool, error) {
 func LookupInLocations(env, sub, fname string) (fpath string) {
 	var list []string
 	if val := os.Getenv(env); val != "" {
-		fpath = val
+		fpath, _ = util.ExpandHomePath(val)
 		cobra.CheckErr(os.MkdirAll(fpath, os.ModePerm))
 		return
 	}

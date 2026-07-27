@@ -171,7 +171,7 @@ var listCmd = &cobra.Command{
 		if fRTP || fMrtp > 0 || fDiff > 0 {
 			LoadInternalYaml(exitctx)
 			if err = LoadExternalYaml(exitctx); err != nil {
-				log.Fatalf("can not load yaml files: %s", err.Error())
+				log.Fatalf("can not load external yaml files: %s", err.Error())
 				return
 			}
 			UpdateAlgList()
@@ -297,7 +297,7 @@ mix - has pays by combinations with mixed symbols (non-wilds)
 bm - slots with non-reels bonus mode
 um - slots with mode depended on the user's choice
 casc - slots with cascade falls
-cm - multipliers on cascade avalanche
+cf - features on cascade avalanche levels
 fg - slots with any free games
 fgo - slots with non-retriggered free games
 fgt - slots with free games that can be retriggered only once

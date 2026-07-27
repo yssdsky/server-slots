@@ -376,9 +376,10 @@ func (s *Grid5x3) SymPos(sym Sym) (c Hitx) {
 func (s *Grid5x3) SymNum2(sym1, sym2 Sym) (n1, n2 Pos) {
 	for _, sr := range s.Grid {
 		for _, sy := range sr {
-			if sy == sym1 {
+			switch sy {
+			case sym1:
 				n1++
-			} else if sy == sym2 {
+			case sym2:
 				n2++
 			}
 		}
@@ -494,9 +495,10 @@ func (s *Grid5x4) SymPos(sym Sym) (c Hitx) {
 func (s *Grid5x4) SymNum2(sym1, sym2 Sym) (n1, n2 Pos) {
 	for _, sr := range s.Grid {
 		for _, sy := range sr {
-			if sy == sym1 {
+			switch sy {
+			case sym1:
 				n1++
-			} else if sy == sym2 {
+			case sym2:
 				n2++
 			}
 		}

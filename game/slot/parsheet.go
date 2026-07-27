@@ -136,10 +136,10 @@ func Print_raw(w io.Writer, sp *ScanPar, s Simulator) {
 	fmt.Fprintf(w, "simulator raw data:\n")
 	var b, err = yaml.Marshal(s)
 	if err != nil {
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintln(w, err.Error())
 		return
 	}
-	fmt.Fprintf(w, util.B2S(b))
+	fmt.Fprintln(w, util.B2S(b))
 }
 
 func Print_cascmetrics(w io.Writer, sp *ScanPar, s *StatCascade) {
