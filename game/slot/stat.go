@@ -174,11 +174,15 @@ func (c *SlotCounter) IsZero() bool {
 	return c.N.Load() == 0 // N can not be zero for non-empty structure
 }
 
+// Reserves memory for counters and sums for given symbol by
+// maximum number of this symbol in win.
 func (c *SlotCounter) SymDim(sym Sym, pn int) {
 	c.C[sym-1] = make([]Uint64, pn)
 	c.S[sym-1] = make([]Float64, pn)
 }
 
+// Reserves memory for counters and sums for all symbols
+// by maximum number of symbols in win.
 func (c *SlotCounter) CntDim(sn, pn int) {
 	c.C = make([][]Uint64, sn)
 	c.S = make([][]Float64, sn)
@@ -187,11 +191,13 @@ func (c *SlotCounter) CntDim(sn, pn int) {
 	}
 }
 
+// Reserves memory for bonus hits counters and sums.
 func (c *SlotCounter) BonDim(n int) {
 	c.BH = make([]Uint64, n)
 	c.BS = make([]Float64, n)
 }
 
+// Reserves memory for progressive jackpot hits counters.
 func (c *SlotCounter) JackDim(n int) {
 	c.JH = make([]Uint64, n)
 }
@@ -225,6 +231,7 @@ func (c *SlotCounter) Update(wins Wins) (pay float64) {
 	return
 }
 
+// SymPays returns sum of pays by given symbol.
 func (c *SlotCounter) SymPays(sym Sym) (sum float64) {
 	var pays = c.S[sym-1]
 	for i := range pays {
@@ -233,6 +240,7 @@ func (c *SlotCounter) SymPays(sym Sym) (sum float64) {
 	return
 }
 
+// SumPays returns sum of pays by all symbols and bonuses.
 func (c *SlotCounter) SumPays() (sum float64) {
 	for _, pays := range c.S {
 		for i := range pays {
@@ -260,6 +268,7 @@ func NewStatGeneric(sn, pn int) *StatGeneric {
 	return &s
 }
 
+// Count returns number of processed grid reshuffles, including with no wins.
 func (s *StatGeneric) Count() float64 {
 	return float64(s.N.Load())
 }
@@ -280,6 +289,8 @@ func (s *StatGeneric) RTPsym(cost float64, scat Sym) (lrtp, srtp float64) {
 	return
 }
 
+// NSQ returns number of spins, sum of pays, sum of squares of pays by spin,
+// normalized by spin cost.
 func (s *StatGeneric) NSQ(cost float64) (N float64, S float64, Q float64) {
 	N = s.Count()
 	S = s.SumPays() / cost
@@ -321,6 +332,7 @@ func (s *StatGeneric) JackHits(jid int) float64 {
 	return float64(s.JH[jid-1].Load())
 }
 
+// Simulate performs spin simulation, calculates results, update statistics.
 func (s *StatGeneric) Simulate(g SlotGame, reels Reelx, wins *Wins) {
 	if g.Scanner(wins) != nil {
 		s.EC.Inc()
@@ -359,30 +371,37 @@ func (s *StatCascade) MarshalYAML() (any, error) {
 	}, nil
 }
 
+// Reserves memory for counters and sums for given symbol by
+// maximum number of this symbol in win.
 func (s *StatCascade) SymDim(sym Sym, pn int) {
 	for cfn := range s.Casc {
 		s.Casc[cfn].SymDim(sym, pn)
 	}
 }
 
+// Reserves memory for counters and sums for all symbols
+// by maximum number of symbols in win.
 func (s *StatCascade) CntDim(sn, pn int) {
 	for cfn := range s.Casc {
 		s.Casc[cfn].CntDim(sn, pn)
 	}
 }
 
+// Reserves memory for bonus hits counters and sums.
 func (s *StatCascade) BonDim(n int) {
 	for cfn := range s.Casc {
 		s.Casc[cfn].BonDim(n)
 	}
 }
 
+// Reserves memory for progressive jackpot hits counters.
 func (s *StatCascade) JackDim(n int) {
 	for cfn := range s.Casc {
 		s.Casc[cfn].JackDim(n)
 	}
 }
 
+// Count returns number of processed grid reshuffles, including with no wins.
 func (s *StatCascade) Count() float64 {
 	return float64(s.Casc[0].N.Load())
 }
@@ -415,6 +434,8 @@ func (s *StatCascade) SumFGH() (sum uint64) {
 	return
 }
 
+// SumBH returns number of bonus hits by given bonus id.
+// Bonus id is 1-based.
 func (s *StatCascade) SumBH(bid int) (sum uint64) {
 	for cfn := range s.Casc {
 		sum += s.Casc[cfn].BH[bid-1].Load()
@@ -422,6 +443,8 @@ func (s *StatCascade) SumBH(bid int) (sum uint64) {
 	return
 }
 
+// SymJH returns number of progressive jackpot hits by given jackpot id.
+// Jackpot id is 1-based.
 func (s *StatCascade) SumJH(jid int) (sum uint64) {
 	for cfn := range s.Casc {
 		sum += s.Casc[cfn].JH[jid-1].Load()
@@ -457,6 +480,8 @@ func (s *StatCascade) RTPsym(cost float64, scat Sym) (lrtp, srtp float64) {
 	return
 }
 
+// NSQ returns number of spins, sum of pays, sum of squares of pays by spin,
+// normalized by spin cost.
 func (s *StatCascade) NSQ(cost float64) (N float64, S float64, Q float64) {
 	N = s.Count()
 	S = s.SumPays() / cost
@@ -479,11 +504,11 @@ func (s *StatCascade) FGQ() float64 {
 func (s *StatCascade) ΣPL(scat Sym, L []int) (sum float64) {
 	var N = s.Count()
 	for i, Li := range L {
-		var c float64
+		var c uint64
 		for cfn := range s.Casc {
-			c += float64(s.Casc[cfn].C[scat-1][i].Load())
+			c += s.Casc[cfn].C[scat-1][i].Load()
 		}
-		var Pfgi = c / N
+		var Pfgi = float64(c) / N
 		sum += Pfgi * float64(Li)
 	}
 	return
@@ -542,27 +567,28 @@ func (s *StatCascade) Ncascmax() int {
 	return len(s.Casc)
 }
 
+// Simulate performs spin simulation, calculates results, update statistics.
 func (s *StatCascade) Simulate(g SlotGame, reels Reelx, wins *Wins) {
 	var sc = g.(Cascade)
 	var err error
-	var cfn int
 	var pay float64
-	for {
+	var cfn int
+	for cfn = range FallLimit {
 		sc.UntoFall()
-		if cfn++; cfn > FallLimit {
-			err = ErrAvalanche
-			break
-		}
 		var wp = len(*wins)
 		if err = g.Scanner(wins); err != nil {
 			break
 		}
-		pay += s.Casc[cfn-1].Update((*wins)[wp:])
+		pay += s.Casc[cfn].Update((*wins)[wp:])
 		sc.Strike((*wins)[wp:])
 		if len(*wins) == wp {
 			break
 		}
 		sc.PushFall(reels)
+	}
+	if cfn >= FallLimit {
+		err = ErrAvalanche
+		return
 	}
 	if pay > 0 {
 		s.Q.Add(pay * pay)

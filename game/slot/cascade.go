@@ -21,7 +21,7 @@ type Cascade5x3 struct {
 	Grid5x3 `yaml:",inline"`
 	Hits    [5][3]Pos `json:"hits" yaml:"hits,flow" xml:"hits"` // hits to fall down
 	Seed    [5]int    `json:"seed" yaml:"seed,flow" xml:"seed"` // reels positions
-	// cascade fall number
+	// cascade fall number, base roll has CFN = 0, first fall has CFN = 1
 	CFN int `json:"cfn,omitempty" yaml:"cfn,omitempty" xml:"cfn,omitempty"`
 }
 
@@ -39,14 +39,14 @@ func (s *Cascade5x3) SetCol(x Pos, reel []Sym, pos int) {
 }
 
 func (s *Cascade5x3) SpinReels(reels Reelx) {
-	if s.CFN > 1 {
+	if s.CFN > 0 {
 		s.PushFall(reels)
 	} else {
-		s.TopFall(reels)
+		s.BaseRoll(reels)
 	}
 }
 
-func (s *Cascade5x3) TopFall(reels Reelx) {
+func (s *Cascade5x3) BaseRoll(reels Reelx) {
 	for x, reel := range reels {
 		var pos = rand.N(len(reel))
 		s.SetCol(Pos(x+1), reel, pos)
@@ -90,7 +90,7 @@ func (s *Cascade5x3) UntoFall() {
 	if s.Cascade() {
 		s.CFN++
 	} else {
-		s.CFN = 1
+		s.CFN = 0
 	}
 }
 
@@ -125,14 +125,14 @@ func (s *Cascade5x4) SetCol(x Pos, reel []Sym, pos int) {
 }
 
 func (s *Cascade5x4) SpinReels(reels Reelx) {
-	if s.CFN > 1 {
+	if s.CFN > 0 {
 		s.PushFall(reels)
 	} else {
-		s.TopFall(reels)
+		s.BaseRoll(reels)
 	}
 }
 
-func (s *Cascade5x4) TopFall(reels Reelx) {
+func (s *Cascade5x4) BaseRoll(reels Reelx) {
 	for x, reel := range reels {
 		var pos = rand.N(len(reel))
 		s.SetCol(Pos(x+1), reel, pos)
@@ -176,7 +176,7 @@ func (s *Cascade5x4) UntoFall() {
 	if s.Cascade() {
 		s.CFN++
 	} else {
-		s.CFN = 1
+		s.CFN = 0
 	}
 }
 
@@ -199,14 +199,9 @@ func CascadeGain(game SlotGeneric, wins Wins, fund, mrtp float64) (sumgain float
 	}
 	var casc = game.Clone().(SlotCascade)
 	casc.Strike(wins)
-	var cfn = 1
 	var cw Wins
-	for {
+	for range FallLimit {
 		casc.UntoFall()
-		if cfn++; cfn > FallLimit {
-			err = ErrAvalanche
-			return
-		}
 		casc.Spin(mrtp)
 		if err = casc.Scanner(&cw); err != nil {
 			return
@@ -219,4 +214,6 @@ func CascadeGain(game SlotGeneric, wins Wins, fund, mrtp float64) (sumgain float
 		casc.Strike(cw)
 		cw.Reset()
 	}
+	err = ErrAvalanche
+	return
 }

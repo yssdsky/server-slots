@@ -9,7 +9,7 @@ import (
 const (
 	sn         = 10   // number of symbols
 	wild, scat = 1, 2 // wild & scatter symbol IDs
-	cfn8, cfn9 = 1, 2 // bonus ID for CFN = 8 and CFN = 9
+	cfn8, cfn9 = 1, 2 // bonus ID for CFN = 7 and CFN = 8
 )
 
 var ReelsMap slot.ReelsMap[slot.Reelx]
@@ -64,13 +64,13 @@ func (g *Game) Scanner(wins *slot.Wins) error {
 	g.ScanLined(wins)
 	g.ScanScatters(wins)
 	if len(*wins) == 0 {
-		if g.CFN == 8 {
+		if g.CFN == 7 {
 			*wins = append(*wins, slot.WinItem{
 				Pay: 100,
 				MP:  1,
 				BID: cfn8,
 			})
-		} else if g.CFN >= 9 {
+		} else if g.CFN >= 8 {
 			*wins = append(*wins, slot.WinItem{
 				Pay: 1000,
 				MP:  1,

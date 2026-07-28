@@ -15,11 +15,12 @@ const (
 type Cell int
 
 func (c Cell) Type() CT {
-	if c == 0 {
+	switch c {
+	case 0:
 		return buck
-	} else if c == 1 || c == -1 {
+	case 1, -1:
 		return mult
-	} else {
+	default:
 		return pay
 	}
 }

@@ -58,15 +58,15 @@ func (g *Game) Scanner(wins *slot.Wins) error {
 	g.ScanLined(wins)
 	if len(*wins) == 0 {
 		switch {
-		case g.CFN == 5:
+		case g.CFN == 4:
 			*wins = append(*wins, slot.WinItem{
 				FS: 12,
 			})
-		case g.CFN == 6:
+		case g.CFN == 5:
 			*wins = append(*wins, slot.WinItem{
 				FS: 20,
 			})
-		case g.CFN >= 7:
+		case g.CFN >= 6:
 			*wins = append(*wins, slot.WinItem{
 				FS: 38,
 			})
@@ -78,11 +78,11 @@ func (g *Game) Scanner(wins *slot.Wins) error {
 func (g *Game) GetMult() float64 {
 	var mp float64 = 1
 	switch g.CFN {
-	case 2:
+	case 1:
 		mp = 2
-	case 3:
+	case 2:
 		mp = 5
-	case 4:
+	case 3:
 		mp = 10
 	}
 	if g.FSR != 0 {

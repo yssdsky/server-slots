@@ -163,11 +163,11 @@ Let's examine the scan output values ​​using an example of `Gonzo's Quest` s
 ```txt
 $ slot_debug.exe scan -g=netent/gonzosquest -r=95 --full
 selected 20 lines
-completed 100% (50722560), time spent 7.2566161s
+completed 100% (50722560), time spent 6.586422175s
 
 reels lengths [34, 37, 35, 36, 32], total reshuffles 50722560
 symbols: µ = 90.41822%, sigma(sym) = 5.72795
-free: HRfg = 1/564.49, q = 0.017715, sq = 1/(1-q) = 1.018035
+free: HRfg = 1/564.49, q = 0.017715, sq = 1/(1-q) = 1.018
 RTP = 90.418(sym) + 0.017715*276.15(fg) = 95.310212%
 sigma = 6.17553, VI[95%] = 12.1038 (Medium-High)
 CI[95%] = 66610, bankroll[CI] = 6247.72
@@ -181,10 +181,13 @@ RTP spread for spins number with confidence 95%:
 10000000: 94.93% ... 95.69%
 
 cascade metrics:
-N[2] = 17002368, Ec2 = Kf2 = 1/2.9833
-N[3] = 4022784, Ec3 = 1/12.609, Kf3 = 1/4.2265
-N[4] = 974592, Ec4 = 1/52.045, Kf4 = 1/4.1277
-N[5] = 284544, Ec5 = 1/178.26, Kf5 = 1/3.4251
+N[1] = 17002368, Ec1 = Kf1 = 1/2.9833
+N[2] = 4022784, Ec2 = 1/12.609, Kf2 = 1/4.2265
+N[3] = 974592, Ec3 = 1/52.045, Kf3 = 1/4.1277
+N[4] = 284544, Ec4 = 1/178.26, Kf4 = 1/3.4251
+N[5] = 62208, Ec5 = 1/815.37, Kf5 = 1/4.5741
+N[6] = 12672, Ec6 = 1/4002.7, Kf6 = 1/4.9091
+N[7] = 3456, Ec7 = 1/14677, Kf7 = 1/3.6667
 Mcascade = 1.8768, ACL = 1.3153, Kfading = 1/3.9376, Ncascmax = 8
 
 symbols contribution to payouts:
@@ -201,14 +204,14 @@ sym rate%  rtp% |     1     2     3     4     5
 
 cascades contribution to payouts:
 cfn rate%  rtp%
- 1: 53.28 50.78
- 2: 28.05 26.74
- 3: 12.97 12.36
- 4:  4.62  4.41
- 5:  0.89  0.85
- 6:  0.16  0.15
- 7:  0.03  0.02
- 8:     0     0
+ 0: 53.28 50.78
+ 1: 28.05 26.74
+ 2: 12.97 12.36
+ 3:  4.62  4.41
+ 4:  0.89  0.85
+ 5:  0.16  0.15
+ 6:  0.03  0.02
+ 7:     0     0
 ```
 
 Here output means:
@@ -233,11 +236,11 @@ Here output means:
 
 * `RTP spread` is the table with RTP intervals for different $N$ values. High volatility increases spread, and moves far away point of convergence.
 
-* `N[2]`, `N[3]` ... - number of cascade falls #2, #3, etc in scanning pool.
+* `N[1]`, `N[2]` ... - number of cascade falls #1, #2, etc in scanning pool.
 
-* `Ec2`, `Ec3` ... - expectation of cascade fall #2, #3, etc. Shows how many spins to wait to get cascade fall with this number.
+* `Ec1`, `Ec2` ... - expectation of cascade fall #1, #2, etc. Shows how many spins to wait to get cascade fall with this number.
 
-* `Kf2`, `Kf3` ... - expectation of "next" cascade fall. Fading coefficient for each cascade fall.
+* `Kf1`, `Kf2` ... - expectation of "next" cascade fall. Fading coefficient for each cascade fall.
 
 * `Mcascade` - key parameter for cascade slots, $S_{Σ}/S_1$, where $S_{Σ}$ - sum of pays by all cascades, $S_1$ - pays by 1st cascade fall. It shows how many cascades pays. A high value indicates that the bulk of the payouts comes from cascades, while linear payments are insignificant.
 

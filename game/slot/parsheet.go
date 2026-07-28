@@ -121,7 +121,7 @@ func Print_contribution_falls(w io.Writer, sp *ScanPar, s *StatCascade, rtp floa
 	var sum = s.SumPays()
 	for cfn := range s.Casc {
 		var c = s.Casc[cfn].SumPays() / sum
-		fmt.Fprintf(w, "%2d: %s %s\n", cfn+1, p5f(c*100), p5f(rtp*c*100))
+		fmt.Fprintf(w, "%2d: %s %s\n", cfn, p5f(c*100), p5f(rtp*c*100))
 		if c == 0 {
 			break
 		}
@@ -149,9 +149,9 @@ func Print_cascmetrics(w io.Writer, sp *ScanPar, s *StatCascade) {
 	fmt.Fprintln(w)
 	fmt.Fprintf(w, "cascade metrics:\n")
 	var N = s.Count()
-	var Nc = float64(s.Casc[1].N.Load())
-	fmt.Fprintf(w, "N[2] = %.10g, Ec2 = Kf2 = 1/%.5g\n", Nc, N/Nc)
-	var Np float64
+	var Nc = float64(s.Casc[1].N.Load()) // current number
+	fmt.Fprintf(w, "N[1] = %.10g, Ec1 = Kf1 = 1/%.5g\n", Nc, N/Nc)
+	var Np float64 // previous number
 	for cfn := 2; cfn < len(s.Casc); cfn++ {
 		Np = Nc
 		Nc = float64(s.Casc[cfn].N.Load())
@@ -159,14 +159,15 @@ func Print_cascmetrics(w io.Writer, sp *ScanPar, s *StatCascade) {
 			break
 		}
 		if N/Nc < 1e5 {
-			fmt.Fprintf(w, "N[%d] = %.10g, Ec3 = 1/%.5g, Kf3 = 1/%.5g\n", cfn+1, Nc, N/Nc, Np/Nc)
+			fmt.Fprintf(w, "N[%d] = %.10g, Ec%d = 1/%.5g, Kf%d = 1/%.5g\n", cfn, Nc, cfn, N/Nc, cfn, Np/Nc)
 		} else {
-			fmt.Fprintf(w, "N[%d] = %.10g, Ec3 = 1/%d, Kf3 = 1/%.5g\n", cfn+1, Nc, int(N/Nc), Np/Nc)
+			fmt.Fprintf(w, "N[%d] = %.10g, Ec%d = 1/%d, Kf%d = 1/%.5g\n", cfn, Nc, cfn, int(N/Nc), cfn, Np/Nc)
 		}
 	}
 	fmt.Fprintf(w, "Mcascade = %.5g, ACL = %.5g, Kfading = 1/%.5g, Ncascmax = %d\n", s.Mcascade(), s.ACL(), s.Kfading(), s.Ncascmax())
 }
 
+// Print_all assembles all print functions of parsheets.
 func Print_all(w io.Writer, sp *ScanPar, s Counter, rtp, D float64) {
 	Print_vi(w, sp, D)
 	Print_ci(w, sp, rtp, D)

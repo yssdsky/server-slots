@@ -77,7 +77,7 @@ func (g *Game) ScanLined(wins *slot.Wins) {
 			}
 		}
 		if numl >= 3 && syml > scat {
-			var fm = float64(min(g.CFN, 5))
+			var fm = float64(min(g.CFN+1, 5))
 			var mm float64 = 1 // mult mode
 			if g.FSR > 0 {
 				mm = 3
