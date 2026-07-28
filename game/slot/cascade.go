@@ -202,7 +202,7 @@ func CascadeGain(game SlotGeneric, wins Wins, fund, mrtp float64) (sumgain float
 	var cw Wins
 	for range FallLimit {
 		casc.UntoFall()
-		casc.Spin(mrtp)
+		casc.SpinReels(casc.GetReels(mrtp))
 		if err = casc.Scanner(&cw); err != nil {
 			return
 		}

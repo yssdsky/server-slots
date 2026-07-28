@@ -128,7 +128,7 @@ func BenchmarkSpin(b *testing.B) {
 
 	b.ResetTimer()
 	for b.Loop() {
-		g.Spin(96)
+		g.SpinReels(g.GetReels(96))
 		g.Scanner(&wins)
 		wins.Reset()
 	}

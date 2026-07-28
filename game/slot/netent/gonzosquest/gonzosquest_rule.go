@@ -38,12 +38,14 @@ type Game struct {
 var _ slot.SlotCascade = (*Game)(nil)
 
 func NewGame() *Game {
-	return &Game{
+	var g = &Game{
 		Slotx: slot.Slotx{
 			Sel: 20,
 			Bet: 1,
 		},
 	}
+	g.SpinReels(g.GetReels(slot.InitRTP))
+	return g
 }
 
 func (g *Game) Clone() slot.SlotGeneric {
@@ -107,9 +109,13 @@ func (g *Game) ScanScatters(wins *slot.Wins) {
 	}
 }
 
-func (g *Game) Spin(mrtp float64) {
+func (g *Game) GetReels(mrtp float64) slot.Reelx {
 	var reels, _ = ReelsMap.FindClosest(mrtp)
-	g.SpinReels(reels)
+	return reels
+}
+
+func (g *Game) Spin(mrtp float64) {
+	g.SpinReels(g.GetReels(mrtp))
 }
 
 func (g *Game) Prepare() {

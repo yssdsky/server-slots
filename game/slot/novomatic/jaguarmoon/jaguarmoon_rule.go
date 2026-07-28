@@ -49,12 +49,14 @@ type Game struct {
 var _ slot.SlotGeneric = (*Game)(nil)
 
 func NewGame() *Game {
-	return &Game{
+	var g = &Game{
 		Slotx: slot.Slotx{
 			Bet: 1,
 		},
 		M: 0,
 	}
+	g.SpinReels(g.GetReels(slot.InitRTP))
+	return g
 }
 
 func (g *Game) Clone() slot.SlotGeneric {
@@ -112,13 +114,17 @@ func (g *Game) Cost() float64 {
 	return g.Bet * 10
 }
 
-func (g *Game) Spin(mrtp float64) {
+func (g *Game) GetReels(mrtp float64) slot.Reelx {
 	if g.FSR == 0 {
 		var reels, _ = ReelsMap.FindClosest(mrtp)
-		g.SpinReels(reels)
+		return reels
 	} else {
-		g.SpinReels(ReelsBon)
+		return ReelsBon
 	}
+}
+
+func (g *Game) Spin(mrtp float64) {
+	g.SpinReels(g.GetReels(mrtp))
 }
 
 func (g *Game) Prepare() {

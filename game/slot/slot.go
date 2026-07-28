@@ -19,6 +19,9 @@ type WinItem struct {
 	JR  float64 `json:"jr,omitempty" yaml:"jr,omitempty" xml:"jr,omitempty,attr"`    // jackpot rate (share of the progressive jackpot for this algorithm)
 }
 
+// Inits created games objects with screen filled with reels on this RTP.
+const InitRTP = 95.0
+
 // Progressive jackpot calculated as P * Bet / JackBasis * JackFund
 // where P - is the reciprocal value of the occurrence probability.
 // Maximum P=25000000 with maximum Bet=10.
@@ -56,6 +59,7 @@ type SlotGame interface {
 	Cost() float64                // cost of spin on current bet and lines, constant function
 	JackFreq(float64) []float64   // returns occurrence frequency set of progressive jackpots if it has, constant function
 	FreeMode() bool               // returns true on spins without pay, constant function
+	GetReels(float64) Reelx       // returns reels for current game state, constant function
 	Spin(float64)                 // fill the grid with random hits on reels closest to given RTP, constant function
 	Spawn(Wins, float64, float64) // setup bonus games to wins results, constant function
 	Prepare()                     // update game state before new spin, grid is unknown yet

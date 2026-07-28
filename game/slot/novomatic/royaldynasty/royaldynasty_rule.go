@@ -54,12 +54,14 @@ type Game struct {
 var _ slot.SlotGeneric = (*Game)(nil)
 
 func NewGame(sel int) *Game {
-	return &Game{
+	var g = &Game{
 		Slotx: slot.Slotx{
 			Sel: sel,
 			Bet: 1,
 		},
 	}
+	g.SpinReels(g.GetReels(slot.InitRTP))
+	return g
 }
 
 func (g *Game) Clone() slot.SlotGeneric {
@@ -132,9 +134,10 @@ func (g *Game) ScanLinedReg(wins *slot.Wins) {
 // Lined symbols calculation on bonus games.
 func (g *Game) ScanLinedBon(wins *slot.Wins) {
 	var ps slot.Sym // pays scatter
-	if g.TS == scat1 {
+	switch g.TS {
+	case scat1:
 		ps = scat2
-	} else if g.TS == scat2 {
+	case scat2:
 		ps = scat1
 	}
 	for li, line := range BetLines[:g.Sel] {
@@ -223,13 +226,17 @@ func (g *Game) ScanScattersBon(wins *slot.Wins) {
 	}
 }
 
-func (g *Game) Spin(mrtp float64) {
+func (g *Game) GetReels(mrtp float64) slot.Reelx {
 	if g.FSR == 0 {
 		var reels, _ = ReelsMap.FindClosest(mrtp)
-		g.SpinReels(reels)
+		return reels
 	} else {
-		g.SpinReels(ReelsBon)
+		return ReelsBon
 	}
+}
+
+func (g *Game) Spin(mrtp float64) {
+	g.SpinReels(g.GetReels(mrtp))
 }
 
 func (g *Game) Prepare() {

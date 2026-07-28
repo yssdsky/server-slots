@@ -111,11 +111,6 @@ var (
 	JoinBuf = SqlStory{}
 )
 
-// Make game grid object.
-func InitGrid(g game.Gamble) {
-	g.Spin(cfg.DefMRTP)
-}
-
 // Creates new instance of game.
 func ApiGameNew(c *gin.Context) {
 	var err error
@@ -176,9 +171,6 @@ func ApiGameNew(c *gin.Context) {
 		},
 		Game: anygame,
 	}
-
-	// make game grid object
-	InitGrid(anygame)
 
 	// insert new story entry
 	if Cfg.ClubInsertBuffer > 1 {

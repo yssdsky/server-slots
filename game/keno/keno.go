@@ -106,6 +106,9 @@ const (
 	KSselhit KS = KSsel | KShit // win cell, hit and selection
 )
 
+// Inits created games objects with screen filled with using table on this RTP.
+const InitRTP = 95.0
+
 type Grid [80]KS
 
 type Bitset = util.Bitset128

@@ -80,7 +80,7 @@ local function read_reels(iter)
 		if not s then
 			break
 		end
-		local n = assert(string.match(s, "^(%d+%.?%d*):$"), "rtp key does not found")
+		local n = assert(string.match(s, "^(%-?%d+%.?%d*):$"), "rtp key does not found")
 		local rtp = tonumber(n)
 		reelsmap[rtp or 0] = reels_lines()
 	until false

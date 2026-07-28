@@ -63,7 +63,7 @@ local function generate()
 
 	reels.comment = assert(output:match("(reels lengths.*)$"), "calculation output does not received")
 	reels.rtp = assert(
-		tonumber(string.match(reels.comment, "RTP =[^\\n\\r]* (%d+%.?%d-)%%\n")),
+		tonumber(string.match(reels.comment, "RTP =[^\\n\\r]* (%-?%d+%.?%d-)%%\n")),
 		"result RTP does not found, comment is:\n"..reels.comment)
 
 	return reels

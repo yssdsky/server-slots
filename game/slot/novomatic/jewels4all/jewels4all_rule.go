@@ -39,12 +39,14 @@ type Game struct {
 var _ slot.SlotGeneric = (*Game)(nil)
 
 func NewGame(sel int) *Game {
-	return &Game{
+	var g = &Game{
 		Slotx: slot.Slotx{
 			Sel: sel,
 			Bet: 1,
 		},
 	}
+	g.SpinReels(g.GetReels(slot.InitRTP))
+	return g
 }
 
 func (g *Game) Clone() slot.SlotGeneric {
@@ -117,6 +119,10 @@ func (g *Game) ScanLined(wins *slot.Wins) {
 			})
 		}
 	}
+}
+
+func (g *Game) GetReels(mrtp float64) slot.Reelx {
+	return Reels
 }
 
 func (g *Game) Spin(mrtp float64) {

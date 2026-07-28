@@ -45,11 +45,13 @@ type Game struct {
 var _ slot.SlotGeneric = (*Game)(nil)
 
 func NewGame() *Game {
-	return &Game{
+	var g = &Game{
 		Slotx: slot.Slotx{
 			Bet: 1,
 		},
 	}
+	g.SpinReels(g.GetReels(slot.InitRTP))
+	return g
 }
 
 func (g *Game) Clone() slot.SlotGeneric {
@@ -79,9 +81,10 @@ func (g *Game) Scanner(wins *slot.Wins) error {
 		var c = 1 // current ways
 		for x, cx := range counts {
 			var n = cx[sym]
-			if x == 1 {
+			switch x {
+			case 1:
 				n += cx[wild] * 2
-			} else if x == 3 {
+			case 3:
 				n += cx[wild] * 5
 			}
 			if n == 0 {
@@ -120,13 +123,17 @@ func (g *Game) Cost() float64 {
 	return g.Bet * 25
 }
 
-func (g *Game) Spin(mrtp float64) {
+func (g *Game) GetReels(mrtp float64) slot.Reelx {
 	if g.FSR == 0 {
 		var reels, _ = ReelsMap.FindClosest(mrtp)
-		g.SpinReels(reels)
+		return reels
 	} else {
-		g.SpinReels(ReelsBon)
+		return ReelsBon
 	}
+}
+
+func (g *Game) Spin(mrtp float64) {
+	g.SpinReels(g.GetReels(mrtp))
 }
 
 func (g *Game) SetSel(sel int) error {

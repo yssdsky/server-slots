@@ -39,11 +39,13 @@ type Game struct {
 var _ keno.KenoGame = (*Game)(nil)
 
 func NewGame() *Game {
-	return &Game{
+	var g = &Game{
 		Keno80: keno.Keno80{
 			Bet: 1,
 		},
 	}
+	g.Spin(keno.InitRTP)
+	return g
 }
 
 func (g *Game) Scanner(wins *keno.Wins) error {

@@ -42,7 +42,7 @@ var Freegames = []int{10, 15, 15, 20, 25}
 var BetLines = slot.BetLinesPlt5x3[:]
 
 const (
-	Efs = 17  // average free spins for ScatRand set
+	Efs  = 17  // average free spins for ScatRand set
 	Pmfs = 0.3 // probability of "got away" at free spins
 )
 
@@ -57,13 +57,15 @@ type Game struct {
 var _ slot.SlotGeneric = (*Game)(nil)
 
 func NewGame(sel int) *Game {
-	return &Game{
+	var g = &Game{
 		Slotx: slot.Slotx{
 			Sel: sel,
 			Bet: 1,
 		},
 		M: 0,
 	}
+	g.SpinReels(g.GetReels(slot.InitRTP))
+	return g
 }
 
 func (g *Game) Clone() slot.SlotGeneric {
@@ -156,13 +158,17 @@ func (g *Game) ScanScatters(wins *slot.Wins) {
 	}
 }
 
-func (g *Game) Spin(mrtp float64) {
+func (g *Game) GetReels(mrtp float64) slot.Reelx {
 	if g.FSR == 0 {
 		var reels, _ = ReelsMap.FindClosest(mrtp)
-		g.SpinReels(reels)
+		return reels
 	} else {
-		g.SpinReels(ReelsBon)
+		return ReelsBon
 	}
+}
+
+func (g *Game) Spin(mrtp float64) {
+	g.SpinReels(g.GetReels(mrtp))
 }
 
 func (g *Game) Prepare() {
