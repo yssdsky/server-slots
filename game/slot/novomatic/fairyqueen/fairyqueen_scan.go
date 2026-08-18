@@ -116,10 +116,10 @@ func BruteForce5x3es3(ctx context.Context, sp *slot.ScanPar, s slot.Simulator, g
 }
 
 func CalcStatBon(ctx context.Context, sp *slot.ScanPar, es slot.Sym) (float64, float64, float64) {
-	var reels = ReelsBon
 	var g = NewGame(sp.Sel)
 	g.FSR = 10 // set free spins mode
 	g.ES = es
+	var reels = g.GetReels(sp.MRTP)
 	var s = slot.NewStatGeneric(sn, 5)
 
 	var calc = func(w io.Writer) (float64, float64) {
@@ -176,8 +176,8 @@ func CalcStatReg(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	fmt.Printf("RTPfs = sq*rtp(sym) = %.5g*%.5g = %.6f%%\n", sqfs, rtpsym*100, rtpfs*100)
 
 	fmt.Printf("*regular reels calculations*\n")
-	var reels, _ = ReelsMap.FindClosest(sp.MRTP)
 	var g = NewGame(sp.Sel)
+	var reels = g.GetReels(sp.MRTP)
 	var s = slot.NewStatGeneric(sn, 5)
 
 	var calc = func(w io.Writer) (float64, float64) {

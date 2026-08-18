@@ -13,9 +13,9 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	fmt.Printf("\n(1/2) bonus games calculations\n")
 	var sb = slot.NewStatGeneric(sn, 5)
 	{
-		var reels, _ = ReelsMap.FindClosest(sp.MRTP)
 		var g = NewGame(sp.Sel)
 		g.BM = true // set bonus mode
+		var reels = g.GetReels(sp.MRTP)
 		var calc = func(w io.Writer) (float64, float64) {
 			return slot.Parsheet_simple(w, sp, sb, g.Cost())
 		}
@@ -29,8 +29,8 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	fmt.Printf("\n(2/2) regular games calculations\n")
 	var sr = slot.NewStatGeneric(sn, 5)
 	{
-		var reels, _ = ReelsMap.FindClosest(sp.MRTP)
 		var g = NewGame(sp.Sel)
+		var reels = g.GetReels(sp.MRTP)
 
 		// custom parsheet
 		var cost = g.Cost()

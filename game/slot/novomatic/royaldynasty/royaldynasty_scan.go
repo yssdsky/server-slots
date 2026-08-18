@@ -12,10 +12,10 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	fmt.Printf("\n(1/2) bonus reels calculations\n")
 	var sb = slot.NewStatGeneric(sn, 5)
 	{
-		var reels = ReelsBon
 		var g = NewGame(sp.Sel)
 		g.FSR = 35 // set free spins mode
 		g.TS = scat1
+		var reels = g.GetReels(sp.MRTP)
 		var calc = func(w io.Writer) (float64, float64) {
 			var N = sb.Count()
 			var q = float64(sb.FGH.Load()*35) / N
@@ -36,8 +36,8 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	fmt.Printf("\n(2/2) regular reels calculations\n")
 	var sr = slot.NewStatGeneric(sn, 5)
 	{
-		var reels, _ = ReelsMap.FindClosest(sp.MRTP)
 		var g = NewGame(sp.Sel)
+		var reels = g.GetReels(sp.MRTP)
 		var calc = func(w io.Writer) (float64, float64) {
 			// bonus reels parameters
 			var Nb = sb.Count()

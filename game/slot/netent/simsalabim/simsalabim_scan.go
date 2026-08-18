@@ -12,9 +12,9 @@ import (
 const EVne12 = 3 * 100
 
 func CalcStatBon(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
-	var reels = ReelsBon
 	var g = NewGame(sp.Sel)
 	g.FSR = 10 // set free spins mode
+	var reels = g.GetReels(sp.MRTP)
 	var s = slot.NewStatGeneric(sn, 5)
 
 	var calc = func(w io.Writer) (float64, float64) {
@@ -39,8 +39,8 @@ func CalcStatReg(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 		return 0, 0
 	}
 	fmt.Printf("*regular reels calculations*\n")
-	var reels, _ = ReelsMap.FindClosest(sp.MRTP)
 	var g = NewGame(sp.Sel)
+	var reels = g.GetReels(sp.MRTP)
 	var s = slot.NewStatGeneric(sn, 5)
 	s.BonDim(ne12)
 

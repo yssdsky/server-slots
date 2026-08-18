@@ -9,8 +9,8 @@ import (
 )
 
 func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
-	var reels, _ = ReelsMap.FindClosest(sp.MRTP)
 	var g = NewGame(sp.Sel)
+	var reels = g.GetReels(sp.MRTP)
 	var s = slot.NewStatGeneric(sn, 5)
 	s.JackDim(lmj)
 

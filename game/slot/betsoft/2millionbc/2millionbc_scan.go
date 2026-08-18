@@ -62,8 +62,8 @@ func CalcStatReg(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 		return 0, 0
 	}
 	fmt.Printf("*regular reels calculations*\n")
-	var reels, _ = ReelsMap.FindClosest(sp.MRTP)
 	var g = NewGame(sp.Sel)
+	var reels = g.GetReels(sp.MRTP)
 	var s = slot.NewStatGeneric(sn, 5)
 	s.BonDim(dlbn)
 

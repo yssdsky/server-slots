@@ -14,9 +14,9 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	fmt.Printf("\n(1/2) free games calculations\n")
 	var idb = fmt.Sprintf("ctinteractive/beetlestar/graw/bon/%d", sp.Sel)
 	if sb, ok = slot.FindStatGeneric(idb+"/%g", sp.MRTP, sn, 5); ok {
-		var reels, _ = ReelsMap.FindClosest(sp.MRTP)
 		var g = NewGame(sp.Sel)
 		g.FSR = 15 // set free spins mode
+		var reels = g.GetReels(sp.MRTP)
 		var calc = func(w io.Writer) (float64, float64) {
 			return slot.Parsheet_fgretrig(w, sp, sb, g.Cost(), 1, 15)
 		}
@@ -30,8 +30,8 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	fmt.Printf("\n(2/2) regular games calculations\n")
 	var idr = fmt.Sprintf("ctinteractive/beetlestar/graw/reg/%d", sp.Sel)
 	if sr, ok = slot.FindStatGeneric(idr+"/%g", sp.MRTP, sn, 5); ok {
-		var reels, _ = ReelsMap.FindClosest(sp.MRTP)
 		var g = NewGame(sp.Sel)
+		var reels = g.GetReels(sp.MRTP)
 		var calc = func(w io.Writer) (float64, float64) {
 			return slot.Parsheet_fgretrig_split(w, sp, sr, sb, g.Cost(), 1, 15)
 		}

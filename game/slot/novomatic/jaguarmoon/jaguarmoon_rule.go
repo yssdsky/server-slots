@@ -53,7 +53,7 @@ func NewGame() *Game {
 		Slotx: slot.Slotx{
 			Bet: 1,
 		},
-		M: 0,
+		M: 1,
 	}
 	g.SpinReels(g.GetReels(slot.InitRTP))
 	return g
@@ -81,10 +81,7 @@ func (g *Game) Scanner(wins *slot.Wins) error {
 			combs[sym] = c * n
 			if x >= linemin && c > 0 && n == 0 {
 				var pay = LinePay[sym-1][x-1]
-				var mm float64 = 1 // mult mode
-				if g.FSR > 0 {
-					mm = g.M
-				}
+				var mm = g.M // mult mode
 				*wins = append(*wins, slot.WinItem{
 					Pay: g.Bet * pay,
 					MP:  mm * float64(c),
@@ -129,7 +126,7 @@ func (g *Game) Spin(mrtp float64) {
 
 func (g *Game) Prepare() {
 	if g.FSR == 0 {
-		g.M = 0
+		g.M = 1
 	}
 }
 

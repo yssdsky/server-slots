@@ -12,9 +12,9 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	fmt.Printf("\n(1/2) bonus reels calculations\n")
 	var sb = slot.NewStatCascade(sn, 5)
 	{
-		var reels = ReelsBon
 		var g = NewGame()
 		g.FSR = 14 // set free spins mode
+		var reels = g.GetReels(sp.MRTP)
 		var calc = func(w io.Writer) (float64, float64) {
 			return slot.Parsheet_fgretrig_series(w, sp, sb, g.Cost(), 1, ScatFreespinBon[:], scat)
 		}
@@ -28,8 +28,8 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	fmt.Printf("\n(2/2) regular reels calculations\n")
 	var sr = slot.NewStatCascade(sn, 5)
 	{
-		var reels, _ = ReelsMap.FindClosest(sp.MRTP)
 		var g = NewGame()
+		var reels = g.GetReels(sp.MRTP)
 		var calc = func(w io.Writer) (float64, float64) {
 			return slot.Parsheet_fgretrig_split_series(w, sp, sr, sb, g.Cost(), 1, ScatFreespinReg[:], scat)
 		}

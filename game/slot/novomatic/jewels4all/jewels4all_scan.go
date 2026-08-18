@@ -54,8 +54,8 @@ func BruteForceEuro(ctx context.Context, s slot.Simulator, g *Game, reels slot.R
 }
 
 func CalcStatEuro(ctx context.Context, sp *slot.ScanPar, s *slot.StatGeneric, x, y slot.Pos) (float64, float64) {
-	var reels = Reels
 	var g = NewGame(sp.Sel)
+	var reels = g.GetReels(sp.MRTP)
 
 	var calc = func(w io.Writer) (float64, float64) {
 		return slot.Parsheet_simple(w, sp, s, g.Cost())
