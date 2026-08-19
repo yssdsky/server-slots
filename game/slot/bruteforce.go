@@ -9,11 +9,12 @@ import (
 )
 
 // Function to report about progress of calculation by brute force
-func ProgressBF(ctx context.Context, sp *ScanPar, s Simulator, calc func(io.Writer) (float64, float64), cost float64, total float64) {
+func ProgressBF(ctx context.Context, sp *ScanPar, s Simulator, calc func(io.Writer) (float64, float64), cost float64) {
 	const stepdur = 1000 * time.Millisecond
 	var t0 = time.Now()
 	var steps = time.Tick(stepdur)
 	fmt.Printf("calculation started...\r")
+	var total = float64(sp.Total)
 	var (
 		dur time.Duration
 		N   float64
@@ -45,7 +46,8 @@ loop:
 		N/total*100, int(N), dur)
 }
 
-func BruteForcex(ctx context.Context, sp *ScanPar, s Simulator, g SlotGeneric, reels Reelx) {
+func BruteForcex(ctx context.Context, sp *ScanPar, s Simulator, g SlotGeneric) {
+	var reels = g.GetReels(sp.MRTP)
 	var total = reels.Reshuffles()
 	var tn64 = uint64(sp.TN)
 	if sp.TN%len(reels[0]) == 0 {

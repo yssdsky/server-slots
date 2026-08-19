@@ -12,15 +12,15 @@ import (
 func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	var s = slot.NewStatGeneric(sn, 5)
 	var g = NewGame(sp.Sel)
-	var reels = g.GetReels(sp.MRTP)
+	var r3 = g.GetReels(sp.MRTP)[2]
 	// custom parsheet
 	var njb float64
-	for _, sym := range reels[2] {
+	for _, sym := range r3 {
 		if sym == jazz {
 			njb++
 		}
 	}
-	var Pjb = njb * 3 / float64(len(reels[2]))
+	var Pjb = njb * 3 / float64(len(r3))
 	var cost = g.Cost()
 	const L = 10.0
 	var calc = func(w io.Writer) (float64, float64) {
@@ -45,5 +45,5 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 		slot.Print_all(w, sp, s, rtp, D)
 		return rtp, D
 	}
-	return slot.ScanReelsCommon(ctx, sp, s, g, reels, calc)
+	return slot.ScanReelsCommon(ctx, sp, s, g, calc)
 }

@@ -35,10 +35,9 @@ func CalcStatReg(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	var sr = slot.NewStatGeneric(sn, 5)
 	{
 		var g = NewGame(sp.Sel)
-		var reels = g.GetReels(sp.MRTP)
 		var calc = func(w io.Writer) (float64, float64) {
 			return slot.Parsheet_fgonce_split(w, sp, sr, sb, g.Cost(), 1, 15)
 		}
-		return slot.ScanReelsCommon(ctx, sp, sr, g, reels, calc)
+		return slot.ScanReelsCommon(ctx, sp, sr, g, calc)
 	}
 }

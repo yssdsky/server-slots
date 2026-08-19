@@ -11,7 +11,6 @@ import (
 
 func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	var g = NewGame(sp.Sel)
-	var reels = g.GetReels(sp.MRTP)
 	var s = slot.NewStatGeneric(sn, 5)
 
 	// custom parsheet
@@ -44,5 +43,5 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 		return rtp, D
 	}
 
-	return slot.ScanReelsCommon(ctx, sp, s, g, reels, calc)
+	return slot.ScanReelsCommon(ctx, sp, s, g, calc)
 }

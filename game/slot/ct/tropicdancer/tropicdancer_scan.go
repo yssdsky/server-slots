@@ -9,7 +9,6 @@ import (
 
 func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	var g = NewGame(sp.Sel)
-	var reels = g.GetReels(sp.MRTP)
 	var s = slot.NewStatGeneric(sn, 5)
 	s.SymDim(scat, 15)
 
@@ -17,5 +16,5 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 		return slot.Parsheet_fgretrig_series(w, sp, s, g.Cost(), 2, ScatFreespin[:], scat)
 	}
 
-	return slot.ScanReelsCommon(ctx, sp, s, g, reels, calc)
+	return slot.ScanReelsCommon(ctx, sp, s, g, calc)
 }

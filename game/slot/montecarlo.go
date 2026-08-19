@@ -66,7 +66,8 @@ loop:
 		N/total*100, int(N), dur, sp.Conf*100, ΔRTP*100)
 }
 
-func MonteCarlo(ctx context.Context, sp *ScanPar, s Simulator, g SlotGeneric, reels Reelx) {
+func MonteCarlo(ctx context.Context, sp *ScanPar, s Simulator, g SlotGeneric) {
+	var reels = g.GetReels(sp.MRTP)
 	var tn64 = uint64(sp.TN)
 	var total = max(sp.Total, lolim)
 	var wg sync.WaitGroup

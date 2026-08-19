@@ -14,13 +14,12 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	{
 		var g = NewGame(sp.Sel)
 		g.FSR = 10 // set free spins mode
-		var reels = g.GetReels(sp.MRTP)
 		var calc = func(w io.Writer) (float64, float64) {
 			var q = 0.5 // probability of getting or not getting free spins is equal
 			var ΣPL = sb.FGQ() * 10
 			return slot.Parsheet_fgretrig_custom(w, sp, sb, g.Cost(), 1, q, ΣPL)
 		}
-		slot.ScanReelsCommon(ctx, sp, sb, g, reels, calc)
+		slot.ScanReelsCommon(ctx, sp, sb, g, calc)
 	}
 
 	if ctx.Err() != nil {
@@ -31,13 +30,12 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	var sr = slot.NewStatGeneric(sn, 5)
 	{
 		var g = NewGame(sp.Sel)
-		var reels = g.GetReels(sp.MRTP)
 		var calc = func(w io.Writer) (float64, float64) {
 			var qr = sr.FSQ()
 			var qb = 0.5 // probability of getting or not getting free spins is equal
 			var ΣPL = sb.FGQ() * 10
 			return slot.Parsheet_fgretrig_split_custom(w, sp, sr, sb, g.Cost(), 1, qr, qb, ΣPL)
 		}
-		return slot.ScanReelsCommon(ctx, sp, sr, g, reels, calc)
+		return slot.ScanReelsCommon(ctx, sp, sr, g, calc)
 	}
 }

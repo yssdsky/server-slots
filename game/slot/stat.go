@@ -601,7 +601,7 @@ func (s *StatCascade) Simulate(g SlotGame, reels Reelx, wins *Wins) {
 
 type (
 	CalcFunc = func(io.Writer) (float64, float64)
-	CalcAlg  = func(ctx context.Context, sp *ScanPar, s Simulator, g SlotGeneric, reels Reelx)
+	CalcAlg  = func(ctx context.Context, sp *ScanPar, s Simulator, g SlotGeneric)
 )
 
 const (
@@ -614,8 +614,9 @@ var (
 	ErrReelCount = errors.New("unexpected number of reels")
 )
 
-func ScanReels(ctx context.Context, sp *ScanPar, s Simulator, g SlotGeneric, reels Reelx,
+func ScanReels(ctx context.Context, sp *ScanPar, s Simulator, g SlotGeneric,
 	bruteforce, montecarlo CalcAlg, calc CalcFunc) (float64, float64) {
+	var reels = g.GetReels(sp.MRTP)
 	if sx, sy := g.Dim(); len(reels) != int(sx) {
 		panic(fmt.Errorf("%w: %d reels provided for %dx%d slot", ErrReelCount, len(reels), sx, sy))
 	}
@@ -632,15 +633,16 @@ func ScanReels(ctx context.Context, sp *ScanPar, s Simulator, g SlotGeneric, ree
 		case game.CMbruteforce:
 			go func() {
 				defer wg.Done()
-				ProgressBF(ctx2, sp, s, calc, g.Cost(), float64(reels.Reshuffles()))
+				sp.Total = reels.Reshuffles()
+				ProgressBF(ctx2, sp, s, calc, g.Cost())
 			}()
-			bruteforce(ctx2, sp, s, g, reels)
+			bruteforce(ctx2, sp, s, g)
 		case game.CMmontecarlo:
 			go func() {
 				defer wg.Done()
 				ProgressMC(ctx2, sp, s, calc, g.Cost())
 			}()
-			montecarlo(ctx2, sp, s, g, reels)
+			montecarlo(ctx2, sp, s, g)
 		}
 	}()
 	wg.Wait()
@@ -651,8 +653,8 @@ func ScanReels(ctx context.Context, sp *ScanPar, s Simulator, g SlotGeneric, ree
 }
 
 func ScanReelsCommon(ctx context.Context,
-	sp *ScanPar, s Simulator, g SlotGeneric, reels Reelx, calc CalcFunc) (float64, float64) {
-	return ScanReels(ctx, sp, s, g, reels, BruteForcex, MonteCarlo, calc)
+	sp *ScanPar, s Simulator, g SlotGeneric, calc CalcFunc) (float64, float64) {
+	return ScanReels(ctx, sp, s, g, BruteForcex, MonteCarlo, calc)
 }
 
 func GetStatGeneric(id string, sn, pn int) (s *StatGeneric, ok bool) {

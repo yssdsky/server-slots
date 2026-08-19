@@ -15,11 +15,10 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	{
 		var g = NewGame(sp.Sel)
 		g.FSR = 15 // set free spins mode
-		var reels = g.GetReels(sp.MRTP)
 		var calc = func(w io.Writer) (float64, float64) {
 			return slot.Parsheet_fgretrig(w, sp, sb, g.Cost(), 1, 15)
 		}
-		slot.ScanReelsCommon(ctx, sp, sb, g, reels, calc)
+		slot.ScanReelsCommon(ctx, sp, sb, g, calc)
 	}
 
 	if ctx.Err() != nil {
@@ -31,10 +30,9 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	sr.SymDim(scat, 9)
 	{
 		var g = NewGame(sp.Sel)
-		var reels = g.GetReels(sp.MRTP)
 		var calc = func(w io.Writer) (float64, float64) {
 			return slot.Parsheet_fgretrig_split(w, sp, sr, sb, g.Cost(), 1, 15)
 		}
-		return slot.ScanReelsCommon(ctx, sp, sr, g, reels, calc)
+		return slot.ScanReelsCommon(ctx, sp, sr, g, calc)
 	}
 }

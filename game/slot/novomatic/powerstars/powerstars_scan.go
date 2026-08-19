@@ -15,7 +15,7 @@ type futureResult struct {
 }
 
 // Calculates the probabilities of transitioning to new states containing wilds.
-func calculateTransitionProbs(currentMask int, p2, p3, p4 float64, E, G map[int]float64, muCurrent float64) futureResult {
+func calculateTransitionProbs(currentMask int, p2, p3, p4 float64, E, G map[int]float64) futureResult {
 	res := futureResult{}
 
 	// Checking the free reels (2, 3, 4)
@@ -118,7 +118,7 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (rtp, D float64) {
 			}
 			return µ, D
 		}
-		mu[mask], d[mask] = slot.ScanReelsCommon(ctx, sp, s, g, Reels, calc)
+		mu[mask], d[mask] = slot.ScanReelsCommon(ctx, sp, s, g, calc)
 		if mask == 0 {
 			sr = s
 			// break
@@ -141,7 +141,7 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (rtp, D float64) {
 	for s := 6; s >= 1; s-- {
 		currentMu := mu[s]
 		currentSecondMoment := d[s] + mu[s]*mu[s]
-		var pNew = calculateTransitionProbs(s, p2, p3, p4, E, G, currentMu)
+		var pNew = calculateTransitionProbs(s, p2, p3, p4, E, G)
 		E[s] = currentMu + pNew.expectedFuture
 		G[s] = currentSecondMoment + pNew.secondMomentFuture + 2*currentMu*pNew.expectedFuture
 	}

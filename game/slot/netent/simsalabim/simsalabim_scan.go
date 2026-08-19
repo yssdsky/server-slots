@@ -14,7 +14,6 @@ const EVne12 = 3 * 100
 func CalcStatBon(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	var g = NewGame(sp.Sel)
 	g.FSR = 10 // set free spins mode
-	var reels = g.GetReels(sp.MRTP)
 	var s = slot.NewStatGeneric(sn, 5)
 
 	var calc = func(w io.Writer) (float64, float64) {
@@ -29,7 +28,7 @@ func CalcStatBon(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 		return rtp, math.NaN()
 	}
 
-	return slot.ScanReelsCommon(ctx, sp, s, g, reels, calc)
+	return slot.ScanReelsCommon(ctx, sp, s, g, calc)
 }
 
 func CalcStatReg(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
@@ -40,7 +39,6 @@ func CalcStatReg(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	}
 	fmt.Printf("*regular reels calculations*\n")
 	var g = NewGame(sp.Sel)
-	var reels = g.GetReels(sp.MRTP)
 	var s = slot.NewStatGeneric(sn, 5)
 	s.BonDim(ne12)
 
@@ -60,5 +58,5 @@ func CalcStatReg(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 		return rtp, math.NaN()
 	}
 
-	return slot.ScanReelsCommon(ctx, sp, s, g, reels, calc)
+	return slot.ScanReelsCommon(ctx, sp, s, g, calc)
 }

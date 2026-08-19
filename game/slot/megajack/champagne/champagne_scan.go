@@ -42,7 +42,6 @@ func ExpBottle() {
 func CalcStatBon(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	var g = NewGame(sp.Sel)
 	g.FSR = 15 // set free spins mode
-	var reels = g.GetReels(sp.MRTP)
 	var s = slot.NewStatGeneric(sn, 5)
 	s.BonDim(mjap)
 	s.JackDim(mjj)
@@ -66,7 +65,7 @@ func CalcStatBon(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 		return rtp, math.NaN()
 	}
 
-	return slot.ScanReelsCommon(ctx, sp, s, g, reels, calc)
+	return slot.ScanReelsCommon(ctx, sp, s, g, calc)
 }
 
 func CalcStatReg(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
@@ -81,7 +80,6 @@ func CalcStatReg(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	fmt.Printf("*regular games calculations*\n")
 	var g = NewGame(sp.Sel)
 	g.FSR = 0 // no free spins
-	var reels = g.GetReels(sp.MRTP)
 	var s = slot.NewStatGeneric(sn, 5)
 	s.BonDim(mjap)
 	s.JackDim(mjj)
@@ -105,5 +103,5 @@ func CalcStatReg(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 		return rtp, math.NaN()
 	}
 
-	return slot.ScanReelsCommon(ctx, sp, s, g, reels, calc)
+	return slot.ScanReelsCommon(ctx, sp, s, g, calc)
 }
