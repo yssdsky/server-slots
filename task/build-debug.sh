@@ -6,10 +6,14 @@ wd=$(realpath -s "$(dirname "$0")/..")
 mkdir -p "$GOPATH/bin/config" "$GOPATH/bin/sqlite"
 cp -ruv "$wd/appdata/"* "$GOPATH/bin/config"
 
-buildvers=$(git describe --tags)
+if [[ -z "${BUILDVERS:-}" ]]; then
+  BUILDVERS=$(git describe --tags)
+fi
 # See https://tc39.es/ecma262/#sec-date-time-string-format
 # time format acceptable for Date constructors.
-buildtime=$(date +'%FT%T.%3NZ')
+if [[ -z "${BUILDTIME:-}" ]]; then
+  BUILDTIME=$(date +'%FT%T.%3NZ')
+fi
 
 go env -w CGO_ENABLED=1
 if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
@@ -21,6 +25,6 @@ go build -o "$GOPATH/bin/${appname}" -v\
  -tags="jsoniter"\
  -buildvcs=false\
  -ldflags="-linkmode external -extldflags -static\
- -X 'github.com/slotopol/server/config.BuildVers=$buildvers'\
- -X 'github.com/slotopol/server/config.BuildTime=$buildtime'"\
+ -X 'github.com/slotopol/server/config.BuildVers=$BUILDVERS'\
+ -X 'github.com/slotopol/server/config.BuildTime=$BUILDTIME'"\
  $wd

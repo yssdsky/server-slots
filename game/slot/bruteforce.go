@@ -101,7 +101,7 @@ func BruteForcex(ctx context.Context, sp *ScanPar, s Simulator, g SlotGeneric) {
 						break
 					}
 				}
-				s.Simulate(gt, reels, &wins)
+				s.Simulate(gt, &wins, reels)
 				if iscascade && len(wins) > 0 {
 					for x := range rn {
 						rpos[x] = -1
@@ -144,7 +144,7 @@ func BruteForce5x3Big(ctx context.Context, sp *ScanPar, s Simulator, g SlotGener
 							continue
 						}
 						gt.SetCol(5, r5, i5)
-						s.Simulate(gt, nil, &wins)
+						s.Simulate(gt, &wins, nil)
 						wins.Reset()
 					}
 				}

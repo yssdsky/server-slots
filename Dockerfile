@@ -1,5 +1,5 @@
 # Typical usage:
-#   docker build --progress=plain --pull --rm -f "Dockerfile" -t schwarzlichtbezirk/slotopol:latest "."
+#   docker build --build-arg "BUILDVERS=$(git describe --tags)" --progress=plain --pull --rm -f "Dockerfile" -t schwarzlichtbezirk/slotopol:latest "."
 #   docker run -d -p 8080:8080 schwarzlichtbezirk/slotopol
 
 ##
@@ -7,7 +7,7 @@
 ##
 
 # Use image with golang last version as builder.
-FROM golang:1.25-bookworm AS build
+FROM golang:1.27-bookworm AS builder
 
 # Make project root folder as current dir.
 WORKDIR /go/src/github.com/slotopol/server
@@ -17,6 +17,9 @@ COPY go.mod go.sum ./
 RUN go mod download
 # Copy all files and subfolders in current state as is.
 COPY . .
+
+# Declare build version to be set at build time. Default value is "unknown" if not set.
+ARG BUILDVERS=unknown
 
 # Set executable rights to all shell-scripts.
 RUN chmod +x ./task/*.sh
@@ -31,7 +34,7 @@ RUN ./task/build-docker.sh
 FROM scratch
 
 # Copy compiled executable and configuration files to new image destination.
-COPY --from=build /go/bin /go/bin
+COPY --from=builder /go/bin /go/bin
 
 # Open REST listen port.
 EXPOSE 8080

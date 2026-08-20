@@ -15,6 +15,7 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	{
 		var g = NewGame()
 		g.FSR = 15 // set free spins mode
+		g.M = 1
 		var calc = func(w io.Writer) (float64, float64) {
 			return slot.Parsheet_simple(w, sp, sb, g.Cost())
 		}

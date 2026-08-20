@@ -22,7 +22,7 @@ type Simulator interface {
 	// normalized by spin cost.
 	NSQ(float64) (float64, float64, float64)
 	// Performs spin simulation, calculates results, update statistics.
-	Simulate(SlotGame, Reelx, *Wins)
+	Simulate(SlotGame, *Wins, Reelx)
 }
 
 type Counter interface {
@@ -333,7 +333,7 @@ func (s *StatGeneric) JackHits(jid int) float64 {
 }
 
 // Simulate performs spin simulation, calculates results, update statistics.
-func (s *StatGeneric) Simulate(g SlotGame, reels Reelx, wins *Wins) {
+func (s *StatGeneric) Simulate(g SlotGame, wins *Wins, reels Reelx) {
 	if g.Scanner(wins) != nil {
 		s.EC.Inc()
 		return
@@ -568,23 +568,23 @@ func (s *StatCascade) Ncascmax() int {
 }
 
 // Simulate performs spin simulation, calculates results, update statistics.
-func (s *StatCascade) Simulate(g SlotGame, reels Reelx, wins *Wins) {
-	var sc = g.(Cascade)
+func (s *StatCascade) Simulate(g SlotGame, wins *Wins, reels Reelx) {
+	var gc = g.(Cascade)
 	var err error
 	var pay float64
 	var cfn int
 	for cfn = range FallLimit {
-		sc.UntoFall()
+		gc.UntoFall()
 		var wp = len(*wins)
 		if err = g.Scanner(wins); err != nil {
 			break
 		}
 		pay += s.Casc[cfn].Update((*wins)[wp:])
-		sc.Strike((*wins)[wp:])
+		gc.Strike((*wins)[wp:])
 		if len(*wins) == wp {
 			break
 		}
-		sc.PushFall(reels)
+		gc.PushFall(reels)
 	}
 	if cfn >= FallLimit {
 		err = ErrAvalanche

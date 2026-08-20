@@ -29,7 +29,7 @@ func init() {
 	pf.StringVarP(&cfg.SqlPath, "sqlite", "q", "", "sqlite databases path (default same as config file path)")
 	pf.StringArrayVarP(&cfg.ObjPath, "fpath", "f", nil, "additional paths to yaml files or folders with game specific data (can be repeated)")
 	pf.BoolVarP(&cfg.Verbose, "verbose", "v", false, "print more verbose information to log")
-	rootCmd.SetVersionTemplate(fmt.Sprintf("version: %s, builton: %s", cfg.BuildVers, cfg.BuildTime))
+	rootCmd.SetVersionTemplate(fmt.Sprintf("version: %s, builton: %s\n", cfg.BuildVers, cfg.BuildTime))
 }
 
 // Execute executes the root command.

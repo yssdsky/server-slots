@@ -7,18 +7,26 @@ mkdir -p "$GOPATH/bin/config" "$GOPATH/bin/sqlite"
 cp -ruv "$wd/appdata/"* "$GOPATH/bin/config"
 
 # dockerfile has no access to git repository,
-# so update content of this variable by
-#   echo $(git describe --tags)
-buildvers="v0.12.0"
+# so set up BUILDVERS outside of dockerfile call.
+#   docker build --build-arg "BUILDVERS=$(git describe --tags)" -t schwarzlichtbezirk/slotopol:latest .
+if [[ -z "${BUILDVERS:-}" ]]; then
+  BUILDVERS=$(git describe --tags) # try to get build version from git if not set
+  if [[ -z "${BUILDVERS:-}" ]]; then
+    echo "Warning: BUILDVERS is not set and git describe failed. Use --build-arg 'BUILDVERS=$(git describe --tags)'"
+    BUILDVERS="unknown"
+  fi
+fi
 # See https://tc39.es/ecma262/#sec-date-time-string-format
 # time format acceptable for Date constructors.
-buildtime=$(date +'%FT%T.%3NZ')
+if [[ -z "${BUILDTIME:-}" ]]; then
+  BUILDTIME=$(date +'%FT%T.%3NZ')
+fi
 
 go env -w GOOS=linux GOARCH=amd64 CGO_ENABLED=1
 go build -o /go/bin/app -v\
  -tags="jsoniter prod full"\
  -buildvcs=false\
  -trimpath -ldflags="-w -s -linkmode external -extldflags -static\
- -X 'github.com/slotopol/server/config.BuildVers=$buildvers'\
- -X 'github.com/slotopol/server/config.BuildTime=$buildtime'"\
- ./
+ -X 'github.com/slotopol/server/config.BuildVers=$BUILDVERS'\
+ -X 'github.com/slotopol/server/config.BuildTime=$BUILDTIME'"\
+ $wd

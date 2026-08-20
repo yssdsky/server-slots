@@ -55,7 +55,7 @@ func BruteForce5x3es2(ctx context.Context, sp *slot.ScanPar, s slot.Simulator, g
 							continue
 						}
 						sg.SetCol(5, r5, i5)
-						s.Simulate(sg, reels, &wins)
+						s.Simulate(sg, &wins, reels)
 						wins.Reset()
 					}
 				}
@@ -106,7 +106,7 @@ func BruteForce5x3es3(ctx context.Context, sp *slot.ScanPar, s slot.Simulator, g
 						continue
 					}
 					sg.SetCol(5, r5, i5)
-					s.Simulate(sg, reels, &wins)
+					s.Simulate(sg, &wins, reels)
 					wins.Reset()
 				}
 			}

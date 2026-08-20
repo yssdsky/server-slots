@@ -6,16 +6,20 @@ wd=$(realpath -s "$(dirname "$0")/..")
 mkdir -p "$GOPATH/bin/config" "$GOPATH/bin/sqlite"
 cp -ruv "$wd/appdata/"* "$GOPATH/bin/config"
 
-buildvers=$(git describe --tags)
+if [[ -z "${BUILDVERS:-}" ]]; then
+  BUILDVERS=$(git describe --tags)
+fi
 # See https://tc39.es/ecma262/#sec-date-time-string-format
 # time format acceptable for Date constructors.
-buildtime=$(date +'%FT%T.%3NZ')
+if [[ -z "${BUILDTIME:-}" ]]; then
+  BUILDTIME=$(date +'%FT%T.%3NZ')
+fi
 
 go env -w GOOS=windows GOARCH=amd64 CGO_ENABLED=1
 go build -o "$GOPATH/bin/slot_win_x64_megajack.exe" -v\
  -tags="jsoniter prod megajack"\
  -buildvcs=false\
  -trimpath -ldflags="-w -s -linkmode external -extldflags -static\
- -X 'github.com/slotopol/server/config.BuildVers=$buildvers'\
- -X 'github.com/slotopol/server/config.BuildTime=$buildtime'"\
+ -X 'github.com/slotopol/server/config.BuildVers=$BUILDVERS'\
+ -X 'github.com/slotopol/server/config.BuildTime=$BUILDTIME'"\
  $wd
