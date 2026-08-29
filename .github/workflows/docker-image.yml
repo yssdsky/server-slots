@@ -15,6 +15,15 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0 # Fetch all history for git describe
+
+    - name: Get current version tag
+      id: get_version
+      run: |
+        VERSION=$(git describe --tags --always)
+        echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+        echo "Current version tag: $VERSION"
 
     - name: Log in to Docker Hub
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -40,3 +49,5 @@ jobs:
         push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
+        build-args: |
+          BUILDVERS=${{ steps.get_version.outputs.VERSION }}

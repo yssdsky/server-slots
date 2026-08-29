@@ -7,7 +7,7 @@ mkdir -p "$GOPATH/bin/config" "$GOPATH/bin/sqlite"
 cp -ruv "$wd/appdata/"* "$GOPATH/bin/config"
 
 if [[ -z "${BUILDVERS:-}" ]]; then
-  BUILDVERS=$(git describe --tags)
+  BUILDVERS=$(git describe --tags --always)
 fi
 # See https://tc39.es/ecma262/#sec-date-time-string-format
 # time format acceptable for Date constructors.

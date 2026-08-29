@@ -8,11 +8,11 @@ cp -ruv "$wd/appdata/"* "$GOPATH/bin/config"
 
 # dockerfile has no access to git repository,
 # so set up BUILDVERS outside of dockerfile call.
-#   docker build --build-arg "BUILDVERS=$(git describe --tags)" -t schwarzlichtbezirk/slotopol:latest .
+#   docker build --build-arg "BUILDVERS=$(git describe --tags --always)" -t schwarzlichtbezirk/slotopol:latest .
 if [[ -z "${BUILDVERS:-}" ]]; then
-  BUILDVERS=$(git describe --tags) # try to get build version from git if not set
+  BUILDVERS=$(git describe --tags --always) # try to get build version from git if not set
   if [[ -z "${BUILDVERS:-}" ]]; then
-    echo "Warning: BUILDVERS is not set and git describe failed. Use --build-arg 'BUILDVERS=$(git describe --tags)'"
+    echo "Warning: BUILDVERS is not set and git describe failed. Use --build-arg 'BUILDVERS=$(git describe --tags --always)'"
     BUILDVERS="unknown"
   fi
 fi

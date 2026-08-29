@@ -1,5 +1,5 @@
 # Typical usage:
-#   docker build --build-arg "BUILDVERS=$(git describe --tags)" --progress=plain --pull --rm -f "Dockerfile" -t schwarzlichtbezirk/slotopol:latest "."
+#   docker build --build-arg "BUILDVERS=$(git describe --tags --always)" --progress=plain --pull --rm -f "Dockerfile" -t schwarzlichtbezirk/slotopol:latest "."
 #   docker run -d -p 8080:8080 schwarzlichtbezirk/slotopol
 
 ##
