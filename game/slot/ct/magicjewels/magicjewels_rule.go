@@ -11,6 +11,8 @@ const (
 	wild = 1 // wild symbol IDs
 )
 
+var ReelsCas slot.Reelx
+
 var ReelsMap slot.ReelsMap[slot.Reelx]
 
 // Lined payment.
@@ -124,8 +126,12 @@ func (g *Game) ScanLined(wins *slot.Wins) {
 }
 
 func (g *Game) GetReels(mrtp float64) slot.Reelx {
-	var reels, _ = ReelsMap.FindClosest(mrtp)
-	return reels
+	if g.CFN == 0 {
+		var reels, _ = ReelsMap.FindClosest(mrtp)
+		return reels
+	} else {
+		return ReelsCas
+	}
 }
 
 func (g *Game) Spin(mrtp float64) {

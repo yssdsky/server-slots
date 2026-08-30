@@ -18,7 +18,7 @@ const listLong = ``
 const listExmp = `Get the list of all available games:
   %[1]s list
 Get the list of slots with cascade falls:
-  %[1]s list -i casc
+  %[1]s list -i cas
 Get the list of 'NetExt' and 'BetSoft' games:
   %[1]s list -i netent -i betsoft
 Get the list of Megajack games and any games with 3 reels:
@@ -43,11 +43,11 @@ var (
 func FormatGameInfo(gi *game.GameInfo) string {
 	var b strings.Builder
 	if gi.SN > 0 {
-		if gi.GP&(game.GPcpay+game.GPcasc) == game.GPcpay+game.GPcasc {
+		if gi.GP&(game.GPcpay+game.GPcas) == game.GPcpay+game.GPcas {
 			fmt.Fprintf(&b, "'%s' %s %dx%d cluster cascade videoslot", gi.Name, gi.Prov, gi.SX, gi.SY)
 		} else if gi.GP&game.GPcpay > 0 {
 			fmt.Fprintf(&b, "'%s' %s %dx%d cluster videoslot", gi.Name, gi.Prov, gi.SX, gi.SY)
-		} else if gi.GP&game.GPcasc > 0 {
+		} else if gi.GP&game.GPcas > 0 {
 			fmt.Fprintf(&b, "'%s' %s %dx%d cascade videoslot", gi.Name, gi.Prov, gi.SX, gi.SY)
 		} else {
 			fmt.Fprintf(&b, "'%s' %s %dx%d videoslot", gi.Name, gi.Prov, gi.SX, gi.SY)
@@ -296,7 +296,7 @@ fill - has multiplier on filled slot grid
 mix - has pays by combinations with mixed symbols (non-wilds)
 bm - slots with non-reels bonus mode
 um - slots with mode depended on the user's choice
-casc - slots with cascade falls
+cas - slots with cascade falls
 cf - features on cascade avalanche levels
 fg - slots with any free games
 fgo - slots with non-retriggered free games

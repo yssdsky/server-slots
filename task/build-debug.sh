@@ -17,11 +17,11 @@ fi
 
 go env -w CGO_ENABLED=1
 if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
-  appname="slot_debug.exe"
+  appext=".exe"
 else
-  appname="slot_debug"
+  appext=""
 fi
-go build -o "$GOPATH/bin/${appname}" -v\
+go build -o "${GOPATH}/bin/slot_debug${appext}" -v\
  -tags="jsoniter"\
  -buildvcs=false\
  -ldflags="-linkmode external -extldflags -static\

@@ -22,7 +22,7 @@ type Simulator interface {
 	// normalized by spin cost.
 	NSQ(float64) (float64, float64, float64)
 	// Performs spin simulation, calculates results, update statistics.
-	Simulate(SlotGame, *Wins, Reelx)
+	Simulate(SlotGame, *Wins, float64)
 }
 
 type Counter interface {
@@ -333,7 +333,7 @@ func (s *StatGeneric) JackHits(jid int) float64 {
 }
 
 // Simulate performs spin simulation, calculates results, update statistics.
-func (s *StatGeneric) Simulate(g SlotGame, wins *Wins, reels Reelx) {
+func (s *StatGeneric) Simulate(g SlotGame, wins *Wins, mrtp float64) {
 	if g.Scanner(wins) != nil {
 		s.EC.Inc()
 		return
@@ -568,7 +568,7 @@ func (s *StatCascade) Ncascmax() int {
 }
 
 // Simulate performs spin simulation, calculates results, update statistics.
-func (s *StatCascade) Simulate(g SlotGame, wins *Wins, reels Reelx) {
+func (s *StatCascade) Simulate(g SlotGame, wins *Wins, mrtp float64) {
 	var gc = g.(Cascade)
 	var err error
 	var pay float64
@@ -584,6 +584,7 @@ func (s *StatCascade) Simulate(g SlotGame, wins *Wins, reels Reelx) {
 		if len(*wins) == wp {
 			break
 		}
+		var reels = g.GetReels(mrtp)
 		gc.PushFall(reels)
 	}
 	if cfn >= FallLimit {

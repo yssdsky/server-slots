@@ -1,5 +1,5 @@
 #!/bin/bash -u
-# This script compiles project with Megajack games only for Windows amd64.
+# This script compiles project with Megajack games only.
 # It produces static C-libraries linkage.
 
 wd=$(realpath -s "$(dirname "$0")/..")
@@ -15,8 +15,18 @@ if [[ -z "${BUILDTIME:-}" ]]; then
   BUILDTIME=$(date +'%FT%T.%3NZ')
 fi
 
-go env -w GOOS=windows GOARCH=amd64 CGO_ENABLED=1
-go build -o "$GOPATH/bin/slot_win_x64_megajack.exe" -v\
+goos=$(go env GOOS)
+goarch=$(go env GOARCH)
+if [[ "$goarch" == "amd64" ]]; then
+  goarch="x64"
+fi
+if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
+  appext=".exe"
+else
+  appext=""
+fi
+go env -w CGO_ENABLED=1
+go build -o "${GOPATH}/bin/slot_${goos}_${goarch}_megajack${appext}" -v\
  -tags="jsoniter prod megajack"\
  -buildvcs=false\
  -trimpath -ldflags="-w -s -linkmode external -extldflags -static\

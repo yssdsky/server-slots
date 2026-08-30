@@ -51,7 +51,7 @@ const (
 
 	GPbmode // has non-reels bonus mode
 	GPpick  // has game mode depending on the user's choice
-	GPcasc  // cascade falls present
+	GPcas  // cascade falls present
 	GPcfeat // has features on cascade avalanche levels (like multipliers, freespins, etc.)
 
 	GPfgonce // non-retriggered free games are present
@@ -92,8 +92,9 @@ const ( // print flags for slots
 	PF_vi     // volatility index
 	PF_ci     // convergence index
 	PF_spread // RTP spread
-	PF_casc   // cascade metrics
+	PF_cm     // cascade metrics
 	PF_sym    // symbols contribution to payouts
+	PF_cas   // cascades contribution to payouts
 	PF_raw    // simulator raw data
 )
 
@@ -234,12 +235,16 @@ func (sp *ScanPar) IsSpread() bool {
 	return sp.PF&PF_spread != 0
 }
 
-func (sp *ScanPar) IsCasc() bool {
-	return sp.PF&PF_casc != 0
+func (sp *ScanPar) IsCM() bool {
+	return sp.PF&PF_cm != 0
 }
 
 func (sp *ScanPar) IsSym() bool {
 	return sp.PF&PF_sym != 0
+}
+
+func (sp *ScanPar) IsCasc() bool {
+	return sp.PF&PF_cas != 0
 }
 
 func (sp *ScanPar) IsRaw() bool {

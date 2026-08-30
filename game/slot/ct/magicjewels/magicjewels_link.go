@@ -18,7 +18,7 @@ var Info = game.AlgInfo{
 	AlgDescr: game.AlgDescr{
 		GT: game.GTslot,
 		GP: game.GPlpay |
-			game.GPcasc |
+			game.GPcas |
 			game.GPcfeat |
 			game.GPfgseq |
 			game.GPfgmult |
@@ -34,6 +34,7 @@ var Info = game.AlgInfo{
 
 func init() {
 	Info.SetupFactory(func(sel int) game.Gamble { return NewGame() }, CalcStat)
+	game.DataRouter["ctinteractive/magicjewels/cas"] = &ReelsCas
 	game.DataRouter["ctinteractive/magicjewels/rmap"] = &ReelsMap
 	game.LoadMap = append(game.LoadMap, data)
 }

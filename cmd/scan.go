@@ -48,7 +48,7 @@ func SetupParSheet(pf *pflag.FlagSet, sp *game.ScanPar, gi *game.GameInfo) (err 
 		} else if sel > gi.LNum {
 			return fmt.Errorf("number of selected bet lines is greater than maximum number %d in game %s", gi.LNum, gi.ID())
 		}
-		if sel != gi.LNum && (gi.GP&game.GPcasc != 0) {
+		if sel != gi.LNum && (gi.GP&game.GPcas != 0) {
 			return fmt.Errorf("can not change number of selected lines %d on cascade slot %s", gi.LNum, gi.ID())
 		}
 		sp.Sel = sel
@@ -79,8 +79,9 @@ func SetupParSheet(pf *pflag.FlagSet, sp *game.ScanPar, gi *game.GameInfo) (err 
 		"vi":     game.PF_vi,
 		"ci":     game.PF_ci,
 		"spread": game.PF_spread,
-		"casc":   game.PF_casc,
+		"cm":     game.PF_cm,
 		"sym":    game.PF_sym,
+		"cas":    game.PF_cas,
 		"raw":    game.PF_raw,
 		"full":   0xffff &^ game.PF_raw,
 	}
@@ -187,8 +188,9 @@ func init() {
 	pf.Bool("vi", true, "print volatility index")
 	pf.Bool("ci", true, "print index of convergence")
 	pf.Bool("spread", false, "print RTP spread")
-	pf.Bool("casc", false, "print cascade metrics")
+	pf.Bool("cm", false, "print cascade metrics")
 	pf.Bool("sym", false, "print symbols contribution to payouts")
+	pf.Bool("cas", false, "print cascades contribution to payouts")
 	pf.Bool("raw", false, "simulator raw data")
 	pf.Bool("full", false, "print full parsheet (switch on all print-flags except raw data)")
 

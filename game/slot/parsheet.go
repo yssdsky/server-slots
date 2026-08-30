@@ -112,7 +112,7 @@ func Print_symbols_cascade(w io.Writer, sp *ScanPar, s *StatCascade, rtp float64
 }
 
 func Print_contribution_falls(w io.Writer, sp *ScanPar, s *StatCascade, rtp float64) {
-	if !sp.IsSym() {
+	if !sp.IsCasc() {
 		return
 	}
 	fmt.Fprintln(w)
@@ -143,7 +143,7 @@ func Print_raw(w io.Writer, sp *ScanPar, s Simulator) {
 }
 
 func Print_cascmetrics(w io.Writer, sp *ScanPar, s *StatCascade) {
-	if !sp.IsCasc() {
+	if !sp.IsCM() {
 		return
 	}
 	fmt.Fprintln(w)

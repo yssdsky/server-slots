@@ -197,13 +197,13 @@ func CascadeGain(game SlotGeneric, wins Wins, fund, mrtp float64) (sumgain float
 	if _, ok := game.(SlotCascade); !ok {
 		return
 	}
-	var casc = game.Clone().(SlotCascade)
-	casc.Strike(wins)
+	var cas = game.Clone().(SlotCascade)
+	cas.Strike(wins)
 	var cw Wins
 	for range FallLimit {
-		casc.UntoFall()
-		casc.SpinReels(casc.GetReels(mrtp))
-		if err = casc.Scanner(&cw); err != nil {
+		cas.UntoFall()
+		cas.SpinReels(cas.GetReels(mrtp))
+		if err = cas.Scanner(&cw); err != nil {
 			return
 		}
 		if len(cw) == 0 {
@@ -211,7 +211,7 @@ func CascadeGain(game SlotGeneric, wins Wins, fund, mrtp float64) (sumgain float
 		}
 		game.Spawn(cw, fund, mrtp)
 		sumgain += cw.Gain()
-		casc.Strike(cw)
+		cas.Strike(cw)
 		cw.Reset()
 	}
 	err = ErrAvalanche
