@@ -169,7 +169,10 @@ var listCmd = &cobra.Command{
 
 		// Load yaml-files
 		if fRTP || fMrtp > 0 || fDiff > 0 {
-			LoadInternalYaml(exitctx)
+			if _, err = LoadInternalYaml(exitctx); err != nil {
+				log.Fatalf("can not load internal yaml files: %s", err.Error())
+				return
+			}
 			if err = LoadExternalYaml(exitctx); err != nil {
 				log.Fatalf("can not load external yaml files: %s", err.Error())
 				return

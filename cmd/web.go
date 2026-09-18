@@ -43,7 +43,10 @@ var webCmd = &cobra.Command{
 		var exitctx = Startup()
 
 		// Load yaml-files
-		LoadInternalYaml(exitctx)
+		if _, err = LoadInternalYaml(exitctx); err != nil {
+			log.Fatalf("can not load internal yaml files: %s", err.Error())
+			return
+		}
 		if err = LoadExternalYaml(exitctx); err != nil {
 			log.Fatalf("can not load external yaml files: %s", err.Error())
 			return

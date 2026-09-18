@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/fs"
 	"log"
 	"os"
 	"os/signal"
@@ -70,67 +69,62 @@ func Startup() (exitctx context.Context) {
 	return
 }
 
+// ctxReader makes check up of context cancellation before each read operation.
+type ctxReader struct {
+	ctx context.Context
+	r   io.Reader
+}
+
+func (cr ctxReader) Read(p []byte) (int, error) {
+	if err := cr.ctx.Err(); err != nil {
+		return 0, err // returns context error (Canceled / DeadlineExceeded)
+	}
+	return cr.r.Read(p)
+}
+
 // Load data from embed yaml chunks.
-func LoadInternalYaml(ctx context.Context) {
+func LoadInternalYaml(ctx context.Context) (count int, err error) {
 	var t0 = time.Now()
-	var size int
+	var n, size int
 	for _, b := range game.LoadMap {
-		if ctx.Err() != nil {
+		var cr = ctxReader{ctx: ctx, r: bytes.NewReader(b)}
+		if n, err = game.ReadChain(cr); err != nil {
 			return
 		}
-		game.MustReadChain(bytes.NewReader(b))
 		size += len(b)
+		count += n
 	}
 	var d = time.Since(t0)
 	if cfg.Verbose >= cfg.V_INFO {
 		log.Printf("loaded %d embedded yaml files in %s on %d bytes\n", len(game.LoadMap), d.String(), size)
 	}
+	return
 }
 
-func LoadYamlFromFile(fullpath string) (err error) {
-	if ext := util.ToLower(filepath.Ext(fullpath)); ext != ".yaml" && ext != ".yml" {
+func LoadYamlFromFile(ctx context.Context, fpath string) (err error) {
+	if ext := util.ToLower(filepath.Ext(fpath)); ext != ".yaml" && ext != ".yml" {
 		return nil
 	}
 	var r io.ReadCloser
-	if r, err = os.Open(fullpath); err != nil {
+	if r, err = os.Open(fpath); err != nil {
 		return err
 	}
 	defer r.Close()
+	var cr = ctxReader{ctx: ctx, r: r}
 	var count int
-	if count, err = game.ReadChain(r); err != nil {
-		return fmt.Errorf("can not read data from %s: %w", fullpath, err)
+	if count, err = game.ReadChain(cr); err != nil {
+		return fmt.Errorf("can not read data from %s: %w", fpath, err)
 	}
 	if cfg.Verbose >= cfg.V_PATH {
-		log.Printf("loaded %d objects from: %s\n", count, fullpath)
+		log.Printf("loaded %d objects from: %s\n", count, fpath)
 	}
 	return nil
 }
 
 // Load data from extermal yaml files.
 func LoadExternalYaml(ctx context.Context) (err error) {
-	for _, root := range FinalPaths {
-		var isdir bool
-		if isdir, err = cfg.DirExists(root); err != nil {
-			return
-		}
-		if isdir {
-			err = fs.WalkDir(os.DirFS(root), ".", func(fpath string, d fs.DirEntry, err error) error {
-				if err != nil {
-					return err
-				}
-				if err = ctx.Err(); err != nil {
-					return err
-				}
-				if d.IsDir() {
-					return nil
-				}
-				var fullpath = filepath.Join(root, fpath)
-				return LoadYamlFromFile(fullpath)
-			})
-		} else {
-			err = LoadYamlFromFile(root)
-		}
-		if err != nil {
+	for _, fpath := range FinalPaths {
+		if err = LoadYamlFromFile(ctx, fpath); err != nil {
 			return
 		}
 	}

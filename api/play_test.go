@@ -97,7 +97,10 @@ func TestPlay(t *testing.T) {
 	var exitctx = context.Background()
 
 	// Load yaml-files
-	cmd.LoadInternalYaml(exitctx)
+	if _, err := cmd.LoadInternalYaml(exitctx); err != nil {
+		t.Fatalf("can not load internal yaml files: %s", err.Error())
+		return
+	}
 	cmd.UpdateAlgList()
 	cmd.CheckAlgList()
 
