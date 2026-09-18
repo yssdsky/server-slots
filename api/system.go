@@ -12,6 +12,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/klauspost/cpuid/v2"
+	"github.com/mattn/go-isatty"
 	"github.com/schwarzlichtbezirk/go-disk-usage/du"
 )
 
@@ -24,6 +25,16 @@ func isRunningInContainer() bool {
 		return false // File does not exist, not running in Docker or an error occurred
 	}
 	return true // File exists, likely running in Docker
+}
+
+func terminalName() string {
+	if isatty.IsTerminal(os.Stdout.Fd()) {
+		return "tty"
+	}
+	if isatty.IsCygwinTerminal(os.Stdout.Fd()) {
+		return "cygwin"
+	}
+	return "unknown"
 }
 
 // save server start time
@@ -50,6 +61,7 @@ func ApiServInfo(c *gin.Context) {
 			"os":       runtime.GOOS,
 			"arch":     runtime.GOARCH,
 			"indocker": isRunningInContainer(),
+			"terminal": terminalName(),
 			"maxprocs": runtime.GOMAXPROCS(0),
 			// CPU
 			"cpubrand": cpuid.CPU.BrandName,

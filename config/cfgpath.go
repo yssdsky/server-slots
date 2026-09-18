@@ -12,9 +12,18 @@ import (
 	"xorm.io/xorm"
 )
 
+const ( // Verbose flags
+	V_NONE  = iota
+	V_INFO  // Prints more verbose information to log.
+	V_DEBUG // Prints debug information to log.
+	V_PATH  // Prints paths to yaml files to log.
+)
+
 var (
 	// Prints more verbose information to log.
-	Verbose bool
+	Verbose int
+	// Silent mode, turn off all log output.
+	Silent bool
 	// AppName is name of this application without extension.
 	AppName = util.PathName(os.Args[0])
 	// Executable path.
@@ -41,7 +50,7 @@ var (
 func InitConfig() {
 	var err error
 
-	if Verbose {
+	if Verbose >= V_INFO {
 		log.Printf("version: %s, builton: %s\n", BuildVers, BuildTime)
 	}
 
@@ -96,7 +105,7 @@ func InitConfig() {
 		cobra.CheckErr(viper.Unmarshal(&Cfg))
 		CfgFile = viper.ConfigFileUsed()
 		CfgPath = filepath.Dir(CfgFile)
-		if Verbose {
+		if Verbose >= V_INFO {
 			log.Printf("config path: %s\n", CfgPath)
 		}
 	}
@@ -105,7 +114,7 @@ func InitConfig() {
 	if SqlPath == "" {
 		SqlPath = LookupInLocations("SLOTOPOL_SQLPATH", "sqlite", "slot-club.sqlite")
 	}
-	if Verbose {
+	if Verbose >= V_INFO {
 		log.Printf("sqlite path: %s\n", SqlPath)
 	}
 }

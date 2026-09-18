@@ -82,7 +82,7 @@ func LoadInternalYaml(ctx context.Context) {
 		size += len(b)
 	}
 	var d = time.Since(t0)
-	if cfg.Verbose {
+	if cfg.Verbose >= cfg.V_INFO {
 		log.Printf("loaded %d embedded yaml files in %s on %d bytes\n", len(game.LoadMap), d.String(), size)
 	}
 }
@@ -96,39 +96,40 @@ func LoadYamlFromFile(fullpath string) (err error) {
 		return err
 	}
 	defer r.Close()
-	if err = game.ReadChain(r); err != nil {
+	var count int
+	if count, err = game.ReadChain(r); err != nil {
 		return fmt.Errorf("can not read data from %s: %w", fullpath, err)
 	}
-	if cfg.Verbose {
-		log.Printf("loaded data from: %s\n", fullpath)
+	if cfg.Verbose >= cfg.V_PATH {
+		log.Printf("loaded %d objects from: %s\n", count, fullpath)
 	}
 	return nil
 }
 
 // Load data from extermal yaml files.
 func LoadExternalYaml(ctx context.Context) (err error) {
-	for _, root := range cfg.ObjPath {
-		root, _ = util.ExpandHomePath(root)
+	for _, root := range FinalPaths {
 		var isdir bool
 		if isdir, err = cfg.DirExists(root); err != nil {
 			return
 		}
-		if !isdir {
-			return LoadYamlFromFile(root)
+		if isdir {
+			err = fs.WalkDir(os.DirFS(root), ".", func(fpath string, d fs.DirEntry, err error) error {
+				if err != nil {
+					return err
+				}
+				if err = ctx.Err(); err != nil {
+					return err
+				}
+				if d.IsDir() {
+					return nil
+				}
+				var fullpath = filepath.Join(root, fpath)
+				return LoadYamlFromFile(fullpath)
+			})
+		} else {
+			err = LoadYamlFromFile(root)
 		}
-		err = fs.WalkDir(os.DirFS(root), ".", func(fpath string, d fs.DirEntry, err error) error {
-			if err != nil {
-				return err
-			}
-			if err = ctx.Err(); err != nil {
-				return err
-			}
-			if d.IsDir() {
-				return nil
-			}
-			var fullpath = filepath.Join(root, fpath)
-			return LoadYamlFromFile(fullpath)
-		})
 		if err != nil {
 			return
 		}
@@ -140,6 +141,13 @@ func UpdateAlgList() {
 	for _, ai := range game.AlgList {
 		if ai.Update != nil {
 			ai.Update(ai)
+		}
+	}
+	if cfg.Verbose >= cfg.V_INFO {
+		if len(game.DataLoaded) == len(game.DataRouter) {
+			log.Printf("all %d objects loaded\n", len(game.DataLoaded))
+		} else {
+			log.Printf("loaded %d objects of %d registered\n", len(game.DataLoaded), len(game.DataRouter))
 		}
 	}
 }

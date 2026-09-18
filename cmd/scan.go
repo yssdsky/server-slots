@@ -171,30 +171,30 @@ var scanCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(scanCmd)
 
-	var pf = scanCmd.Flags()
-	pf.Bool("noembed", false, "do not load embedded yaml files, useful for development")
-	pf.StringP("game", "g", "", "identifier of game to scan")
+	var f = scanCmd.Flags()
+	f.Bool("noembed", false, "do not load embedded yaml files, useful for development")
+	f.StringP("game", "g", "", "identifier of game to scan")
 	// ParSheet
-	pf.Int("mt", 0, "multithreaded scanning threads number")
-	pf.Float64P("rtp", "r", cfg.DefMRTP, "master RTP of game")
-	pf.IntP("sel", "l", 0, "number of selected bet lines, 0 for all")
-	pf.Float64("conf", 95, "confidence probability, in percents")
-	pf.Uint64P("total", "n", 10, "Monte Carlo method iterations number, in millions")
-	pf.Float64P("prec", "p", 0.1, "precision of result for Monte Carlo method, in percents")
+	f.Int("mt", 0, "multithreaded scanning threads number")
+	f.Float64P("rtp", "r", cfg.DefMRTP, "master RTP of game")
+	f.IntP("sel", "l", 0, "number of selected bet lines, 0 for all")
+	f.Float64("conf", 95, "confidence probability, in percents")
+	f.Uint64P("total", "n", 10, "Monte Carlo method iterations number, in millions")
+	f.Float64P("prec", "p", 0.1, "precision of result for Monte Carlo method, in percents")
 	// print flags
-	pf.Bool("main", true, "print RTP, sigma and other main information")
-	pf.Bool("jack", true, "print info about progressive jackpots")
-	pf.Bool("fg", true, "print info for bonus reels")
-	pf.Bool("vi", true, "print volatility index")
-	pf.Bool("ci", true, "print index of convergence")
-	pf.Bool("spread", false, "print RTP spread")
-	pf.Bool("cm", false, "print cascade metrics")
-	pf.Bool("sym", false, "print symbols contribution to payouts")
-	pf.Bool("cas", false, "print cascades contribution to payouts")
-	pf.Bool("raw", false, "simulator raw data")
-	pf.Bool("full", false, "print full parsheet (switch on all print-flags except raw data)")
+	f.Bool("main", true, "print RTP, sigma and other main information")
+	f.Bool("jack", true, "print info about progressive jackpots")
+	f.Bool("fg", true, "print info for bonus reels")
+	f.Bool("vi", true, "print volatility index")
+	f.Bool("ci", true, "print index of convergence")
+	f.Bool("spread", false, "print RTP spread")
+	f.Bool("cm", false, "print cascade metrics")
+	f.Bool("sym", false, "print symbols contribution to payouts")
+	f.Bool("cas", false, "print cascades contribution to payouts")
+	f.Bool("raw", false, "simulator raw data")
+	f.Bool("full", false, "print full parsheet (switch on all print-flags except raw data)")
 
-	pf.SortFlags = false
+	f.SortFlags = false
 
 	scanCmd.MarkFlagRequired("game")
 }

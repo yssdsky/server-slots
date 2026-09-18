@@ -124,6 +124,6 @@ var webCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(webCmd)
 
-	var pf = webCmd.Flags()
-	pf.Bool("debug", false, "run gin-gonic in debug mode")
+	var f = webCmd.Flags()
+	f.Bool("debug", false, "run gin-gonic in debug mode")
 }

@@ -3,11 +3,13 @@ module github.com/slotopol/server
 go 1.25.0
 
 require (
+	github.com/bmatcuk/doublestar/v4 v4.10.0
 	github.com/gin-gonic/gin v1.10.1
 	github.com/go-sql-driver/mysql v1.10.0
 	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/klauspost/cpuid/v2 v2.4.0
 	github.com/lib/pq v1.12.3
+	github.com/mattn/go-isatty v0.0.24
 	github.com/mattn/go-sqlite3 v1.14.50
 	github.com/schwarzlichtbezirk/go-disk-usage v1.3.0
 	github.com/spf13/cobra v1.10.2
@@ -37,7 +39,6 @@ require (
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/leodido/go-urn v1.5.0 // indirect
-	github.com/mattn/go-isatty v0.0.24 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pelletier/go-toml/v2 v2.4.3 // indirect

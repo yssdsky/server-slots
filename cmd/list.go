@@ -324,18 +324,18 @@ all - all games`
 func init() {
 	rootCmd.AddCommand(listCmd)
 
-	var pf = listCmd.Flags()
-	pf.BoolP("name", "n", true, "list of provided games names")
-	pf.BoolP("stat", "s", true, "summary statistics of provided games")
+	var f = listCmd.Flags()
+	f.BoolP("name", "n", true, "list of provided games names")
+	f.BoolP("stat", "s", true, "summary statistics of provided games")
 
-	pf.BoolVar(&fSort, "sort", false, "sort by provider, else sort by names")
-	pf.BoolVar(&fProp, "prop", false, "print properties for each game")
-	pf.Float64Var(&fMrtp, "mrtp", 0, "RTP (Return to Player) of reels closest to given master RTP")
-	pf.Float64Var(&fDiff, "diff", 0, "difference between master RTP and closest to it real reels RTP")
-	pf.BoolVarP(&fRTP, "rtp", "r", false, "RTP (Return to Player) percents list of available reels for each game")
+	f.BoolVar(&fSort, "sort", false, "sort by provider, else sort by names")
+	f.BoolVar(&fProp, "prop", false, "print properties for each game")
+	f.Float64Var(&fMrtp, "mrtp", 0, "RTP (Return to Player) of reels closest to given master RTP")
+	f.Float64Var(&fDiff, "diff", 0, "difference between master RTP and closest to it real reels RTP")
+	f.BoolVarP(&fRTP, "rtp", "r", false, "RTP (Return to Player) percents list of available reels for each game")
 
-	pf.StringSliceVarP(&inclist, "include", "i", []string{"all"}, filtdescr)
-	pf.StringSliceVarP(&exclist, "exclude", "e", nil, "filter(s) to exclude games, filters are same as for include option")
+	f.StringSliceVarP(&inclist, "include", "i", []string{"all"}, filtdescr)
+	f.StringSliceVarP(&exclist, "exclude", "e", nil, "filter(s) to exclude games, filters are same as for include option")
 
-	pf.SortFlags = false
+	f.SortFlags = false
 }

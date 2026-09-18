@@ -10,6 +10,7 @@ import (
 )
 
 var DataRouter = map[string]any{} // object router for data loading
+var DataLoaded = map[string]any{} // storage for loaded data
 
 var LoadMap = [][]byte{} // storage for loaded data
 
@@ -23,7 +24,7 @@ var (
 // Each object is identified by a string id, followed by its YAML representation.
 // The objects are looked up in the DataRouter map.
 // If an object implements the Clearer interface, its Clear method is called before decoding.
-func ReadChain(r io.Reader) (err error) {
+func ReadChain(r io.Reader) (count int, err error) {
 	type Clearer interface {
 		Clear()
 	}
@@ -49,14 +50,18 @@ func ReadChain(r io.Reader) (err error) {
 		if err = dec.Decode(obj); err != nil {
 			return
 		}
+		DataLoaded[id] = obj
+		count++
 	}
 }
 
 // MustReadChain is like ReadChain but panics if an error occurs.
-func MustReadChain(r io.Reader) {
-	if err := ReadChain(r); err != nil {
+func MustReadChain(r io.Reader) (count int) {
+	var err error
+	if count, err = ReadChain(r); err != nil {
 		panic(err)
 	}
+	return
 }
 
 func FindClosest[T any](m map[float64]T, ref float64) (val T, key float64) {
