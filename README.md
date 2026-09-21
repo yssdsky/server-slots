@@ -16,11 +16,11 @@ Slots games server. Releases functionality a wide variety of games from differen
 Server provides HTTP-based API for popular slots and have well-optimized performance for thousands requests per second. Can be deployed on dedicated server or as portable application for Linux or Windows.
 
 ```text
-total: 350 games, 177 algorithms, 11 providers
+total: 351 games, 178 algorithms, 11 providers
 AGT: 65 games
 Aristocrat: 6 games
 BetSoft: 3 games
-CT Interactive: 146 games
+CT Interactive: 147 games
 IGT: 5 games
 Megajack: 4 games
 NetEnt: 22 games
@@ -32,6 +32,7 @@ Slotopol: 2 games
 
 *Last added games*:
 
+* '[Magic Jewels](https://www.livebet2.com/casino/slots/ct-interactive/magic-jewels)' CT Interactive 5x3 cascade videoslot
 * '[Satyr and Nymph Dice](https://www.livebet.com/casino/slots/ct-interactive/satyr-and-nymph-dice)' CT Interactive 5x3 videoslot
 * '[Goblin's Gold](https://www.livebet.com/casino/slots/ct-interactive/goblin-s-gold)' CT Interactive 5x3 videoslot
 * '[Columbus Treasure](https://www.livebet2.com/casino/slots/ct-interactive/columbus-treasure)' CT Interactive 5x3 videoslot
@@ -42,23 +43,6 @@ Slotopol: 2 games
 * '[Win Feast](https://www.livebet.com/casino/slots/ct-interactive/win-feast)' CT Interactive 5x3 cascade videoslot
 * '[100 Burning Brilliants](https://www.slotsmate.com/software/ct-interactive/100-burning-brilliants)' CT Interactive 5x4 cascade videoslot
 * '[Cave of Clovers](https://www.slotsmate.com/software/ct-interactive/cave-of-clovers)' CT Interactive 5x4 videoslot
-* '[Hyper Cuber](https://www.livebet2.com/casino/slots/ct-interactive/hyper-cuber)' CT Interactive 5x3 cluster cascade videoslot
-* '[Ice Fruits 6 reels](https://agtsoftware.com/games/agt/6megaice)' AGT 6x3 videoslot
-* '[Tibetan Song](https://www.livebet2.com/casino/slots/ct-interactive/tibetan-song)' CT Interactive 5x3 videoslot
-* '[Black Pharaoh](https://www.livebet2.com/casino/slots/ct-interactive/black-pharaoh)' CT Interactive 5x3 videoslot
-* '[Christmas Storm](https://www.livebet2.com/casino/slots/ct-interactive/christmas-storm)' CT Interactive 5x3 cascade videoslot
-* '[Beetle Star](https://www.livebet2.com/casino/slots/ct-interactive/beetle-star)' CT Interactive 5x3 videoslot
-* '[Amazons Spear](https://www.livebet2.com/casino/slots/ct-interactive/amazons-spear)' CT Interactive 5x3 videoslot
-* '[50 Treasures](https://www.livebet2.com/casino/slots/ct-interactive/50-treasures)' CT Interactive 5x4 videoslot
-* '[20 Fruitata Wins](https://www.livebet2.com/casino/slots/ct-interactive/20-fruitata-wins)' CT Interactive 5x3 videoslot
-* '[20 Star Party](https://www.livebet2.com/casino/slots/ct-interactive/20-star-party)' CT Interactive 5x3 videoslot
-* '[30 Fruitata Wins](https://www.livebet2.com/casino/slots/ct-interactive/30-fruitata-wins)' CT Interactive 5x3 cascade videoslot
-* '[40 Hell's Cherries](https://www.livebet2.com/casino/slots/ct-interactive/40-hell-s-cherries)' CT Interactive 5x4 videoslot
-* '[40 Dice Treasures](https://www.livebet2.com/casino/slots/ct-interactive/40-dice-treasures)' CT Interactive 5x4 videoslot
-* '[40 Shining Coins](https://www.livebet2.com/casino/slots/ct-interactive/40-shining-coins)' CT Interactive 5x4 videoslot
-* '[40 Shining jewels](https://www.livebet2.com/casino/slots/ct-interactive/40-shining-jewels)' CT Interactive 5x4 videoslot
-* '[Celestial Ruler](https://www.livebet2.com/casino/slots/ct-interactive/celestial-ruler)' CT Interactive 5x3 videoslot
-* '[Banana Party](https://www.livebet2.com/casino/slots/ct-interactive/banana-party)' CT Interactive 5x3 videoslot
 
 *Games with most interesting algorithms released on server*:
 

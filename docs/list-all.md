@@ -233,6 +233,7 @@
 'Lucky Lady's Charm' Novomatic 5x3 videoslot
 'Lucky Lady's Charm Deluxe' Novomatic 5x3 videoslot
 'Lucky Slot' AGT 5x3 videoslot
+'Magic Jewels' CT Interactive 5x3 cascade videoslot
 'Magician Dreaming' CT Interactive 5x3 videoslot
 'Marco Polo' Novomatic 5x3 videoslot
 'Mega Joker' Novomatic 5x4 videoslot
@@ -353,11 +354,11 @@
 'Wonder 7's' CT Interactive 5x3 videoslot
 'Zeus' AGT 4x4 videoslot
 
-total: 350 games, 177 algorithms, 11 providers
+total: 351 games, 178 algorithms, 11 providers
 AGT: 65 games
 Aristocrat: 6 games
 BetSoft: 3 games
-CT Interactive: 146 games
+CT Interactive: 147 games
 IGT: 5 games
 Megajack: 4 games
 NetEnt: 22 games

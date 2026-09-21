@@ -31,5 +31,5 @@ go.work.sum
 .vscode/
 
 # Temporary development files
-reeldev.yaml
+reeldev*.yaml
 TODO

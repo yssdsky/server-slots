@@ -452,11 +452,12 @@ func (s *StatCascade) SumJH(jid int) (sum uint64) {
 	return
 }
 
-// CascNum returns number of cascades with at least n hits.
+// CascNum returns number of reshuffles with given cascade number
+// with avalanche end on this number.
 func (s *StatCascade) CascNum(n int) (sum uint64) {
 	sum = s.Casc[n].N.Load()
-	for i := n + 1; i < FallLimit; i++ {
-		sum -= s.Casc[i].N.Load()
+	if n < len(s.Casc)-1 {
+		sum -= s.Casc[n+1].N.Load()
 	}
 	return
 }

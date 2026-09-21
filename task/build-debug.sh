@@ -6,6 +6,16 @@ wd=$(realpath -s "$(dirname "$0")/..")
 mkdir -p "$GOPATH/bin/config" "$GOPATH/bin/sqlite"
 cp -ruv "$wd/appdata/"* "$GOPATH/bin/config"
 
+need() {
+  if ! command -v "$1" >/dev/null 2>&1; then
+    echo "missing required command: $1" >&2
+    exit 1
+  fi
+}
+
+need go
+need git
+
 if [[ -z "${BUILDVERS:-}" ]]; then
   BUILDVERS=$(git describe --tags --always)
 fi

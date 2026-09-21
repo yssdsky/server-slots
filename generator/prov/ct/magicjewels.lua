@@ -1,75 +1,77 @@
 local scripts = arg[0]:match("^(.*generator[/%\\])")
 dofile(scripts.."lib/makereel.lua")
 
+-- Note: Reels with an even distribution of symbols yields an RTP of 300–500% or more.
+
 local symsetbase15 = {
 	0, -- 1 wild (2, 3, 4 reels only)
 	1, -- 2 crown    5000
 	2, -- 3 ruby     1500
-	5, -- 4 diamond  500
-	6, -- 5 emerald  200
-	6, -- 6 amber    50
-	3, -- 7 sapphire 50
-	3, -- 8 amethyst 40
+	3, -- 4 diamond  500
+	3, -- 5 emerald  200
+	7, -- 6 amber    50
+	9, -- 7 sapphire 50
+	9, -- 8 amethyst 40
 }
 local symsetbase24 = {
 	1, -- 1 wild (2, 3, 4 reels only)
-	4, -- 2 crown    5000
-	4, -- 3 ruby     1500
-	5, -- 4 diamond  500
-	5, -- 5 emerald  200
-	5, -- 6 amber    50
-	10, -- 7 sapphire 50
-	10, -- 8 amethyst 40
+	2, -- 2 crown    5000
+	7, -- 3 ruby     1500
+	10, -- 4 diamond  500
+	10, -- 5 emerald  200
+	6, -- 6 amber    50
+	4, -- 7 sapphire 50
+	4, -- 8 amethyst 40
 }
 local symsetbase3 = {
 	1, -- 1 wild (2, 3, 4 reels only)
 	1, -- 2 crown    5000
-	4, -- 3 ruby     1500
-	8, -- 4 diamond  500
-	9, -- 5 emerald  200
-	9, -- 6 amber    50
-	6, -- 7 sapphire 50
-	6, -- 8 amethyst 40
+	3, -- 3 ruby     1500
+	3, -- 4 diamond  500
+	4, -- 5 emerald  200
+	10, -- 6 amber    50
+	11, -- 7 sapphire 50
+	11, -- 8 amethyst 40
 }
 
 local symsetfall15 = {
 	0, -- 1 wild (2, 3, 4 reels only)
 	1, -- 2 crown    5000
-	2, -- 3 ruby     1500
-	5, -- 4 diamond  500
-	6, -- 5 emerald  200
-	6, -- 6 amber    50
-	3, -- 7 sapphire 50
-	3, -- 8 amethyst 40
-}
-local symsetfall24 = {
-	0, -- 1 wild (2, 3, 4 reels only)
-	3, -- 2 crown    5000
-	5, -- 3 ruby     1500
-	6, -- 4 diamond  500
-	6, -- 5 emerald  200
+	3, -- 3 ruby     1500
+	3, -- 4 diamond  500
+	3, -- 5 emerald  200
 	6, -- 6 amber    50
 	9, -- 7 sapphire 50
 	9, -- 8 amethyst 40
 }
-local symsetfall3 = {
+local symsetfall24 = {
 	0, -- 1 wild (2, 3, 4 reels only)
 	2, -- 2 crown    5000
-	4, -- 3 ruby     1500
-	8, -- 4 diamond  500
-	9, -- 5 emerald  200
-	9, -- 6 amber    50
-	6, -- 7 sapphire 50
-	6, -- 8 amethyst 40
+	6, -- 3 ruby     1500
+	10, -- 4 diamond  500
+	10, -- 5 emerald  200
+	8, -- 6 amber    50
+	4, -- 7 sapphire 50
+	4, -- 8 amethyst 40
+}
+local symsetfall3 = {
+	1, -- 1 wild (2, 3, 4 reels only)
+	1, -- 2 crown    5000
+	3, -- 3 ruby     1500
+	4, -- 4 diamond  500
+	5, -- 5 emerald  200
+	8, -- 6 amber    50
+	11, -- 7 sapphire 50
+	11, -- 8 amethyst 40
 }
 
 local neighbours = {
 	--1, 2, 3, 4, 5, 6, 7, 8,
 	{ 4, 0, 0, 0, 0, 0, 0, 0,}, -- 1 wild (2, 3, 4 reels only)
 	{ 0, 4, 0, 0, 0, 0, 0, 0,}, -- 2 crown
-	{ 0, 0, 4, 0, 0, 0, 0, 0,}, -- 3 ruby
-	{ 0, 0, 0, 3, 0, 0, 0, 0,}, -- 4 diamond
-	{ 0, 0, 0, 0, 3, 0, 0, 0,}, -- 5 emerald
+	{ 0, 0, 3, 0, 0, 0, 0, 0,}, -- 3 ruby
+	{ 0, 0, 0, 2, 0, 0, 0, 0,}, -- 4 diamond
+	{ 0, 0, 0, 0, 2, 0, 0, 0,}, -- 5 emerald
 	{ 0, 0, 0, 0, 0, 2, 0, 0,}, -- 6 amber
 	{ 0, 0, 0, 0, 0, 0, 2, 0,}, -- 7 sapphire
 	{ 0, 0, 0, 0, 0, 0, 0, 2,}, -- 8 amethyst

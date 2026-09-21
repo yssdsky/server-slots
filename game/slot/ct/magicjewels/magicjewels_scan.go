@@ -12,9 +12,7 @@ func FSQ(s *slot.StatCascade) float64 {
 	var sum uint64
 	sum += s.CascNum(4) * 12
 	sum += s.CascNum(5) * 20
-	for i := 6; i < slot.FallLimit; i++ {
-		sum += s.CascNum(i) * 38
-	}
+	sum += s.Casc[6].N.Load() * 38
 	return float64(sum) / N
 }
 
