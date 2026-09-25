@@ -93,6 +93,7 @@ import (
 	_ "github.com/slotopol/server/game/slot/ct/jollybelugawhales"
 	_ "github.com/slotopol/server/game/slot/ct/kingofclovers"
 	_ "github.com/slotopol/server/game/slot/ct/lucky3penguins"
+	_ "github.com/slotopol/server/game/slot/ct/luckycloverx3"
 	_ "github.com/slotopol/server/game/slot/ct/luckydollar"
 	_ "github.com/slotopol/server/game/slot/ct/magicjewels"
 	_ "github.com/slotopol/server/game/slot/ct/mightykraken"

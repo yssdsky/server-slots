@@ -99,6 +99,7 @@
 'Columbus Treasure' CT Interactive 5x3 videoslot
 'Cops'n'Robbers' Play'n GO 5x3 videoslot
 'Crown' AGT 5x4 videoslot
+'Crown and Orb' CT Interactive 5x3 videoslot
 'Dancing Bananas' CT Interactive 5x3 videoslot
 'Dancing Dragons' CT Interactive 5x3 videoslot
 'Dark Woods' CT Interactive 5x3 cascade videoslot
@@ -229,6 +230,7 @@
 'Lucky Clover' CT Interactive 5x3 videoslot
 'Lucky Clover 10' CT Interactive 5x3 videoslot
 'Lucky Clover 20' CT Interactive 5x3 videoslot
+'Lucky Clover x3' CT Interactive 5x3 videoslot
 'Lucky Dollar' CT Interactive 5x3 videoslot
 'Lucky Lady's Charm' Novomatic 5x3 videoslot
 'Lucky Lady's Charm Deluxe' Novomatic 5x3 videoslot
@@ -354,11 +356,11 @@
 'Wonder 7's' CT Interactive 5x3 videoslot
 'Zeus' AGT 4x4 videoslot
 
-total: 351 games, 178 algorithms, 11 providers
+total: 353 games, 179 algorithms, 11 providers
 AGT: 65 games
 Aristocrat: 6 games
 BetSoft: 3 games
-CT Interactive: 147 games
+CT Interactive: 149 games
 IGT: 5 games
 Megajack: 4 games
 NetEnt: 22 games
