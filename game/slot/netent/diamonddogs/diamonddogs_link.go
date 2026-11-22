@@ -6,6 +6,7 @@ import (
 	_ "embed"
 
 	"github.com/slotopol/server/game"
+	"github.com/slotopol/server/game/slot"
 )
 
 //go:embed diamonddogs_data.yaml
@@ -31,7 +32,11 @@ var Info = game.AlgInfo{
 		LN: len(BetLines),
 		BN: 1,
 	},
-	Update: func(ai *game.AlgInfo) { ai.RTP = game.MakeRtpList(ReelsMap) },
+	Update: func(ai *game.AlgInfo) {
+		ai.RTP = game.MakeRtpList(ReelsMap)
+		slot.MapSetPadding(ReelsMap, ai.SY)
+		ReelsBon.SetPadding(ai.SY)
+	},
 }
 
 func init() {

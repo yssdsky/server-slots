@@ -6,6 +6,7 @@ import (
 	_ "embed"
 
 	"github.com/slotopol/server/game"
+	"github.com/slotopol/server/game/slot"
 )
 
 //go:embed redroo_data.yaml
@@ -28,7 +29,10 @@ var Info = game.AlgInfo{
 		WN: 1024,
 		BN: 0,
 	},
-	Update: func(ai *game.AlgInfo) { ai.RTP = game.MakeRtpList(ReelsMap) },
+	Update: func(ai *game.AlgInfo) {
+		ai.RTP = game.MakeRtpList(ReelsMap)
+		slot.MapSetPadding(ReelsMap, ai.SY)
+	},
 }
 
 func init() {

@@ -33,7 +33,7 @@ var Info = game.AlgInfo{
 	},
 	Update: func(ai *game.AlgInfo) {
 		ai.RTP = game.MakeRtpList(ReelsMap)
-		slot.MapSetPadding(ReelsMap, 3)
+		slot.MapSetPadding(ReelsMap, ai.SY)
 	},
 }
 

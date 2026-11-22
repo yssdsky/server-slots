@@ -29,7 +29,7 @@ var Info = game.AlgInfo{
 	},
 	Update: func(ai *game.AlgInfo) {
 		ai.RTP = game.MakeRtpList(ChanceMap)
-		Reels.SetPadding(3)
+		Reels.SetPadding(ai.SY)
 	},
 }
 

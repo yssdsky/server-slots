@@ -26,7 +26,7 @@ func (rx Reelx) Clone() Reelx {
 	return clone
 }
 
-func (rx Reelx) SetPadding(sy Pos) Reelx {
+func (rx Reelx) SetPadding(sy int) Reelx {
 	for i, reel := range rx {
 		if len(reel) > 0 {
 			rx[i] = append(reel, reel[:sy-1]...)
@@ -109,7 +109,7 @@ func (m ReelsMap[T]) FindClosest(mrtp float64) (val T, rtp float64) {
 	return
 }
 
-func MapSetPadding(m ReelsMap[Reelx], sy Pos) {
+func MapSetPadding(m ReelsMap[Reelx], sy int) {
 	for _, rx := range m {
 		rx.SetPadding(sy)
 	}

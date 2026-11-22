@@ -6,6 +6,7 @@ import (
 	_ "embed"
 
 	"github.com/slotopol/server/game"
+	"github.com/slotopol/server/game/slot"
 )
 
 //go:embed caveofclovers_data.yaml
@@ -27,7 +28,10 @@ var Info = game.AlgInfo{
 		LN: len(BetLines),
 		BN: 0,
 	},
-	Update: func(ai *game.AlgInfo) { ai.RTP = game.MakeRtpList(ReelsMap) },
+	Update: func(ai *game.AlgInfo) {
+		ai.RTP = game.MakeRtpList(ReelsMap)
+		slot.MapSetPadding(ReelsMap, ai.SY)
+	},
 }
 
 func init() {

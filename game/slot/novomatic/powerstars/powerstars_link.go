@@ -27,7 +27,10 @@ var Info = game.AlgInfo{
 		LN: len(BetLines),
 		BN: 0,
 	},
-	Update: func(ai *game.AlgInfo) { ai.RTP = game.MakeRtpList(ChanceMap) },
+	Update: func(ai *game.AlgInfo) {
+		ai.RTP = game.MakeRtpList(ChanceMap)
+		Reels.SetPadding(ai.SY)
+	},
 }
 
 func init() {
