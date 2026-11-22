@@ -2,12 +2,14 @@ package slot
 
 import (
 	"math"
+	"slices"
 	"strconv"
 	"strings"
 )
 
 // ReelAt returns symbol on the reel at true cyclic position.
 // Incoming "pos" can be greater than reel length, or can be negative.
+// This function is slow-performance on reels scanning.
 func ReelAt(reel []Sym, pos int) Sym {
 	var n = len(reel)
 	return reel[(n+pos%n)%n]
@@ -15,42 +17,62 @@ func ReelAt(reel []Sym, pos int) Sym {
 
 type Reelx [][]Sym
 
+func (rx Reelx) Clone() Reelx {
+	var clone Reelx
+	clone = slices.Clone(rx)
+	for i, reel := range rx {
+		clone[i] = slices.Clone(reel)
+	}
+	return clone
+}
+
+func (rx Reelx) SetPadding(sy Pos) Reelx {
+	for i, reel := range rx {
+		rx[i] = append(reel, reel[:sy]...)
+	}
+	return rx
+}
+
+func (rx Reelx) Clear() {
+	clear(rx)
+}
+
 // Returns reel at given column, index is 1-based.
 func (rx Reelx) Reel(col Pos) []Sym {
 	return rx[col-1]
 }
 
-// Returns total number of reshuffles.
-func (rx Reelx) Reshuffles() uint64 {
+// Returns total number of reshuffles with padding carried.
+func (rx Reelx) Reshuffles(sy Pos) uint64 {
 	var res uint64 = 1
 	for _, reel := range rx {
-		res *= uint64(len(reel))
+		res *= uint64(len(reel)) - uint64(sy)
 	}
 	return res
 }
 
 // Returns seed position on reels from array of positions on each reel.
-func (rx Reelx) PosToSeed(pos []int) (seed uint64) {
+func (rx Reelx) PosToSeed(pos []int, sy Pos) (seed uint64) {
 	var m uint64 = 1
 	for i := len(rx) - 1; i >= 0; i-- {
 		seed += uint64(pos[i]) * m
-		m *= uint64(len(rx[i]))
+		m *= uint64(len(rx[i])) - uint64(sy)
 	}
 	return
 }
 
 // Fills the array of positions on each reel from given seed.
-func (rx Reelx) SeedToPos(seed uint64, pos []int) {
+func (rx Reelx) SeedToPos(seed uint64, pos []int, sy Pos) {
 	var cur = seed
 	var rl uint64
 	for i := len(rx) - 1; i >= 0; i-- {
-		rl = uint64(len(rx[i]))
+		rl = uint64(len(rx[i])) - uint64(sy)
 		pos[i] = int(cur % rl)
 		cur /= rl
 	}
 }
 
-func (rx Reelx) String() string {
+func (rx Reelx) String(sy Pos) string {
 	var b strings.Builder
 	b.WriteString("[")
 	for i, reel := range rx {
@@ -61,10 +83,6 @@ func (rx Reelx) String() string {
 	}
 	b.WriteString("]")
 	return b.String()
-}
-
-func (rx Reelx) Clear() {
-	clear(rx)
 }
 
 type ReelsMap[T any] map[float64]T

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"slices"
 	"sync"
 	"time"
 )
@@ -74,36 +75,36 @@ func ReporterBF(ctx context.Context, snapch []chan Simulator2,
 		N/total*100, int(N), dur)
 	var reels = g.GetReels(sp.MRTP)
 	fmt.Println()
-	fmt.Printf("reels lengths %s, total reshuffles %d\n", reels.String(), reels.Reshuffles())
+	fmt.Printf("reels lengths %s, total reshuffles %d\n", reels.String(0), reels.Reshuffles(0))
 	calc(os.Stdout)
 }
 
 func WorkerBF(ctx context.Context, outch chan Simulator2, ti, tn uint64,
 	sp *ScanPar, local Simulator2, wgame SlotGeneric) {
-	var reels = wgame.GetReels(sp.MRTP)
-	var total = reels.Reshuffles()
+	// Grid dimension.
+	var sx, sy = wgame.Dim()
+	var reels = wgame.GetReels(sp.MRTP).Clone().SetPadding(sy)
+	var total = reels.Reshuffles(sy)
 	var _, iscascade = wgame.(SlotCascade)
 
-	// Number of reels.
-	var rn = len(reels)
 	// Precompute reel lengths.
-	var rlen = make([]int, rn)
-	for x := range rn {
-		rlen[x] = len(reels[x])
+	var rlen = make([]int, sx)
+	for x := range sx {
+		rlen[x] = len(reels[x]) - int(sy)
 	}
 	// Precompute delimiters for position calculation.
-	var delim = make([]uint64, rn)
+	var delim = make([]uint64, sx)
 	delim[0] = 1
-	for x := 1; x < rn; x++ {
+	var x Pos
+	for x = 1; x < sx; x++ {
 		delim[x] = delim[x-1] * uint64(rlen[x-1])
 	}
 	var wins Wins
-	var rpos = make([]int, rn)
-	for x := range rn {
+	var rpos = make([]int, sx)
+	for x := range sx {
 		rpos[x] = -1
 	}
 	var i, N uint64
-	var x int
 	var pos int
 	// Using one general loop instead of five nested loops
 	// gives ~30% performance increase.
@@ -117,10 +118,10 @@ func WorkerBF(ctx context.Context, outch chan Simulator2, ti, tn uint64,
 			default:
 			}
 		}
-		for x = range rn {
+		for x = range sx {
 			pos = int(i/delim[x]) % rlen[x]
 			if rpos[x] != pos {
-				wgame.SetCol(Pos(x+1), reels[x], pos)
+				wgame.SetColFast(x+1, reels[x], pos)
 				rpos[x] = pos
 			} else {
 				break
@@ -128,7 +129,7 @@ func WorkerBF(ctx context.Context, outch chan Simulator2, ti, tn uint64,
 		}
 		local.Simulate(wgame, &wins, sp.MRTP)
 		if iscascade && len(wins) > 0 {
-			for x := range rn {
+			for x := range sx {
 				rpos[x] = -1
 			}
 		}
@@ -216,23 +217,24 @@ loop:
 }
 
 func BruteForcex(ctx context.Context, sp *ScanPar, s Simulator, g SlotGeneric) {
-	var reels = g.GetReels(sp.MRTP)
-	var total = reels.Reshuffles()
+	// Grid dimension.
+	var sx, sy = g.Dim()
+	var reels = g.GetReels(sp.MRTP).Clone().SetPadding(sy)
+	var total = reels.Reshuffles(sy)
 	var tn64 = uint64(sp.TN)
-	if sp.TN%len(reels[0]) == 0 {
+	if sp.TN%(len(reels[0])-int(sy)) == 0 {
 		panic("BruteForcex: thread number equals to 1-st reel length")
 	}
-	// Number of reels.
-	var rn = len(reels)
 	// Precompute reel lengths.
-	var rlen = make([]int, rn)
-	for x := range rn {
-		rlen[x] = len(reels[x])
+	var rlen = make([]int, sx)
+	var x Pos
+	for x = range sx {
+		rlen[x] = len(reels[x]) - int(sy)
 	}
 	// Precompute delimiters for position calculation.
-	var delim = make([]uint64, rn)
+	var delim = make([]uint64, sx)
 	delim[0] = 1
-	for x := 1; x < rn; x++ {
+	for x = 1; x < sx; x++ {
 		delim[x] = delim[x-1] * uint64(rlen[x-1])
 	}
 
@@ -244,12 +246,12 @@ func BruteForcex(ctx context.Context, sp *ScanPar, s Simulator, g SlotGeneric) {
 		go func() {
 			defer wg.Done()
 			var wins Wins
-			var rpos = make([]int, rn)
-			for x := range rn {
+			var rpos = make([]int, sx)
+			for x := range sx {
 				rpos[x] = -1
 			}
 			var i, N uint64
-			var x int
+			var x Pos
 			var pos int
 			// Using one general loop instead of five nested loops
 			// gives ~30% performance increase.
@@ -262,10 +264,10 @@ func BruteForcex(ctx context.Context, sp *ScanPar, s Simulator, g SlotGeneric) {
 					default:
 					}
 				}
-				for x = range rn {
+				for x = range sx {
 					pos = int(i/delim[x]) % rlen[x]
 					if rpos[x] != pos {
-						gt.SetCol(Pos(x+1), reels[x], pos)
+						gt.SetColFast(x+1, reels[x], pos)
 						rpos[x] = pos
 					} else {
 						break
@@ -273,7 +275,7 @@ func BruteForcex(ctx context.Context, sp *ScanPar, s Simulator, g SlotGeneric) {
 				}
 				s.Simulate(gt, &wins, sp.MRTP)
 				if iscascade && len(wins) > 0 {
-					for x := range rn {
+					for x = range sx {
 						rpos[x] = -1
 					}
 				}
@@ -286,6 +288,9 @@ func BruteForcex(ctx context.Context, sp *ScanPar, s Simulator, g SlotGeneric) {
 
 func BruteForce5x3Big(ctx context.Context, sp *ScanPar, s Simulator, g SlotGeneric, r1, rb, r5 []Sym) {
 	// var total = uint64(len(r1)) * uint64(len(rb)) * uint64(len(r5))
+	r1 = append(slices.Clone(r1), r1[:3]...)
+	rb = append(slices.Clone(rb), rb[:3]...)
+	r5 = append(slices.Clone(r5), r5[:3]...)
 	var tn64 = uint64(sp.TN)
 	var wg sync.WaitGroup
 	wg.Add(sp.TN)
@@ -297,11 +302,11 @@ func BruteForce5x3Big(ctx context.Context, sp *ScanPar, s Simulator, g SlotGener
 			defer wg.Done()
 
 			var wins Wins
-			for i1 := range r1 {
-				gt.SetCol(1, r1, i1)
-				for _, big := range rb {
+			for i1 := range len(r1) - 3 {
+				gt.SetColFast(1, r1, i1)
+				for _, big := range rb[:len(rb)-3] {
 					cb.SetBig(big)
-					for i5 := range r5 {
+					for i5 := range len(r5) - 3 {
 						N++
 						if N&0xFFF == 0 {
 							select {
@@ -313,7 +318,7 @@ func BruteForce5x3Big(ctx context.Context, sp *ScanPar, s Simulator, g SlotGener
 						if N%tn64 != ti {
 							continue
 						}
-						gt.SetCol(5, r5, i5)
+						gt.SetColFast(5, r5, i5)
 						s.Simulate(gt, &wins, sp.MRTP)
 						wins.Reset()
 					}

@@ -8,7 +8,7 @@ import (
 	"go.yaml.in/yaml/v3"
 )
 
-const maxSafeFloat = 1 << 53 // limit of exact integers in the significand of a float64
+const MaxSafeInteger = 1<<53 - 1 // limit of exact integers in the significand of a float64
 
 type Number interface {
 	~uint64 | ~float64
@@ -62,7 +62,7 @@ func formatNum[T Number](v T) string {
 	case uint64:
 		return strconv.FormatUint(val, 10)
 	case float64:
-		if val >= maxSafeFloat {
+		if val > MaxSafeInteger {
 			return strconv.FormatFloat(val, 'e', -1, 64)
 		}
 		return strconv.FormatFloat(val, 'f', -1, 64)
@@ -83,7 +83,7 @@ func numWidth[T Number](maxVal T) int {
 		}
 		return w
 	case float64:
-		if val >= maxSafeFloat {
+		if val > MaxSafeInteger {
 			// For the e-format, we return the actual record length for the
 			// maximum number (with a buffer to accommodate a full 17-digit
 			// mantissa, in case the maximum number has trailing zeros)
@@ -240,4 +240,16 @@ func (ss StatSnap) MarshalYAML() (any, error) {
 	}
 
 	return root, nil
+}
+
+func MarshalStatYAML(v any) ([]byte, error) {
+	var out, err = yaml.Marshal(v)
+	if err != nil {
+		return nil, err
+	}
+	var s = string(out)
+	s = strings.ReplaceAll(s, "- '[", "- [")
+	s = strings.ReplaceAll(s, "]'\n", "]\n")
+	s = strings.ReplaceAll(s, "]' #", "] #")
+	return []byte(s), nil
 }

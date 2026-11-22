@@ -66,7 +66,7 @@ func CalcStatEuro(ctx context.Context, sp *slot.ScanPar, s *slot.StatGeneric, x,
 		var ctx2, cancel2 = context.WithCancel(ctx)
 		defer cancel2()
 		wg.Go(func() {
-			sp.Total = reels.Reshuffles()
+			sp.Total = reels.Reshuffles(0)
 			slot.ProgressBF(ctx2, sp, s, calc)
 		})
 		BruteForceEuro(ctx2, s, g, reels, x, y)

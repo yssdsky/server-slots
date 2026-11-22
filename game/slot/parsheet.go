@@ -8,7 +8,6 @@ import (
 
 	"github.com/slotopol/server/game"
 	"github.com/slotopol/server/util"
-	"go.yaml.in/yaml/v3"
 )
 
 func Print_vi(w io.Writer, sp *ScanPar, D float64) {
@@ -134,7 +133,7 @@ func Print_raw(w io.Writer, sp *ScanPar, s Simulator) {
 	}
 	fmt.Fprintln(w)
 	fmt.Fprintf(w, "simulator raw data:\n")
-	var b, err = yaml.Marshal(s)
+	var b, err = MarshalStatYAML(s)
 	if err != nil {
 		fmt.Fprintln(w, err.Error())
 		return
