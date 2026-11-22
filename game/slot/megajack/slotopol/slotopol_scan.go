@@ -86,28 +86,29 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	ExpMonopoly()
 	fmt.Printf("*reels calculations*\n")
 	var g = NewGame(sp.Sel)
-	var s = slot.NewStatGeneric(sn, 5)
-	s.BonDim(mjap)
-	s.JackDim(mjj)
+	var s = slot.NewStatSnap(1, sn, 5, mjap, mjj)
 
 	var calc = func(w io.Writer) (float64, float64) {
 		var N = s.Count()
-		var lrtp, srtp = s.RTPsym(g.Cost(), scat)
-		var rtpsym = lrtp + srtp
-		var qmje9 = s.BonusHits(mje9) / N / float64(g.Sel)
+		var cost = g.Cost()
+		var rtpsym = s.SumPays() / cost / N
+		var HRmje9 = float64(s.A[0].Cb[mje9-1]) / N
+		var qmje9 = HRmje9 / float64(g.Sel)
 		var rtpmje9 = Emje * 9 * qmje9
-		var qmjm = s.BonusHits(mjm) / N / float64(g.Sel)
+		var HRmjm = float64(s.A[0].Cb[mjm-1]) / N
+		var qmjm = HRmjm / float64(g.Sel)
 		var rtpmjm = Emjm * qmjm
 		var rtp = rtpsym + rtpmje9 + rtpmjm
-		fmt.Fprintf(w, "symbols: %.5g(lined) + %.5g(scatter) = %.6f%%\n", lrtp*100, srtp*100, rtpsym*100)
-		fmt.Fprintf(w, "spin9 bonuses: hit rate 1/%.5g, rtp = %.6f%%\n", N/s.BonusHits(mje9), rtpmje9*100)
-		fmt.Fprintf(w, "monopoly bonuses: hit rate 1/%.5g, rtp = %.6f%%\n", N/s.BonusHits(mjm), rtpmjm*100)
-		if s.JackHits(mjj) > 0 {
-			fmt.Fprintf(w, "jackpots: count %g, frequency 1/%.12g\n", s.JackHits(mjj), N/s.JackHits(mjj))
+		fmt.Fprintf(w, "symbols: µ = %.6f%%\n", rtpsym*100)
+		fmt.Fprintf(w, "spin9 bonuses: hit rate 1/%.5g, rtp = %.6f%%\n", 1/HRmje9, rtpmje9*100)
+		fmt.Fprintf(w, "monopoly bonuses: hit rate 1/%.5g, rtp = %.6f%%\n", 1/HRmjm, rtpmjm*100)
+		if jn := s.A[0].Cj[mjj-1]; jn > 0 {
+			var HRj = float64(jn) / N
+			fmt.Fprintf(w, "jackpots: count %d, hit rate 1/%.12g\n", jn, 1/HRj)
 		}
 		fmt.Fprintf(w, "RTP = %.5g(sym) + %.5g(mje9) + %.5g(mjm) = %.6f%%\n", rtpsym*100, rtpmje9*100, rtpmjm*100, rtp*100)
 		return rtp, math.NaN()
 	}
 
-	return slot.ScanReelsCommon(ctx, sp, s, g, calc)
+	return slot.ScanReelsCommon2(ctx, sp, s, g, calc)
 }

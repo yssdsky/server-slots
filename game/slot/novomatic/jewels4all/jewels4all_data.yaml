@@ -22,6 +22,7 @@ novomatic/jewels4all/chance
 ---
 
 # Map with wild chances.
+# (selected 1 lines)
 
 # RTP = (1-wc)*67.345(sym) + wc*5373.9(eu) = 88.073498%
 88.073498: 0.00390625 # 1/256

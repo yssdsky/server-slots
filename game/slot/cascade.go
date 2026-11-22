@@ -36,6 +36,11 @@ func (s *Cascade5x3) SetCol(x Pos, reel []Sym, pos int) {
 	s.Seed[x-1] = pos
 }
 
+func (s *Cascade5x3) SetColFast(x Pos, reel []Sym, pos int) {
+	copy(s.Grid[x-1][:], reel[pos:])
+	s.Seed[x-1] = pos
+}
+
 func (s *Cascade5x3) SpinReels(rng *Rand, reels Reelx) {
 	if s.CFN > 0 {
 		s.PushFall(reels)
@@ -46,8 +51,8 @@ func (s *Cascade5x3) SpinReels(rng *Rand, reels Reelx) {
 
 func (s *Cascade5x3) BaseRoll(rng *Rand, reels Reelx) {
 	for x, reel := range reels {
-		var pos = rng.N(len(reel))
-		s.SetCol(Pos(x+1), reel, pos)
+		var hit = rng.N(len(reel) - 2)
+		s.SetColFast(Pos(x+1), reel, hit)
 	}
 }
 
@@ -65,10 +70,11 @@ func (s *Cascade5x3) PushFall(reels Reelx) {
 			}
 		}
 		// fall new symbols
-		s.Seed[x] -= n
-		for y := range n {
-			sr[y] = ReelAt(reels[x], s.Seed[x]+y)
-		}
+		var rl = len(reels[x]) - 2
+		var seed = s.Seed[x]
+		seed = (seed - n + rl) % rl
+		copy(sr[:n], reels[x][seed:])
+		s.Seed[x] = seed
 	}
 }
 
@@ -122,6 +128,11 @@ func (s *Cascade5x4) SetCol(x Pos, reel []Sym, pos int) {
 	s.Seed[x-1] = pos
 }
 
+func (s *Cascade5x4) SetColFast(x Pos, reel []Sym, pos int) {
+	copy(s.Grid[x-1][:], reel[pos:])
+	s.Seed[x-1] = pos
+}
+
 func (s *Cascade5x4) SpinReels(rng *Rand, reels Reelx) {
 	if s.CFN > 0 {
 		s.PushFall(reels)
@@ -132,8 +143,8 @@ func (s *Cascade5x4) SpinReels(rng *Rand, reels Reelx) {
 
 func (s *Cascade5x4) BaseRoll(rng *Rand, reels Reelx) {
 	for x, reel := range reels {
-		var pos = rng.N(len(reel))
-		s.SetCol(Pos(x+1), reel, pos)
+		var hit = rng.N(len(reel) - 3)
+		s.SetColFast(Pos(x+1), reel, hit)
 	}
 }
 
@@ -151,10 +162,11 @@ func (s *Cascade5x4) PushFall(reels Reelx) {
 			}
 		}
 		// fall new symbols
-		s.Seed[x] -= n
-		for y := range n {
-			sr[y] = ReelAt(reels[x], s.Seed[x]+y)
-		}
+		var rl = len(reels[x]) - 3
+		var seed = s.Seed[x]
+		seed = (seed - n + rl) % rl
+		copy(sr[:n], reels[x][seed:])
+		s.Seed[x] = seed
 	}
 }
 

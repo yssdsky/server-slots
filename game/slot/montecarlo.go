@@ -93,8 +93,9 @@ func ReporterMC(ctx context.Context, snapch []chan Simulator2,
 	fmt.Printf("completed %.5g%% (%d), time spent %v, precision Δ[%.4g%%] = %.4g%%                \n",
 		N/total*100, int(N), dur, sp.Conf*100, ΔRTP*100)
 	var reels = g.GetReels(sp.MRTP)
+	var _, sy = g.Dim()
 	fmt.Println()
-	fmt.Printf("reels lengths %s, total reshuffles %d\n", reels.String(0), reels.Reshuffles(0))
+	fmt.Printf("reels lengths %s, total reshuffles %d\n", reels.String(sy), reels.Reshuffles(sy))
 	calc(os.Stdout)
 }
 

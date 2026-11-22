@@ -7,12 +7,12 @@ import (
 	"strings"
 )
 
-// ReelAt returns symbol on the reel at true cyclic position.
+// ReelAt returns symbol on the reel without padding at true cyclic position.
 // Incoming "pos" can be greater than reel length, or can be negative.
 // This function is slow-performance on reels scanning.
 func ReelAt(reel []Sym, pos int) Sym {
-	var n = len(reel)
-	return reel[(n+pos%n)%n]
+	var rl = len(reel)
+	return reel[(rl+pos%rl)%rl]
 }
 
 type Reelx [][]Sym
@@ -28,7 +28,9 @@ func (rx Reelx) Clone() Reelx {
 
 func (rx Reelx) SetPadding(sy Pos) Reelx {
 	for i, reel := range rx {
-		rx[i] = append(reel, reel[:sy]...)
+		if len(reel) > 0 {
+			rx[i] = append(reel, reel[:sy-1]...)
+		}
 	}
 	return rx
 }
@@ -46,7 +48,9 @@ func (rx Reelx) Reel(col Pos) []Sym {
 func (rx Reelx) Reshuffles(sy Pos) uint64 {
 	var res uint64 = 1
 	for _, reel := range rx {
-		res *= uint64(len(reel)) - uint64(sy)
+		if len(reel) > 0 {
+			res *= uint64(len(reel)) - uint64(sy-1)
+		}
 	}
 	return res
 }
@@ -56,7 +60,7 @@ func (rx Reelx) PosToSeed(pos []int, sy Pos) (seed uint64) {
 	var m uint64 = 1
 	for i := len(rx) - 1; i >= 0; i-- {
 		seed += uint64(pos[i]) * m
-		m *= uint64(len(rx[i])) - uint64(sy)
+		m *= uint64(len(rx[i])) - uint64(sy-1)
 	}
 	return
 }
@@ -66,7 +70,7 @@ func (rx Reelx) SeedToPos(seed uint64, pos []int, sy Pos) {
 	var cur = seed
 	var rl uint64
 	for i := len(rx) - 1; i >= 0; i-- {
-		rl = uint64(len(rx[i])) - uint64(sy)
+		rl = uint64(len(rx[i])) - uint64(sy-1)
 		pos[i] = int(cur % rl)
 		cur /= rl
 	}
@@ -79,7 +83,11 @@ func (rx Reelx) String(sy Pos) string {
 		if i > 0 {
 			b.WriteString(", ")
 		}
-		b.WriteString(strconv.Itoa(len(reel)))
+		if len(reel) > 0 {
+			b.WriteString(strconv.Itoa(len(reel) - int(sy-1)))
+		} else {
+			b.WriteString("0")
+		}
 	}
 	b.WriteString("]")
 	return b.String()
@@ -99,4 +107,10 @@ func (m ReelsMap[T]) FindClosest(mrtp float64) (val T, rtp float64) {
 		}
 	}
 	return
+}
+
+func MapSetPadding(m ReelsMap[Reelx], sy Pos) {
+	for _, rx := range m {
+		rx.SetPadding(sy)
+	}
 }

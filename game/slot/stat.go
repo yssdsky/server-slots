@@ -629,12 +629,13 @@ var (
 func ScanReels2(ctx context.Context, sp *ScanPar, ss Simulator2, g SlotGeneric,
 	bruteforce, montecarlo CalcAlg2, calc CalcFunc) (float64, float64) {
 	var reels = g.GetReels(sp.MRTP)
-	if sx, sy := g.Dim(); len(reels) != int(sx) {
+	var sx, sy = g.Dim()
+	if len(reels) != int(sx) {
 		panic(fmt.Errorf("%w: %d reels provided for %dx%d slot", ErrReelCount, len(reels), sx, sy))
 	}
 	switch sp.Method {
 	case game.CMbruteforce:
-		sp.Total = reels.Reshuffles(0)
+		sp.Total = reels.Reshuffles(sy)
 		bruteforce(ctx, sp, ss, g, calc)
 	case game.CMmontecarlo:
 		montecarlo(ctx, sp, ss, g, calc)
@@ -664,7 +665,7 @@ func ScanReels(ctx context.Context, sp *ScanPar, s Simulator, g SlotGeneric,
 		switch sp.Method {
 		case game.CMbruteforce:
 			wg.Go(func() {
-				sp.Total = reels.Reshuffles(0)
+				sp.Total = reels.Reshuffles(sy)
 				ProgressBF(ctx2, sp, s, calc)
 			})
 			bruteforce(ctx2, sp, s, g)
@@ -678,7 +679,7 @@ func ScanReels(ctx context.Context, sp *ScanPar, s Simulator, g SlotGeneric,
 	wg.Wait()
 
 	fmt.Println()
-	fmt.Printf("reels lengths %s, total reshuffles %d\n", reels.String(0), reels.Reshuffles(0))
+	fmt.Printf("reels lengths %s, total reshuffles %d\n", reels.String(sy), reels.Reshuffles(sy))
 	return calc(os.Stdout)
 }
 

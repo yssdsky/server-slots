@@ -74,8 +74,9 @@ func ReporterBF(ctx context.Context, snapch []chan Simulator2,
 	fmt.Printf("completed %.5g%% (%d), time spent %v                    \n",
 		N/total*100, int(N), dur)
 	var reels = g.GetReels(sp.MRTP)
+	var _, sy = g.Dim()
 	fmt.Println()
-	fmt.Printf("reels lengths %s, total reshuffles %d\n", reels.String(0), reels.Reshuffles(0))
+	fmt.Printf("reels lengths %s, total reshuffles %d\n", reels.String(sy), reels.Reshuffles(sy))
 	calc(os.Stdout)
 }
 
@@ -83,14 +84,14 @@ func WorkerBF(ctx context.Context, outch chan Simulator2, ti, tn uint64,
 	sp *ScanPar, local Simulator2, wgame SlotGeneric) {
 	// Grid dimension.
 	var sx, sy = wgame.Dim()
-	var reels = wgame.GetReels(sp.MRTP).Clone().SetPadding(sy)
+	var reels = wgame.GetReels(sp.MRTP)
 	var total = reels.Reshuffles(sy)
 	var _, iscascade = wgame.(SlotCascade)
 
 	// Precompute reel lengths.
 	var rlen = make([]int, sx)
 	for x := range sx {
-		rlen[x] = len(reels[x]) - int(sy)
+		rlen[x] = len(reels[x]) - int(sy-1)
 	}
 	// Precompute delimiters for position calculation.
 	var delim = make([]uint64, sx)
@@ -219,17 +220,17 @@ loop:
 func BruteForcex(ctx context.Context, sp *ScanPar, s Simulator, g SlotGeneric) {
 	// Grid dimension.
 	var sx, sy = g.Dim()
-	var reels = g.GetReels(sp.MRTP).Clone().SetPadding(sy)
+	var reels = g.GetReels(sp.MRTP)
 	var total = reels.Reshuffles(sy)
 	var tn64 = uint64(sp.TN)
-	if sp.TN%(len(reels[0])-int(sy)) == 0 {
+	if sp.TN%(len(reels[0])-int(sy-1)) == 0 {
 		panic("BruteForcex: thread number equals to 1-st reel length")
 	}
 	// Precompute reel lengths.
 	var rlen = make([]int, sx)
 	var x Pos
 	for x = range sx {
-		rlen[x] = len(reels[x]) - int(sy)
+		rlen[x] = len(reels[x]) - int(sy-1)
 	}
 	// Precompute delimiters for position calculation.
 	var delim = make([]uint64, sx)
@@ -288,9 +289,8 @@ func BruteForcex(ctx context.Context, sp *ScanPar, s Simulator, g SlotGeneric) {
 
 func BruteForce5x3Big(ctx context.Context, sp *ScanPar, s Simulator, g SlotGeneric, r1, rb, r5 []Sym) {
 	// var total = uint64(len(r1)) * uint64(len(rb)) * uint64(len(r5))
-	r1 = append(slices.Clone(r1), r1[:3]...)
-	rb = append(slices.Clone(rb), rb[:3]...)
-	r5 = append(slices.Clone(r5), r5[:3]...)
+	r1 = append(slices.Clone(r1), r1[:2]...)
+	r5 = append(slices.Clone(r5), r5[:2]...)
 	var tn64 = uint64(sp.TN)
 	var wg sync.WaitGroup
 	wg.Add(sp.TN)
@@ -302,11 +302,11 @@ func BruteForce5x3Big(ctx context.Context, sp *ScanPar, s Simulator, g SlotGener
 			defer wg.Done()
 
 			var wins Wins
-			for i1 := range len(r1) - 3 {
+			for i1 := range len(r1) - 2 {
 				gt.SetColFast(1, r1, i1)
-				for _, big := range rb[:len(rb)-3] {
+				for _, big := range rb {
 					cb.SetBig(big)
-					for i5 := range len(r5) - 3 {
+					for i5 := range len(r5) - 2 {
 						N++
 						if N&0xFFF == 0 {
 							select {

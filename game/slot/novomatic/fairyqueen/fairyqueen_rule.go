@@ -100,6 +100,9 @@ func (g *Game) ScanLined(wins *slot.Wins) {
 		var x slot.Pos
 		for x = 1; x <= 5; x++ {
 			var sx = g.LX(x, line)
+			if sx == 0 {
+				break
+			}
 			if sx == wild {
 				if syml == 0 {
 					numw = x
@@ -157,8 +160,12 @@ func (g *Game) ScanScatters(wins *slot.Wins) {
 }
 
 func (g *Game) GetReels(mrtp float64) slot.Reelx {
-	var reels, _ = ReelsMap.FindClosest(mrtp)
-	return reels
+	if g.FSR == 0 {
+		var reels, _ = ReelsMap.FindClosest(mrtp)
+		return reels
+	} else {
+		return ReelsBon
+	}
 }
 
 func (g *Game) SpinBon(rng *slot.Rand) {
@@ -174,8 +181,8 @@ func (g *Game) SpinBon(rng *slot.Rand) {
 	}
 	for x = num + 1; x <= 5; x++ {
 		var reel = ReelsBon.Reel(x)
-		var hit = rng.N(len(reel))
-		g.SetCol(x, reel, hit)
+		var hit = rng.N(len(reel) - 2)
+		g.SetColFast(x, reel, hit)
 	}
 }
 

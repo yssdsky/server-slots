@@ -2,6 +2,7 @@ package slot
 
 import (
 	"fmt"
+	"math"
 	"slices"
 )
 
@@ -128,6 +129,15 @@ func (sp *StatPage) Add(ap *StatPage) {
 	}
 }
 
+// SymPays returns sum of pays for given 1-based symbol.
+func (sp *StatPage) SymPays(sym Sym) (sum float64) {
+	var pays = sp.S[sym-1]
+	for i := range pays {
+		sum += pays[i]
+	}
+	return
+}
+
 // SumPays returns sum of pays by all symbols and bonuses.
 func (sp *StatPage) SumPays() (sum float64) {
 	for _, pays := range sp.S {
@@ -247,6 +257,14 @@ func (ss *StatSnap) Add(as Simulator2) {
 	}
 }
 
+// SymPays returns sum of pays for given 1-based symbol.
+func (ss *StatSnap) SymPays(sym Sym) (sum float64) {
+	for cfn := range ss.A {
+		sum += ss.A[cfn].SymPays(sym)
+	}
+	return
+}
+
 // SumPays returns sum of pays by all symbols and bonuses.
 func (ss *StatSnap) SumPays() (sum float64) {
 	for _, sp := range ss.A {
@@ -291,6 +309,54 @@ func (ss *StatSnap) FGC() (Cfg, Cfs, Qfs float64) {
 		Qfs += float64(sp.Qfs)
 	}
 	return
+}
+
+// Cascade multiplier.
+func (ss *StatSnap) Mcascade() float64 {
+	var pay1 = ss.A[0].SumPays()
+	var pays float64
+	for cfn := range ss.A {
+		var payi = ss.A[cfn].SumPays()
+		pays += payi
+		if payi == 0 {
+			break
+		}
+	}
+	return pays / pay1
+}
+
+// Average Cascade Length.
+func (ss *StatSnap) ACL() float64 {
+	var sum uint64
+	for i := 1; i < len(ss.A); i++ {
+		sum += ss.A[i].N
+	}
+	return float64(sum) / float64(ss.A[1].N)
+}
+
+// Inverse coefficient of fading (C1/Cn)^(1/(n-1)).
+func (ss *StatSnap) Kfading() float64 {
+	var N1 = ss.A[0].N
+	var Nn uint64
+	var cfn int
+	for cfn = range ss.A {
+		var Ni = ss.A[cfn].N
+		if Ni == 0 {
+			break
+		}
+		Nn = Ni
+	}
+	return math.Pow(float64(N1)/float64(Nn), 1/(float64(cfn)-1))
+}
+
+// Maximum number of cascades in avalanche.
+func (ss *StatSnap) Ncascmax() int {
+	for cfn := range ss.A {
+		if ss.A[cfn].N == 0 {
+			return cfn - 1
+		}
+	}
+	return len(ss.A) - 1
 }
 
 // Simulate performs spin simulation, calculates results, update statistics.

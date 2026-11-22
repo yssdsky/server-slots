@@ -86,8 +86,8 @@ func (s *Gridx) SetColFast(x Pos, reel []Sym, pos int) {
 
 func (s *Gridx) SpinReels(rng *Rand, reels Reelx) {
 	for x, reel := range reels {
-		var hit = rng.N(len(reel))
-		s.SetCol(Pos(x+1), reel, hit)
+		var hit = rng.N(len(reel) - int(s.sy-1))
+		s.SetColFast(Pos(x+1), reel, hit)
 	}
 }
 
@@ -208,8 +208,8 @@ func (s *Grid3x3) SetColFast(x Pos, reel []Sym, pos int) {
 
 func (s *Grid3x3) SpinReels(rng *Rand, reels Reelx) {
 	for x, reel := range reels {
-		var hit = rng.N(len(reel))
-		s.SetCol(Pos(x+1), reel, hit)
+		var hit = rng.N(len(reel) - 2)
+		s.SetColFast(Pos(x+1), reel, hit)
 	}
 }
 
@@ -276,8 +276,8 @@ func (s *Grid4x4) SetColFast(x Pos, reel []Sym, pos int) {
 
 func (s *Grid4x4) SpinReels(rng *Rand, reels Reelx) {
 	for x, reel := range reels {
-		var hit = rng.N(len(reel))
-		s.SetCol(Pos(x+1), reel, hit)
+		var hit = rng.N(len(reel) - 3)
+		s.SetColFast(Pos(x+1), reel, hit)
 	}
 }
 
@@ -355,22 +355,22 @@ func (s *Grid5x3) SetBig(big Sym) {
 
 func (s *Grid5x3) SpinReels(rng *Rand, reels Reelx) {
 	for x, reel := range reels {
-		var hit = rng.N(len(reel))
-		s.SetCol(Pos(x+1), reel, hit)
+		var hit = rng.N(len(reel) - 2)
+		s.SetColFast(Pos(x+1), reel, hit)
 	}
 }
 
 func (s *Grid5x3) SpinBig(rng *Rand, r1, rb, r5 []Sym) {
 	var hit int
 	// set 1 reel
-	hit = rng.N(len(r1))
-	s.SetCol(1, r1, hit)
+	hit = rng.N(len(r1) - 2)
+	s.SetColFast(1, r1, hit)
 	// set center
 	var big = rb[rng.N(len(rb))]
 	s.SetBig(big)
 	// set 5 reel
-	hit = rng.N(len(r5))
-	s.SetCol(5, r5, hit)
+	hit = rng.N(len(r5) - 2)
+	s.SetColFast(5, r5, hit)
 }
 
 func (s *Grid5x3) SymNum(sym Sym) (n Pos) {
@@ -494,8 +494,8 @@ func (s *Grid5x4) SetColFast(x Pos, reel []Sym, pos int) {
 
 func (s *Grid5x4) SpinReels(rng *Rand, reels Reelx) {
 	for x, reel := range reels {
-		var hit = rng.N(len(reel))
-		s.SetCol(Pos(x+1), reel, hit)
+		var hit = rng.N(len(reel) - 3)
+		s.SetColFast(Pos(x+1), reel, hit)
 	}
 }
 
@@ -617,8 +617,8 @@ func (s *Grid6x3) SetColFast(x Pos, reel []Sym, pos int) {
 
 func (s *Grid6x3) SpinReels(rng *Rand, reels Reelx) {
 	for x, reel := range reels {
-		var hit = rng.N(len(reel))
-		s.SetCol(Pos(x+1), reel, hit)
+		var hit = rng.N(len(reel) - 2)
+		s.SetColFast(Pos(x+1), reel, hit)
 	}
 }
 
@@ -685,8 +685,8 @@ func (s *Grid6x4) SetColFast(x Pos, reel []Sym, pos int) {
 
 func (s *Grid6x4) SpinReels(rng *Rand, reels Reelx) {
 	for x, reel := range reels {
-		var hit = rng.N(len(reel))
-		s.SetCol(Pos(x+1), reel, hit)
+		var hit = rng.N(len(reel) - 3)
+		s.SetColFast(Pos(x+1), reel, hit)
 	}
 }
 

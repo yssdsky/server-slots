@@ -18,15 +18,15 @@ func BruteForceEuro(ctx context.Context, s slot.Simulator, g *Game, reels slot.R
 	var r4 = reels.Reel(4)
 	var r5 = reels.Reel(5)
 	var N uint64
-	for i1 := range r1 {
-		g.SetCol(1, r1, i1)
-		for i2 := range r2 {
-			g.SetCol(2, r2, i2)
-			for i3 := range r3 {
-				g.SetCol(3, r3, i3)
-				for i4 := range r4 {
-					g.SetCol(4, r4, i4)
-					for i5 := range r5 {
+	for i1 := range r1[:len(r1)-2] {
+		g.SetColFast(1, r1, i1)
+		for i2 := range r2[:len(r2)-2] {
+			g.SetColFast(2, r2, i2)
+			for i3 := range r3[:len(r3)-2] {
+				g.SetColFast(3, r3, i3)
+				for i4 := range r4[:len(r4)-2] {
+					g.SetColFast(4, r4, i4)
+					for i5 := range r5[:len(r5)-2] {
 						N++
 						if N&0xFFF == 0 {
 							select {
@@ -35,7 +35,7 @@ func BruteForceEuro(ctx context.Context, s slot.Simulator, g *Game, reels slot.R
 							default:
 							}
 						}
-						g.SetCol(5, r5, i5)
+						g.SetColFast(5, r5, i5)
 						var sym slot.Sym
 						if x > 0 {
 							sym = g.At(x, y)
@@ -66,7 +66,7 @@ func CalcStatEuro(ctx context.Context, sp *slot.ScanPar, s *slot.StatGeneric, x,
 		var ctx2, cancel2 = context.WithCancel(ctx)
 		defer cancel2()
 		wg.Go(func() {
-			sp.Total = reels.Reshuffles(0)
+			sp.Total = reels.Reshuffles(3)
 			slot.ProgressBF(ctx2, sp, s, calc)
 		})
 		BruteForceEuro(ctx2, s, g, reels, x, y)
@@ -95,12 +95,12 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (rtp, D float64) {
 	fmt.Printf("\n(16/16) regular games calculations\n")
 	var sr = slot.NewStatGeneric(sn, 5)
 	var µr, Dr = CalcStatEuro(ctx, sp, sr, 0, 0)
-	rtp = (1-Pw)*µr + Pw*µw
+	rtp = (1-Pw)*µr + Pw*µw // Pw = (rtp-µr)/(µw - µr)
 	D = (1-Pw)*Dr + Pw*Dw + Pw*(1-Pw)*(µw-µr)*(µw-µr)
 	if sp.IsMain() {
-		fmt.Printf("*final calculations*\n")
+		fmt.Printf("\n*final calculations*\n")
 		fmt.Printf("euro avr: rtp(eu) = %.6f%%\n", µw*100)
-		fmt.Printf("wild chance: 1/%.5g\n", 1/Pw)
+		fmt.Printf("wild hit rate: 1/%.5g\n", 1/Pw)
 		fmt.Printf("RTP = (1-Pw)*%.5g(sym) + Pw*%.5g(eu) = %.6f%%\n", µr*100, µw*100, rtp*100)
 	}
 	var w = os.Stdout

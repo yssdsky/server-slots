@@ -83,25 +83,25 @@ func Print_symbols_generic(w io.Writer, sp *ScanPar, s *StatGeneric, µ float64)
 	}
 }
 
-func Print_symbols_cascade(w io.Writer, sp *ScanPar, s *StatCascade, µ float64) {
+func Print_symbols_contrib(w io.Writer, sp *ScanPar, ss *StatSnap, µ float64) {
 	if !sp.IsSym() {
 		return
 	}
 	fmt.Fprintln(w)
 	fmt.Fprintf(w, "symbols contribution to payouts:\n")
 	fmt.Fprintf(w, "sym rate%%  rtp%% |")
-	for x := range s.Casc[0].S[0] {
+	for x := range ss.A[0].S[0] {
 		fmt.Fprintf(w, " %5d", x+1)
 	}
 	fmt.Fprintf(w, "\n")
-	var sum = s.SumPays()
-	for sym, pays := range s.Casc[0].S {
-		var cs = s.SymPays(Sym(sym+1)) / sum
+	var sum = ss.SumPays()
+	for sym, pays := range ss.A[0].S {
+		var cs = ss.SymPays(Sym(sym+1)) / sum
 		fmt.Fprintf(w, "%2d: %s %s |", sym+1, p5f(cs*100), p5f(µ*cs*100))
 		for x := range pays {
 			var cx float64
-			for cfn := range s.Casc {
-				cx += s.Casc[cfn].S[sym][x].Load()
+			for cfn := range ss.A {
+				cx += ss.A[cfn].S[sym][x]
 			}
 			cx /= sum
 			fmt.Fprintf(w, " %s", p5f(cx*100))
@@ -110,16 +110,19 @@ func Print_symbols_cascade(w io.Writer, sp *ScanPar, s *StatCascade, µ float64)
 	}
 }
 
-func Print_contribution_falls(w io.Writer, sp *ScanPar, s *StatCascade, µ float64) {
+func Print_falls_contrib(w io.Writer, sp *ScanPar, ss *StatSnap, µ float64) {
 	if !sp.IsCasc() {
 		return
+	}
+	if len(ss.A) <= 1 {
+		return // no cascades
 	}
 	fmt.Fprintln(w)
 	fmt.Fprintf(w, "cascades contribution to payouts:\n")
 	fmt.Fprintf(w, "cfn rate%%  rtp%%\n")
-	var sum = s.SumPays()
-	for cfn := range s.Casc {
-		var c = s.Casc[cfn].SumPays() / sum
+	var sum = ss.SumPays()
+	for cfn := range ss.A {
+		var c = ss.A[cfn].SumPays() / sum
 		fmt.Fprintf(w, "%2d: %s %s\n", cfn, p5f(c*100), p5f(µ*c*100))
 		if c == 0 {
 			break
@@ -141,19 +144,22 @@ func Print_raw(w io.Writer, sp *ScanPar, s Simulator) {
 	fmt.Fprintln(w, util.B2S(b))
 }
 
-func Print_cascmetrics(w io.Writer, sp *ScanPar, s *StatCascade) {
+func Print_casc_metrics(w io.Writer, sp *ScanPar, ss *StatSnap) {
 	if !sp.IsCM() {
 		return
 	}
+	if len(ss.A) <= 1 {
+		return // no cascades
+	}
 	fmt.Fprintln(w)
 	fmt.Fprintf(w, "cascade metrics:\n")
-	var N = s.Count()
-	var Nc = float64(s.Casc[1].N.Load()) // current number
+	var N = ss.Count()
+	var Nc = float64(ss.A[1].N) // current number
 	fmt.Fprintf(w, "N[1] = %.10g, Ec1 = Kf1 = 1/%.5g\n", Nc, N/Nc)
 	var Np float64 // previous number
-	for cfn := 2; cfn < len(s.Casc); cfn++ {
+	for cfn := 2; cfn < len(ss.A); cfn++ {
 		Np = Nc
-		Nc = float64(s.Casc[cfn].N.Load())
+		Nc = float64(ss.A[cfn].N)
 		if Nc == 0 {
 			break
 		}
@@ -163,7 +169,7 @@ func Print_cascmetrics(w io.Writer, sp *ScanPar, s *StatCascade) {
 			fmt.Fprintf(w, "N[%d] = %.10g, Ec%d = 1/%d, Kf%d = 1/%.5g\n", cfn, Nc, cfn, int(N/Nc), cfn, Np/Nc)
 		}
 	}
-	fmt.Fprintf(w, "Mcascade = %.5g, ACL = %.5g, Kfading = 1/%.5g, Ncascmax = %d\n", s.Mcascade(), s.ACL(), s.Kfading(), s.Ncascmax())
+	fmt.Fprintf(w, "Mcascade = %.5g, ACL = %.5g, Kfading = 1/%.5g, Ncascmax = %d\n", ss.Mcascade(), ss.ACL(), ss.Kfading(), ss.Ncascmax())
 }
 
 // Print_all assembles all print functions of parsheets.
@@ -174,10 +180,10 @@ func Print_all(w io.Writer, sp *ScanPar, s Simulator, µ, D float64) {
 	switch stat := s.(type) {
 	case *StatGeneric:
 		Print_symbols_generic(w, sp, stat, µ)
-	case *StatCascade:
-		Print_cascmetrics(w, sp, stat)
-		Print_symbols_cascade(w, sp, stat, µ)
-		Print_contribution_falls(w, sp, stat, µ)
+	case *StatSnap:
+		Print_casc_metrics(w, sp, stat)
+		Print_symbols_contrib(w, sp, stat, µ)
+		Print_falls_contrib(w, sp, stat, µ)
 	}
 	Print_raw(w, sp, s)
 }
