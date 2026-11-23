@@ -19,13 +19,13 @@ func BruteForceEuro(ctx context.Context, s slot.Simulator, g *Game, reels slot.R
 	var r5 = reels.Reel(5)
 	var N uint64
 	for i1 := range r1[:len(r1)-2] {
-		g.SetColFast(1, r1, i1)
+		g.SetCol(1, r1, i1)
 		for i2 := range r2[:len(r2)-2] {
-			g.SetColFast(2, r2, i2)
+			g.SetCol(2, r2, i2)
 			for i3 := range r3[:len(r3)-2] {
-				g.SetColFast(3, r3, i3)
+				g.SetCol(3, r3, i3)
 				for i4 := range r4[:len(r4)-2] {
-					g.SetColFast(4, r4, i4)
+					g.SetCol(4, r4, i4)
 					for i5 := range r5[:len(r5)-2] {
 						N++
 						if N&0xFFF == 0 {
@@ -35,7 +35,7 @@ func BruteForceEuro(ctx context.Context, s slot.Simulator, g *Game, reels slot.R
 							default:
 							}
 						}
-						g.SetColFast(5, r5, i5)
+						g.SetCol(5, r5, i5)
 						var sym slot.Sym
 						if x > 0 {
 							sym = g.At(x, y)

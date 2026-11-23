@@ -122,7 +122,7 @@ func WorkerBF(ctx context.Context, outch chan Simulator2, ti, tn uint64,
 		for x = range sx {
 			pos = int(i/delim[x]) % rlen[x]
 			if rpos[x] != pos {
-				wgame.SetColFast(x+1, reels[x], pos)
+				wgame.SetCol(x+1, reels[x], pos)
 				rpos[x] = pos
 			} else {
 				break
@@ -268,7 +268,7 @@ func BruteForcex(ctx context.Context, sp *ScanPar, s Simulator, g SlotGeneric) {
 				for x = range sx {
 					pos = int(i/delim[x]) % rlen[x]
 					if rpos[x] != pos {
-						gt.SetColFast(x+1, reels[x], pos)
+						gt.SetCol(x+1, reels[x], pos)
 						rpos[x] = pos
 					} else {
 						break
@@ -303,7 +303,7 @@ func BruteForce5x3Big(ctx context.Context, sp *ScanPar, s Simulator, g SlotGener
 
 			var wins Wins
 			for i1 := range len(r1) - 2 {
-				gt.SetColFast(1, r1, i1)
+				gt.SetCol(1, r1, i1)
 				for _, big := range rb {
 					cb.SetBig(big)
 					for i5 := range len(r5) - 2 {
@@ -318,7 +318,7 @@ func BruteForce5x3Big(ctx context.Context, sp *ScanPar, s Simulator, g SlotGener
 						if N%tn64 != ti {
 							continue
 						}
-						gt.SetColFast(5, r5, i5)
+						gt.SetCol(5, r5, i5)
 						s.Simulate(gt, &wins, sp.MRTP)
 						wins.Reset()
 					}

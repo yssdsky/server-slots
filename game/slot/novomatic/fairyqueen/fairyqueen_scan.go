@@ -40,9 +40,9 @@ func BruteForce5x3es2(ctx context.Context, sp *slot.ScanPar, s slot.Simulator2, 
 			}
 
 			for i3 := range r3[:len(r3)-2] {
-				wgame.SetColFast(3, r3, i3)
+				wgame.SetCol(3, r3, i3)
 				for i4 := range r4[:len(r4)-2] {
-					wgame.SetColFast(4, r4, i4)
+					wgame.SetCol(4, r4, i4)
 					for i5 := range r5[:len(r5)-2] {
 						N++
 						if N&0xFFF == 0 {
@@ -55,7 +55,7 @@ func BruteForce5x3es2(ctx context.Context, sp *slot.ScanPar, s slot.Simulator2, 
 						if N%tn64 != ti {
 							continue
 						}
-						wgame.SetColFast(5, r5, i5)
+						wgame.SetCol(5, r5, i5)
 						local.Simulate(wgame, &wins, sp.MRTP)
 						wins.Reset()
 					}
@@ -104,7 +104,7 @@ func BruteForce5x3es3(ctx context.Context, sp *slot.ScanPar, s slot.Simulator2, 
 			}
 
 			for i4 := range r4[:len(r4)-2] {
-				wgame.SetColFast(4, r4, i4)
+				wgame.SetCol(4, r4, i4)
 				for i5 := range r5[:len(r5)-2] {
 					N++
 					if N&0xFFF == 0 {
@@ -117,7 +117,7 @@ func BruteForce5x3es3(ctx context.Context, sp *slot.ScanPar, s slot.Simulator2, 
 					if N%tn64 != ti {
 						continue
 					}
-					wgame.SetColFast(5, r5, i5)
+					wgame.SetCol(5, r5, i5)
 					local.Simulate(wgame, &wins, sp.MRTP)
 					wins.Reset()
 				}

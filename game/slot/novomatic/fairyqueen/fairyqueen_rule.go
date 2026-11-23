@@ -182,7 +182,7 @@ func (g *Game) SpinBon(rng *slot.Rand) {
 	for x = num + 1; x <= 5; x++ {
 		var reel = ReelsBon.Reel(x)
 		var hit = rng.N(len(reel) - 2)
-		g.SetColFast(x, reel, hit)
+		g.SetCol(x, reel, hit)
 	}
 }
 

@@ -26,16 +26,6 @@ type Cascade5x3 struct {
 // Declare conformity with Cascade interface.
 var _ Cascade = (*Cascade5x3)(nil)
 
-func (s *Cascade5x3) SetCol(x Pos, reel []Sym, pos int) {
-	var sr = &s.Grid[x-1]
-	var n = len(reel)
-	pos = (n + pos%n) % n // correct position
-	for y := range sr {
-		sr[y] = reel[(pos+y)%n]
-	}
-	s.Seed[x-1] = pos
-}
-
 func (s *Cascade5x3) SetColFast(x Pos, reel []Sym, pos int) {
 	copy(s.Grid[x-1][:], reel[pos:])
 	s.Seed[x-1] = pos
@@ -117,16 +107,6 @@ type Cascade5x4 struct {
 
 // Declare conformity with Cascade interface.
 var _ Cascade = (*Cascade5x4)(nil)
-
-func (s *Cascade5x4) SetCol(x Pos, reel []Sym, pos int) {
-	var sr = &s.Grid[x-1]
-	var n = len(reel)
-	pos = (n + pos%n) % n // correct position
-	for y := range sr {
-		sr[y] = reel[(pos+y)%n]
-	}
-	s.Seed[x-1] = pos
-}
 
 func (s *Cascade5x4) SetColFast(x Pos, reel []Sym, pos int) {
 	copy(s.Grid[x-1][:], reel[pos:])
