@@ -88,23 +88,24 @@ func WorkerBF(ctx context.Context, outch chan Simulator2, ti, tn uint64,
 	var total = reels.Reshuffles(sy)
 	var _, iscascade = wgame.(SlotCascade)
 
+	var x Pos
 	// Precompute reel lengths.
 	var rlen = make([]int, sx)
-	for x := range sx {
+	for x = range sx {
 		rlen[x] = len(reels[x]) - int(sy-1)
 	}
 	// Precompute delimiters for position calculation.
 	var delim = make([]uint64, sx)
 	delim[0] = 1
-	var x Pos
 	for x = 1; x < sx; x++ {
 		delim[x] = delim[x-1] * uint64(rlen[x-1])
 	}
-	var wins Wins
+	// Positions on reels
 	var rpos = make([]int, sx)
 	for x := range sx {
 		rpos[x] = -1
 	}
+	var wins Wins
 	var i, N uint64
 	var pos int
 	// Using one general loop instead of five nested loops

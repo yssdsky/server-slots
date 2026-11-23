@@ -28,13 +28,14 @@ var combs = []struct {
 
 func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	var g = NewGame(sp.Sel)
-	var s = slot.NewStatGeneric(sn, 5)
+	var s = slot.NewSnapFlat(sn, 5)
 
 	// custom parsheet
 	var cost = g.Cost()
 	var calc = func(w io.Writer) (float64, float64) {
+		var N = s.Count()
 		var µ, Dsym = slot.EvD(s, cost)
-		var Pfg = s.FGQ()
+		var Pfg = float64(s.A[0].Cfg) / N
 		var q = Pfg * 15
 		var sq = 1 / (1 - q)
 		var ΣmN, Σm2N2, ΣV float64
@@ -59,5 +60,5 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 		return rtp, D
 	}
 
-	return slot.ScanReelsCommon(ctx, sp, s, g, calc)
+	return slot.ScanReelsCommon2(ctx, sp, s, g, calc)
 }

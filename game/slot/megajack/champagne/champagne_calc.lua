@@ -226,7 +226,7 @@ local function calculate(reels)
 		print(string.format("*free games calculations*"))
 		print(string.format("symbols: %.5g(lined) + %.5g(scatter) = %.6f%%", rtp_line*100, rtp_scat*100, rtp_sym*100))
 		print(string.format("free: HRfg = 1/%.5g, q = %.5g, sq = 1/(1-q) = %.5g", N/fs_num, q, sq))
-		print(string.format("bottle bonuses: hit rate 1/%.5g, rtp = %.6f%%", 1/qmjc, rtp_mjc*100))
+		print(string.format("bottle bonus: hit rate 1/%.5g, rtp = %.6f%%", 1/qmjc, rtp_mjc*100))
 		print(string.format("RTP = sq*(rtp(sym)+rtp(mjc)) = %.5g*(%.5g+%.5g) = %.6f%%",
 			sq, rtp_sym*100, rtp_mjc*100, rtp_fs*100))
 	end
@@ -244,7 +244,7 @@ local function calculate(reels)
 		print(string.format("*regular games calculations*"))
 		print(string.format("symbols: %.5g(lined) + %.5g(scatter) = %.6f%%", rtp_line*100, rtp_scat*100, rtp_sym*100))
 		print(string.format("free: HRfg = 1/%.5g, q = %.5g, sq = 1/(1-q) = %.5g", N/fs_num, q, sq))
-		print(string.format("bottle bonuses: hit rate 1/%.5g, rtp = %.6f%%", 1/qmjc, rtp_mjc*100))
+		print(string.format("bottle bonus: hit rate 1/%.5g, rtp = %.6f%%", 1/qmjc, rtp_mjc*100))
 		print(string.format("RTP = %.5g(sym) + %.5g*%.5g(fg) = %.6f%%", rtp_sym*100, q, rtp_fs*100, rtp_total*100))
 	end
 	return rtp_total

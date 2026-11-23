@@ -17,8 +17,8 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 			var N = s.Count()
 			for idj := range s.A[0].Cj {
 				var Cj = float64(s.A[0].Cj[idj])
-				var HRj = N / Cj
-				fmt.Fprintf(w, "jackpots%d: count %g, hit rate 1/%.12g\n", idj+1, Cj, HRj)
+				var HRj = Cj / N
+				fmt.Fprintf(w, "jackpot%d: count %g, hit rate 1/%.8g\n", idj+1, Cj, 1/HRj)
 			}
 		}
 		return slot.Parsheet_simple(w, sp, s, g.Cost())

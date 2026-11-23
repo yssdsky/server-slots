@@ -64,25 +64,24 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	fmt.Printf("Ebon = Epyr + Eroom*app[6] = %.5g + %.5g * %.5g = %g\n", Epyr, Eroom, app[5], Ebon)
 	fmt.Printf("*reels calculations*\n")
 	var g = NewGame(sp.Sel)
-	var s = slot.NewStatGeneric(sn, 5)
-	s.BonDim(mjap)
-	s.JackDim(mjj)
+	var s = slot.NewStatSnap(1, sn, 5, mjap, mjj)
 
 	var calc = func(w io.Writer) (float64, float64) {
-		var N = s.Count()
-		var lrtp, srtp = s.RTPsym(g.Cost(), scat)
-		var rtpsym = lrtp + srtp
-		var qmjap = s.BonusHits(mjap) / N
+		var N, S, _ = s.NSQ(g.Cost())
+		var µ = S / N
+		var HRmjap = float64(s.A[0].Cb[mjap-1]) / N
+		var qmjap = HRmjap
 		var rtpmjap = Ebon * qmjap
-		var rtp = rtpsym + rtpmjap
-		fmt.Fprintf(w, "symbols: %.5g(lined) + %.5g(scatter) = %.6f%%\n", lrtp*100, srtp*100, rtpsym*100)
-		fmt.Fprintf(w, "pyramid bonuses: hit rate 1/%.5g, rtp = %.6f%%\n", N/s.BonusHits(mjap), rtpmjap*100)
-		if s.JackHits(mjj) > 0 {
-			fmt.Fprintf(w, "jackpots: count %g, frequency 1/%.12g\n", s.JackHits(mjj), N/s.JackHits(mjj))
+		var rtp = µ + rtpmjap
+		fmt.Fprintf(w, "symbols: µ = %.8g%%\n", µ*100)
+		fmt.Fprintf(w, "pyramid bonus: hit rate 1/%.5g, rtp = %.8g%%\n", 1/HRmjap, rtpmjap*100)
+		if jn := s.A[0].Cj[mjj-1]; jn > 0 {
+			var HRj = float64(jn) / N
+			fmt.Fprintf(w, "jackpot: count %d, hit rate 1/%.8g\n", jn, 1/HRj)
 		}
-		fmt.Fprintf(w, "RTP = %.5g(sym) + %.5g(mjap) = %.6f%%\n", rtpsym*100, rtpmjap*100, rtp*100)
+		fmt.Fprintf(w, "RTP = %.5g(sym) + %.5g(mjap) = %.8g%%\n", µ*100, rtpmjap*100, rtp*100)
 		return rtp, math.NaN()
 	}
 
-	return slot.ScanReelsCommon(ctx, sp, s, g, calc)
+	return slot.ScanReelsCommon2(ctx, sp, s, g, calc)
 }

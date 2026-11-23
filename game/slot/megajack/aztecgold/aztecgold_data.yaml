@@ -55,6 +55,7 @@ megajack/aztecgold/rmap
 ---
 
 # RTP list of available reels:
+# (selected 1 lines)
 # 87.554670
 # 88.088886
 # 88.450070
@@ -100,8 +101,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [33, 33, 35, 35, 35], total reshuffles 46690875
 # symbols: 55.353(lined) + 15.854(scatter) = 71.206579%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/729544
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/729544
 # RTP = 71.207(sym) + 16.348(mjap) = 87.554670%
 87.554670:
   - [7, 4, 9, 8, 3, 10, 1, 4, 2, 6, 1, 5, 3, 2, 10, 8, 4, 1, 5, 4, 3, 6, 2, 1, 5, 2, 7, 1, 3, 7, 5, 2, 6]
@@ -112,8 +113,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [33, 33, 35, 35, 35], total reshuffles 46690875
 # symbols: 55.887(lined) + 15.854(scatter) = 71.740795%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/729544
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/729544
 # RTP = 71.741(sym) + 16.348(mjap) = 88.088886%
 88.088886:
   - [7, 4, 9, 8, 3, 10, 1, 4, 2, 6, 1, 5, 3, 2, 10, 8, 4, 1, 5, 4, 3, 6, 2, 1, 5, 2, 7, 1, 3, 7, 5, 2, 6]
@@ -124,8 +125,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [33, 33, 35, 35, 35], total reshuffles 46690875
 # symbols: 56.248(lined) + 15.854(scatter) = 72.101979%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/729544
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/729544
 # RTP = 72.102(sym) + 16.348(mjap) = 88.450070%
 88.450070:
   - [7, 4, 9, 8, 3, 10, 1, 4, 2, 6, 1, 5, 3, 2, 10, 8, 4, 1, 5, 4, 3, 6, 2, 1, 5, 2, 7, 1, 3, 7, 5, 2, 6]
@@ -136,8 +137,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [34, 34, 35, 35, 35], total reshuffles 49563500
 # symbols: 57.368(lined) + 15.282(scatter) = 72.650826%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/774429
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/774429
 # RTP = 72.651(sym) + 16.348(mjap) = 88.998916%
 88.998916:
   - [4, 2, 5, 7, 1, 6, 2, 7, 3, 5, 8, 2, 6, 5, 9, 3, 10, 2, 1, 5, 7, 4, 8, 1, 4, 6, 3, 4, 2, 1, 10, 8, 1, 3] # 34
@@ -148,8 +149,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [34, 34, 35, 35, 35], total reshuffles 49563500
 # symbols: 57.849(lined) + 15.282(scatter) = 73.131381%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/774429
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/774429
 # RTP = 73.131(sym) + 16.348(mjap) = 89.479471%
 89.479471:
   - [4, 2, 5, 7, 1, 6, 2, 7, 3, 5, 8, 2, 6, 5, 9, 3, 10, 2, 1, 5, 7, 4, 8, 1, 4, 6, 3, 4, 2, 1, 10, 8, 1, 3] # 34
@@ -160,8 +161,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [33, 33, 35, 35, 35], total reshuffles 46690875
 # symbols: 57.794(lined) + 15.854(scatter) = 73.648052%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/729544
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/729544
 # RTP = 73.648(sym) + 16.348(mjap) = 89.996143%
 89.996143:
   - [3, 2, 5, 4, 10, 9, 6, 4, 3, 7, 8, 3, 4, 1, 6, 2, 7, 10, 1, 5, 4, 1, 5, 2, 3, 1, 2, 5, 8, 2, 1, 7, 6]
@@ -172,8 +173,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [34, 34, 35, 35, 35], total reshuffles 49563500
 # symbols: 58.845(lined) + 15.282(scatter) = 74.127356%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/774429
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/774429
 # RTP = 74.127(sym) + 16.348(mjap) = 90.475446%
 90.475446:
   - [4, 2, 5, 7, 1, 6, 2, 7, 3, 5, 8, 2, 6, 5, 9, 3, 10, 2, 1, 5, 7, 4, 8, 1, 4, 6, 3, 4, 2, 1, 10, 8, 1, 3] # 34
@@ -184,8 +185,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [34, 34, 35, 35, 35], total reshuffles 49563500
 # symbols: 59.38(lined) + 15.282(scatter) = 74.662266%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/774429
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/774429
 # RTP = 74.662(sym) + 16.348(mjap) = 91.010356%
 91.010356:
   - [4, 2, 5, 7, 1, 6, 2, 7, 3, 5, 8, 2, 6, 5, 9, 3, 10, 2, 1, 5, 7, 4, 8, 1, 4, 6, 3, 4, 2, 1, 10, 8, 1, 3] # 34
@@ -196,8 +197,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [34, 34, 35, 35, 35], total reshuffles 49563500
 # symbols: 59.901(lined) + 15.282(scatter) = 75.183133%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/774429
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/774429
 # RTP = 75.183(sym) + 16.348(mjap) = 91.531223%
 91.531223:
   - [4, 2, 5, 7, 1, 6, 2, 7, 3, 5, 8, 2, 6, 5, 9, 3, 10, 2, 1, 5, 7, 4, 8, 1, 4, 6, 3, 4, 2, 1, 10, 8, 1, 3] # 34
@@ -208,8 +209,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [34, 34, 35, 35, 35], total reshuffles 49563500
 # symbols: 60.345(lined) + 15.282(scatter) = 75.627532%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/774429
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/774429
 # RTP = 75.628(sym) + 16.348(mjap) = 91.975623%
 91.975623:
   - [4, 2, 5, 7, 1, 6, 2, 7, 3, 5, 8, 2, 6, 5, 9, 3, 10, 2, 1, 5, 7, 4, 8, 1, 4, 6, 3, 4, 2, 1, 10, 8, 1, 3] # 34
@@ -220,8 +221,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [34, 34, 35, 35, 35], total reshuffles 49563500
 # symbols: 60.878(lined) + 15.282(scatter) = 76.160253%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/774429
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/774429
 # RTP = 76.16(sym) + 16.348(mjap) = 92.508344%
 92.508344:
   - [2, 7, 4, 1, 6, 7, 2, 8, 5, 6, 10, 1, 7, 3, 4, 8, 1, 3, 2, 4, 5, 2, 9, 3, 2, 5, 1, 6, 4, 3, 5, 8, 10, 1] # 34
@@ -232,8 +233,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [32, 34, 35, 35, 35], total reshuffles 46648000
 # symbols: 60.797(lined) + 15.867(scatter) = 76.664149%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/728875
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/728875
 # RTP = 76.664(sym) + 16.348(mjap) = 93.012239%
 93.012239:
   - [3, 6, 1, 4, 2, 10, 7, 4, 5, 3, 6, 5, 9, 8, 3, 4, 5, 1, 7, 6, 8, 5, 1, 2, 8, 10, 7, 3, 2, 4, 1, 2] # 32
@@ -244,8 +245,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [32, 32, 35, 35, 35], total reshuffles 43904000
 # symbols: 60.731(lined) + 16.471(scatter) = 77.202360%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/686000
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/686000
 # RTP = 77.202(sym) + 16.348(mjap) = 93.550450%
 93.550450:
   - [3, 6, 1, 4, 2, 10, 7, 4, 5, 3, 6, 5, 9, 8, 3, 4, 5, 1, 7, 6, 8, 5, 1, 2, 8, 10, 7, 3, 2, 4, 1, 2] # 32
@@ -256,8 +257,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [32, 32, 35, 35, 35], total reshuffles 43904000
 # symbols: 60.94(lined) + 16.471(scatter) = 77.411179%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/686000
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/686000
 # RTP = 77.411(sym) + 16.348(mjap) = 93.759269%
 93.759269:
   - [3, 6, 1, 4, 2, 10, 7, 4, 5, 3, 6, 5, 9, 8, 3, 4, 5, 1, 7, 6, 8, 5, 1, 2, 8, 10, 7, 3, 2, 4, 1, 2] # 32
@@ -268,8 +269,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [32, 32, 35, 35, 35], total reshuffles 43904000
 # symbols: 61.182(lined) + 16.471(scatter) = 77.652615%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/686000
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/686000
 # RTP = 77.653(sym) + 16.348(mjap) = 94.000705%
 94.000705:
   - [3, 6, 1, 4, 2, 10, 7, 4, 5, 3, 6, 5, 9, 8, 3, 4, 5, 1, 7, 6, 8, 5, 1, 2, 8, 10, 7, 3, 2, 4, 1, 2] # 32
@@ -280,8 +281,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [32, 34, 35, 35, 35], total reshuffles 46648000
 # symbols: 62.278(lined) + 15.867(scatter) = 78.145241%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/728875
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/728875
 # RTP = 78.145(sym) + 16.348(mjap) = 94.493331%
 94.493331:
   - [3, 6, 1, 4, 2, 10, 7, 4, 5, 3, 6, 5, 9, 8, 3, 4, 5, 1, 7, 6, 8, 5, 1, 2, 8, 10, 7, 3, 2, 4, 1, 2] # 32
@@ -292,8 +293,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [32, 32, 35, 35, 35], total reshuffles 43904000
 # symbols: 61.907(lined) + 16.471(scatter) = 78.378243%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/686000
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/686000
 # RTP = 78.378(sym) + 16.348(mjap) = 94.726334%
 94.726334:
   - [3, 6, 1, 4, 2, 10, 7, 4, 5, 3, 6, 5, 9, 8, 3, 4, 5, 1, 7, 6, 8, 5, 1, 2, 8, 10, 7, 3, 2, 4, 1, 2] # 32
@@ -304,8 +305,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [32, 32, 35, 35, 35], total reshuffles 43904000
 # symbols: 62.193(lined) + 16.471(scatter) = 78.664185%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/686000
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/686000
 # RTP = 78.664(sym) + 16.348(mjap) = 95.012276%
 95.012276:
   - [3, 6, 1, 4, 2, 10, 7, 4, 5, 3, 6, 5, 9, 8, 3, 4, 5, 1, 7, 6, 8, 5, 1, 2, 8, 10, 7, 3, 2, 4, 1, 2] # 32
@@ -316,8 +317,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [32, 32, 35, 35, 35], total reshuffles 43904000
 # symbols: 62.421(lined) + 16.471(scatter) = 78.892001%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/686000
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/686000
 # RTP = 78.892(sym) + 16.348(mjap) = 95.240091%
 95.240091:
   - [3, 6, 1, 4, 2, 10, 7, 4, 5, 3, 6, 5, 9, 8, 3, 4, 5, 1, 7, 6, 8, 5, 1, 2, 8, 10, 7, 3, 2, 4, 1, 2] # 32
@@ -328,8 +329,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [32, 32, 35, 35, 35], total reshuffles 43904000
 # symbols: 63.289(lined) + 15.867(scatter) = 79.156474%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/728875
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/728875
 # RTP = 79.156(sym) + 16.348(mjap) = 95.504565%
 95.504565:
   - [3, 6, 1, 4, 2, 10, 7, 4, 5, 3, 6, 5, 9, 8, 3, 4, 5, 1, 7, 6, 8, 5, 1, 2, 8, 10, 7, 3, 2, 4, 1, 2] # 32
@@ -340,8 +341,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [32, 32, 35, 35, 35], total reshuffles 43904000
 # symbols: 62.847(lined) + 16.471(scatter) = 79.318386%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/686000
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/686000
 # RTP = 79.318(sym) + 16.348(mjap) = 95.666476%
 95.666476:
   - [3, 6, 1, 4, 2, 10, 7, 4, 5, 3, 6, 5, 9, 8, 3, 4, 5, 1, 7, 6, 8, 5, 1, 2, 8, 10, 7, 3, 2, 4, 1, 2] # 32
@@ -352,8 +353,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [32, 32, 35, 35, 35], total reshuffles 43904000
 # symbols: 62.927(lined) + 16.471(scatter) = 79.398560%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/686000
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/686000
 # RTP = 79.399(sym) + 16.348(mjap) = 95.746651%
 95.746651:
   - [3, 6, 1, 4, 2, 10, 7, 4, 5, 3, 6, 5, 9, 8, 3, 4, 5, 1, 7, 6, 8, 5, 1, 2, 8, 10, 7, 3, 2, 4, 1, 2] # 32
@@ -364,8 +365,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [32, 32, 35, 35, 35], total reshuffles 43904000
 # symbols: 63.142(lined) + 16.471(scatter) = 79.613575%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/686000
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/686000
 # RTP = 79.614(sym) + 16.348(mjap) = 95.961666%
 95.961666:
   - [3, 6, 1, 4, 2, 10, 7, 4, 5, 3, 6, 5, 9, 8, 3, 4, 5, 1, 7, 6, 8, 5, 1, 2, 8, 10, 7, 3, 2, 4, 1, 2] # 32
@@ -376,8 +377,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [32, 32, 35, 35, 35], total reshuffles 43904000
 # symbols: 63.633(lined) + 16.471(scatter) = 80.104191%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/686000
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/686000
 # RTP = 80.104(sym) + 16.348(mjap) = 96.452281%
 96.452281:
   - [3, 6, 1, 4, 2, 10, 7, 4, 5, 3, 6, 5, 9, 8, 3, 4, 5, 1, 7, 6, 8, 5, 1, 2, 8, 10, 7, 3, 2, 4, 1, 2] # 32
@@ -388,8 +389,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [32, 32, 35, 35, 35], total reshuffles 43904000
 # symbols: 64.183(lined) + 16.471(scatter) = 80.653890%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/686000
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/686000
 # RTP = 80.654(sym) + 16.348(mjap) = 97.001981%
 97.001981:
   - [3, 6, 1, 4, 2, 10, 7, 4, 5, 3, 6, 5, 9, 8, 3, 4, 5, 1, 7, 6, 8, 5, 1, 2, 8, 10, 7, 3, 2, 4, 1, 2] # 32
@@ -400,8 +401,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [32, 32, 35, 35, 35], total reshuffles 43904000
 # symbols: 64.496(lined) + 16.471(scatter) = 80.966800%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/686000
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/686000
 # RTP = 80.967(sym) + 16.348(mjap) = 97.314891%
 97.314891:
   - [3, 6, 1, 4, 2, 10, 7, 4, 5, 3, 6, 5, 9, 8, 3, 4, 5, 1, 7, 6, 8, 5, 1, 2, 8, 10, 7, 3, 2, 4, 1, 2] # 32
@@ -412,8 +413,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [32, 32, 35, 35, 35], total reshuffles 43904000
 # symbols: 64.69(lined) + 16.471(scatter) = 81.161133%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/686000
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/686000
 # RTP = 81.161(sym) + 16.348(mjap) = 97.509224%
 97.509224:
   - [3, 6, 1, 4, 2, 10, 7, 4, 5, 3, 6, 5, 9, 8, 3, 4, 5, 1, 7, 6, 8, 5, 1, 2, 8, 10, 7, 3, 2, 4, 1, 2] # 32
@@ -424,8 +425,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [32, 32, 35, 35, 35], total reshuffles 43904000
 # symbols: 65.182(lined) + 16.471(scatter) = 81.653389%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/686000
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/686000
 # RTP = 81.653(sym) + 16.348(mjap) = 98.001480%
 98.001480:
   - [3, 6, 1, 4, 2, 10, 7, 4, 5, 3, 6, 5, 9, 8, 3, 4, 5, 1, 7, 6, 8, 5, 1, 2, 8, 10, 7, 3, 2, 4, 1, 2] # 32
@@ -436,8 +437,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [32, 32, 35, 35, 35], total reshuffles 43904000
 # symbols: 65.681(lined) + 16.471(scatter) = 82.151977%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/686000
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/686000
 # RTP = 82.152(sym) + 16.348(mjap) = 98.500068%
 98.500068:
   - [3, 6, 1, 4, 2, 10, 7, 4, 5, 3, 6, 5, 9, 8, 3, 4, 5, 1, 7, 6, 8, 5, 1, 2, 8, 10, 7, 3, 2, 4, 1, 2] # 32
@@ -448,8 +449,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [32, 32, 35, 35, 35], total reshuffles 43904000
 # symbols: 66.166(lined) + 16.471(scatter) = 82.636990%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/686000
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/686000
 # RTP = 82.637(sym) + 16.348(mjap) = 98.985080%
 98.985080:
   - [3, 6, 1, 4, 2, 10, 7, 4, 5, 3, 6, 5, 9, 8, 3, 4, 5, 1, 7, 6, 8, 5, 1, 2, 8, 10, 7, 3, 2, 4, 1, 2] # 32
@@ -460,8 +461,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [32, 32, 35, 35, 35], total reshuffles 43904000
 # symbols: 66.215(lined) + 16.471(scatter) = 82.686188%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/686000
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/686000
 # RTP = 82.686(sym) + 16.348(mjap) = 99.034279%
 99.034279:
   - [3, 6, 1, 4, 2, 10, 7, 4, 5, 3, 6, 5, 9, 8, 3, 4, 5, 1, 7, 6, 8, 5, 1, 2, 8, 10, 7, 3, 2, 4, 1, 2] # 32
@@ -472,8 +473,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [32, 32, 35, 35, 35], total reshuffles 43904000
 # symbols: 66.705(lined) + 16.471(scatter) = 83.176075%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/686000
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/686000
 # RTP = 83.176(sym) + 16.348(mjap) = 99.524166%
 99.524166:
   - [3, 6, 1, 4, 2, 10, 7, 4, 5, 3, 6, 5, 9, 8, 3, 4, 5, 1, 7, 6, 8, 5, 1, 2, 8, 10, 7, 3, 2, 4, 1, 2] # 32
@@ -484,8 +485,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [32, 32, 35, 35, 35], total reshuffles 43904000
 # symbols: 67.147(lined) + 16.471(scatter) = 83.618358%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/686000
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/686000
 # RTP = 83.618(sym) + 16.348(mjap) = 99.966449%
 99.966449:
   - [3, 6, 1, 4, 2, 10, 7, 4, 5, 3, 6, 5, 9, 8, 3, 4, 5, 1, 7, 6, 8, 5, 1, 2, 8, 10, 7, 3, 2, 4, 1, 2] # 32
@@ -496,8 +497,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [32, 32, 35, 35, 35], total reshuffles 43904000
 # symbols: 67.203(lined) + 16.471(scatter) = 83.674162%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/686000
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/686000
 # RTP = 83.674(sym) + 16.348(mjap) = 100.022252%
 100.022252:
   - [3, 6, 1, 4, 2, 10, 7, 4, 5, 3, 6, 5, 9, 8, 3, 4, 5, 1, 7, 6, 8, 5, 1, 2, 8, 10, 7, 3, 2, 4, 1, 2] # 32
@@ -508,8 +509,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [30, 32, 35, 35, 35], total reshuffles 41160000
 # symbols: 67.751(lined) + 17.156(scatter) = 84.906526%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/643125
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/643125
 # RTP = 84.907(sym) + 16.348(mjap) = 101.254616%
 101.254616:
   - [4, 3, 1, 10, 5, 7, 4, 8, 3, 7, 5, 3, 10, 6, 8, 1, 6, 2, 3, 7, 2, 1, 8, 2, 1, 5, 4, 2, 6, 9] # 30
@@ -520,8 +521,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [30, 32, 35, 35, 35], total reshuffles 41160000
 # symbols: 69.147(lined) + 17.156(scatter) = 86.302517%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/643125
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/643125
 # RTP = 86.303(sym) + 16.348(mjap) = 102.650608%
 102.650608:
   - [4, 3, 1, 10, 5, 7, 4, 8, 3, 7, 5, 3, 10, 6, 8, 1, 6, 2, 3, 7, 2, 1, 8, 2, 1, 5, 4, 2, 6, 9] # 30
@@ -532,8 +533,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [32, 32, 35, 35, 35], total reshuffles 43904000
 # symbols: 70.402(lined) + 18.373(scatter) = 88.774468%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/578812
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/578812
 # RTP = 88.774(sym) + 16.348(mjap) = 105.122559%
 105.122559:
   - [5, 4, 7, 9, 1, 2, 5, 4, 8, 6, 4, 1, 5, 3, 1, 2, 8, 6, 7, 3, 10, 7, 2, 6, 3, 8, 10] # 27
@@ -544,8 +545,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [27, 32, 35, 35, 35], total reshuffles 37044000
 # symbols: 71.363(lined) + 18.373(scatter) = 89.735717%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/578812
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/578812
 # RTP = 89.736(sym) + 16.348(mjap) = 106.083807%
 106.083807:
   - [5, 4, 7, 9, 1, 2, 5, 4, 8, 6, 4, 1, 5, 3, 1, 2, 8, 6, 7, 3, 10, 7, 2, 6, 3, 8, 10] # 27
@@ -556,8 +557,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [27, 32, 35, 35, 35], total reshuffles 37044000
 # symbols: 73.473(lined) + 18.373(scatter) = 91.845330%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/578812
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/578812
 # RTP = 91.845(sym) + 16.348(mjap) = 108.193420%
 108.193420:
   - [5, 4, 7, 9, 1, 2, 5, 4, 8, 6, 4, 1, 5, 3, 1, 2, 8, 6, 7, 3, 10, 7, 2, 6, 3, 8, 10] # 27
@@ -568,8 +569,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [29, 29, 35, 35, 35], total reshuffles 36057875
 # symbols: 74.065(lined) + 19.542(scatter) = 93.606848%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/524548
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/524548
 # RTP = 93.607(sym) + 16.348(mjap) = 109.954939%
 109.954939:
   - [7, 8, 4, 10, 1, 3, 5, 2, 6, 4, 3, 9, 7, 1, 2, 10, 5, 1, 6, 8, 5, 3, 7, 8, 2, 4, 6] # 27
@@ -580,8 +581,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [27, 29, 35, 35, 35], total reshuffles 33571125
 # symbols: 75.114(lined) + 19.542(scatter) = 94.655875%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/524548
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/524548
 # RTP = 94.656(sym) + 16.348(mjap) = 111.003965%
 111.003965:
   - [7, 8, 4, 10, 1, 3, 5, 2, 6, 4, 3, 9, 7, 1, 2, 10, 5, 1, 6, 8, 5, 3, 7, 8, 2, 4, 6] # 27
@@ -592,8 +593,8 @@ megajack/aztecgold/rmap
 
 # reels lengths [27, 29, 35, 35, 35], total reshuffles 33571125
 # symbols: 76.468(lined) + 19.542(scatter) = 96.009225%
-# pyramid bonuses: hit rate 1/198.5, rtp = 16.348090%
-# jackpots: count 64, frequency 1/524548
+# pyramid bonus: hit rate 1/198.5, rtp = 16.348090%
+# jackpot: count 64, frequency 1/524548
 # RTP = 96.009(sym) + 16.348(mjap) = 112.357316%
 112.357316:
   - [7, 8, 4, 10, 1, 3, 5, 2, 6, 4, 3, 9, 7, 1, 2, 10, 5, 1, 6, 8, 5, 3, 7, 8, 2, 4, 6] # 27

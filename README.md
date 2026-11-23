@@ -235,6 +235,8 @@ Here output means:
 
 * `cascades contribution` - shows the average contribution of each cascade fall to the payout.
 
+See [Mathematical Model: Sole-Reel Set (Recursive Re-Triggers)](https://github.com/slotopol/server/wiki/sole-reel-recursive) page on project's wiki.
+
 ## Security ensuring
 
 For using server on open Internet it is highly recommended to change default security keys at the configuration file [slot-config.yaml](appdata/slot-config.yaml) (or by environment variables):

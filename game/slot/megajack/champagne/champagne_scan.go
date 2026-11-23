@@ -42,34 +42,33 @@ func ExpBottle() {
 func CalcStatBon(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	var g = NewGame(sp.Sel)
 	g.FSR = 15 // set free spins mode
-	var s = slot.NewStatGeneric(sn, 5)
-	s.BonDim(mjap)
-	s.JackDim(mjj)
+	var s = slot.NewStatSnap(1, sn, 5, mjap, mjj)
 
 	var calc = func(w io.Writer) (float64, float64) {
-		var N = s.Count()
-		var lrtp, srtp = s.RTPsym(g.Cost(), scat)
-		var rtpsym = lrtp + srtp
-		var q = s.FSQ()
+		var N, S, _ = s.NSQ(g.Cost())
+		var µ = S / N
+		var HRfg, q, _ = slot.Efs(s)
 		var sq = 1 / (1 - q)
-		var qmjc = s.BonusHits(mjc) / N / float64(g.Sel)
+		var HRmjc = float64(s.A[0].Cb[mjc-1]) / N
+		var qmjc = HRmjc / float64(g.Sel)
 		var rtpmjc = EVmjc * qmjc
-		var rtp = sq * (rtpsym + rtpmjc)
-		fmt.Fprintf(w, "symbols: %.5g(lined) + %.5g(scatter) = %.6f%%\n", lrtp*100, srtp*100, rtpsym*100)
-		fmt.Fprintf(w, "free: HRfg = 1/%.5g, q = %.5g, sq = 1/(1-q) = %.5g\n", 1/s.FGQ(), q, sq)
-		fmt.Fprintf(w, "bottle bonuses: hit rate 1/%.5g, rtp = %.6f%%\n", N/s.BonusHits(mjc), rtpmjc*100)
-		if s.JackHits(mjj) > 0 {
-			fmt.Fprintf(w, "jackpots: count %g, frequency 1/%.12g\n", s.JackHits(mjj), N/s.JackHits(mjj))
+		var rtp = sq * (µ + rtpmjc)
+		fmt.Fprintf(w, "symbols: µ = %.8g%%\n", µ*100)
+		fmt.Fprintf(w, "free: HRfg = 1/%.5g, q = %.5g, sq = 1/(1-q) = %.5g\n", 1/HRfg, q, sq)
+		fmt.Fprintf(w, "champagne bonus: hit rate 1/%.5g, rtp = %.8g%%\n", 1/HRmjc, rtpmjc*100)
+		if jn := s.A[0].Cj[mjj-1]; jn > 0 {
+			var HRj = float64(jn) / N
+			fmt.Fprintf(w, "jackpot: count %d, hit rate 1/%.8g\n", jn, 1/HRj)
 		}
-		fmt.Fprintf(w, "RTP = sq*(rtp(sym)+rtp(mjc)) = %.5g*(%.5g+%.5g) = %.6f%%\n", sq, rtpsym*100, rtpmjc*100, rtp*100)
+		fmt.Fprintf(w, "RTP = sq*(rtp(sym)+rtp(mjc)) = %.5g*(%.5g+%.5g) = %.8g%%\n", sq, µ*100, rtpmjc*100, rtp*100)
 		return rtp, math.NaN()
 	}
 
-	return slot.ScanReelsCommon(ctx, sp, s, g, calc)
+	return slot.ScanReelsCommon2(ctx, sp, s, g, calc)
 }
 
 func CalcStatReg(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
-	fmt.Printf("*bonus games calculations*\n")
+	fmt.Printf("\n*bonus games calculations*\n")
 	ExpBottle()
 	fmt.Printf("len = %d, avr bottle gain = %.5g, EV = %g\n", len(Bottles), EVbot, EVmjc)
 	fmt.Printf("*free games calculations*\n")
@@ -77,31 +76,30 @@ func CalcStatReg(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	if ctx.Err() != nil {
 		return 0, 0
 	}
-	fmt.Printf("*regular games calculations*\n")
+	fmt.Printf("\n*regular games calculations*\n")
 	var g = NewGame(sp.Sel)
 	g.FSR = 0 // no free spins
-	var s = slot.NewStatGeneric(sn, 5)
-	s.BonDim(mjap)
-	s.JackDim(mjj)
+	var s = slot.NewStatSnap(1, sn, 5, mjap, mjj)
 
 	var calc = func(w io.Writer) (float64, float64) {
-		var N = s.Count()
-		var lrtp, srtp = s.RTPsym(g.Cost(), scat)
-		var rtpsym = lrtp + srtp
-		var q = s.FSQ()
+		var N, S, _ = s.NSQ(g.Cost())
+		var µ = S / N
+		var HRfg, q, _ = slot.Efs(s)
 		var sq = 1 / (1 - q)
-		var qmjc = s.BonusHits(mjc) / N / float64(g.Sel)
+		var HRmjc = float64(s.A[0].Cb[mjc-1]) / N
+		var qmjc = HRmjc / float64(g.Sel)
 		var rtpmjc = EVmjc * qmjc
-		var rtp = rtpsym + rtpmjc + q*rtpfs
-		fmt.Fprintf(w, "symbols: %.5g(lined) + %.5g(scatter) = %.6f%%\n", lrtp*100, srtp*100, rtpsym*100)
-		fmt.Fprintf(w, "free: HRfg = 1/%.5g, q = %.5g, sq = 1/(1-q) = %.5g\n", 1/s.FGQ(), q, sq)
-		fmt.Fprintf(w, "champagne bonuses: hit rate 1/%.5g, rtp = %.6f%%\n", N/s.BonusHits(mjc), rtpmjc*100)
-		if s.JackHits(mjj) > 0 {
-			fmt.Fprintf(w, "jackpots: count %g, frequency 1/%.12g\n", s.JackHits(mjj), N/s.JackHits(mjj))
+		var rtp = µ + rtpmjc + q*rtpfs
+		fmt.Fprintf(w, "symbols: µ = %.8g%%\n", µ*100)
+		fmt.Fprintf(w, "free: HRfg = 1/%.5g, q = %.5g, sq = 1/(1-q) = %.5g\n", 1/HRfg, q, sq)
+		fmt.Fprintf(w, "champagne bonus: hit rate 1/%.5g, rtp = %.8g%%\n", 1/HRmjc, rtpmjc*100)
+		if jn := s.A[0].Cj[mjj-1]; jn > 0 {
+			var HRj = float64(jn) / N
+			fmt.Fprintf(w, "jackpot: count %d, hit rate 1/%.8g\n", jn, 1/HRj)
 		}
-		fmt.Fprintf(w, "RTP = rtp(sym) + rtp(mjc) + q*rtp(fg) = %.5g + %.5g + %.5g*%.5g = %.6f%%\n", rtpsym*100, rtpmjc*100, q, rtpfs*100, rtp*100)
+		fmt.Fprintf(w, "RTP = rtp(sym) + rtp(mjc) + q*rtp(fg) = %.5g + %.5g + %.5g*%.5g = %.8g%%\n", µ*100, rtpmjc*100, q, rtpfs*100, rtp*100)
 		return rtp, math.NaN()
 	}
 
-	return slot.ScanReelsCommon(ctx, sp, s, g, calc)
+	return slot.ScanReelsCommon2(ctx, sp, s, g, calc)
 }

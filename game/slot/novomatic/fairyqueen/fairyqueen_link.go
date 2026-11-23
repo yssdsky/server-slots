@@ -38,7 +38,7 @@ var Info = game.AlgInfo{
 }
 
 func init() {
-	Info.SetupFactory(func(sel int) game.Gamble { return NewGame(sel) }, CalcStatReg)
+	Info.SetupFactory(func(sel int) game.Gamble { return NewGame(sel) }, CalcStat)
 	game.DataRouter["novomatic/fairyqueen/es"] = &ReelExpSym
 	game.DataRouter["novomatic/fairyqueen/bon"] = &ReelsBon
 	game.DataRouter["novomatic/fairyqueen/rmap"] = &ReelsMap

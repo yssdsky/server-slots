@@ -13,31 +13,33 @@ const Ebb = 1 // bananas bonus expectation
 
 func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	var g = NewGame(sp.Sel)
-	var s = slot.NewStatGeneric(sn, 5)
-	s.BonDim(lsb6)
+	var s = slot.NewStatSnap(1, sn, 5, lsb6, 0).MakeSym(scat2, 6)
 
 	var calc = func(w io.Writer) (float64, float64) {
-		var N = s.Count()
-		var lrtp, srtp = s.RTPsym(g.Cost(), scat1)
-		var rtpsym = lrtp + srtp
-		var qbb = s.BonusHits(bbid) / N
+		var N, S, _ = s.NSQ(g.Cost())
+		var µ = S / N
+		var HRbb = float64(s.A[0].Cb[bbid-1]) / N
+		var qbb = HRbb
 		var rtpbb = Ebb * qbb
-		var qls1 = s.BonusHits(lsb1) / N / float64(g.Sel)
+		var HRls1 = float64(s.A[0].Cb[lsb1-1]) / N
+		var qls1 = HRls1 / float64(g.Sel)
 		var rtpls1 = Els * 1 * qls1
-		var qls3 = s.BonusHits(lsb3) / N / float64(g.Sel)
+		var HRls3 = float64(s.A[0].Cb[lsb3-1]) / N
+		var qls3 = HRls3 / float64(g.Sel)
 		var rtpls3 = Els * 3 * qls3
-		var qls6 = s.BonusHits(lsb6) / N / float64(g.Sel)
+		var HRls6 = float64(s.A[0].Cb[lsb6-1]) / N
+		var qls6 = HRls6 / float64(g.Sel)
 		var rtpls6 = Els * 6 * qls6
-		var rtp = rtpsym + rtpbb + rtpls1 + rtpls3 + rtpls6
-		fmt.Fprintf(w, "symbols: %.5g(lined) + %.5g(scatter) = %.6f%%\n", lrtp*100, srtp*100, rtpsym*100)
-		fmt.Fprintf(w, "bananas bonuses: hit rate 1/%.5g, rtp = %.6f%%\n", N/s.BonusHits(bbid), rtpbb*100)
-		fmt.Fprintf(w, "lucky spin1 bonuses: hit rate 1/%.5g, rtp = %.6f%%\n", N/s.BonusHits(lsb1), rtpls1*100)
-		fmt.Fprintf(w, "lucky spin3 bonuses: hit rate 1/%.5g, rtp = %.6f%%\n", N/s.BonusHits(lsb3), rtpls3*100)
-		fmt.Fprintf(w, "lucky spin6 bonuses: hit rate 1/%.5g, rtp = %.6f%%\n", N/s.BonusHits(lsb6), rtpls6*100)
-		fmt.Fprintf(w, "RTP = %.5g(sym) + %.5g(bb) + %.5g(ls) = %.6f%%\n",
-			rtpsym*100, rtpbb*100, (rtpls1+rtpls3+rtpls6)*100, rtp*100)
+		var rtp = µ + rtpbb + rtpls1 + rtpls3 + rtpls6
+		fmt.Fprintf(w, "symbols: µ = %.8g%%\n", µ*100)
+		fmt.Fprintf(w, "bananas bonus: hit rate 1/%.5g, rtp = %.8g%%\n", 1/HRbb, rtpbb*100)
+		fmt.Fprintf(w, "lucky spin1 bonus: hit rate 1/%.5g, rtp = %.8g%%\n", 1/HRls1, rtpls1*100)
+		fmt.Fprintf(w, "lucky spin3 bonus: hit rate 1/%.5g, rtp = %.8g%%\n", 1/HRls3, rtpls3*100)
+		fmt.Fprintf(w, "lucky spin6 bonus: hit rate 1/%.5g, rtp = %.8g%%\n", 1/HRls6, rtpls6*100)
+		fmt.Fprintf(w, "RTP = %.5g(sym) + %.5g(bb) + %.5g(ls) = %.8g%%\n",
+			µ*100, rtpbb*100, (rtpls1+rtpls3+rtpls6)*100, rtp*100)
 		return rtp, math.NaN()
 	}
 
-	return slot.ScanReelsCommon(ctx, sp, s, g, calc)
+	return slot.ScanReelsCommon2(ctx, sp, s, g, calc)
 }

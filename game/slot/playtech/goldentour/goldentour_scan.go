@@ -20,24 +20,24 @@ func ExpGolf() {
 }
 
 func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
-	fmt.Printf("*bonus games calculations*\n")
+	fmt.Printf("\n*bonus games calculations*\n")
 	ExpGolf()
 	fmt.Printf("len = %d, E = %g\n", len(Golf), Egolfbn)
-	fmt.Printf("*reels calculations*\n")
+	fmt.Printf("\n*reels calculations*\n")
 	var g = NewGame(sp.Sel)
-	var s = slot.NewStatGeneric(sn, 5)
-	s.BonDim(golfbon)
+	var s = slot.NewStatSnap(1, sn, 5, golfbon, 0)
 
 	var calc = func(w io.Writer) (float64, float64) {
 		var N, S, _ = s.NSQ(g.Cost())
 		var µ = S / N
-		var qgolfbn = s.BonusHits(golfbon) / N / float64(g.Sel)
-		var rtpgolfbn = Egolfbn * qgolfbn
-		var rtp = µ + rtpgolfbn
-		fmt.Fprintf(w, "golf bonuses: hit rate 1/%.5g, rtp = %.6f%%\n", N/s.BonusHits(golfbon), rtpgolfbn*100)
-		fmt.Fprintf(w, "RTP = %.5g(sym) + %.5g(golf) = %.6f%%\n", µ*100, rtpgolfbn*100, rtp*100)
+		var HRgolf = float64(s.A[0].Cb[golfbon-1]) / N
+		var qgolf = HRgolf / float64(g.Sel)
+		var rtpgolf = Egolfbn * qgolf
+		var rtp = µ + rtpgolf
+		fmt.Fprintf(w, "golf bonus: hit rate 1/%.5g, rtp = %.8g%%\n", 1/HRgolf, rtpgolf*100)
+		fmt.Fprintf(w, "RTP = %.5g(sym) + %.5g(golf) = %.8g%%\n", µ*100, rtpgolf*100, rtp*100)
 		return rtp, math.NaN()
 	}
 
-	return slot.ScanReelsCommon(ctx, sp, s, g, calc)
+	return slot.ScanReelsCommon2(ctx, sp, s, g, calc)
 }

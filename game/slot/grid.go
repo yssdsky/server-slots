@@ -20,11 +20,11 @@ var (
 // (1 ,1) symbol is on left top corner.
 type Grider interface {
 	Dim() (Pos, Pos)                   // returns grid dimensions
+	SetCol(x Pos, reel []Sym, pos int) // setup column on grid with given reel at given position
+	SpinReels(rng *Rand, reels Reelx)  // fill the grid with random hits on those reels
 	At(x, y Pos) Sym                   // returns symbol at position (x, y), starts from (1, 1)
 	LX(x Pos, line Linex) Sym          // returns symbol at position (x, line(x)), starts from (1, 1)
 	SetSym(x, y Pos, sym Sym)          // setup symbol at given position
-	SetCol(x Pos, reel []Sym, pos int) // setup column on grid with given reel at given position
-	SpinReels(rng *Rand, reels Reelx)  // fill the grid with random hits on those reels
 	SymNum(sym Sym) (n Pos)            // returns number of symbols on the grid
 	SymPos(sym Sym) Hitx               // returns symbols positions on the grid
 }

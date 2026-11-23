@@ -19,9 +19,9 @@ megajack/slotopol/rmap
 # Original reels.
 # reels lengths [32, 32, 32, 32, 32], total reshuffles 33554432
 # symbols: 48.848(lined) + 39.546(scatter) = 88.394135%
-# spin9 bonuses: count 2700, rtp = 7.676482%
-# monopoly bonuses: count 4320, rtp = 3.689938%
-# jackpots: count 32, frequency 1/1048576
+# spin9 bonus: count 2700, rtp = 7.676482%
+# monopoly bonus: count 4320, rtp = 3.689938%
+# jackpot: count 32, frequency 1/1048576
 # RTP = 88.394(sym) + 7.6765(mje9) + 3.6899(mjm) = 99.760556%
 99.760556:
   - [13, 1, 5, 12, 13, 11, 12, 11, 13, 8, 2, 12, 13, 3, 4, 6, 13, 2, 5, 10, 13, 9, 7, 8, 13, 10, 7, 9, 13, 3, 4, 6]

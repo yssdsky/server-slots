@@ -235,8 +235,8 @@ local function calculate(reels)
 	local rtp_total = rtp_sym + rtp_mje9 + rtp_mjm
 	print(string.format("reels lengths [%s], total reshuffles %d", table.concat(L, ", "), N))
 	print(string.format("symbols: %.5g(lined) + %.5g(scatter) = %.6f%%", rtp_line*100, rtp_scat*100, rtp_sym*100))
-	print(string.format("spin9 bonuses: hit rate 1/%.5g, rtp = %.6f%%", 1/qmje9, rtp_mje9*100))
-	print(string.format("monopoly bonuses: hit rate 1/%.5g, rtp = %.6f%%", 1/qmjm, rtp_mjm*100))
+	print(string.format("spin9 bonus: hit rate 1/%.5g, rtp = %.6f%%", 1/qmje9, rtp_mje9*100))
+	print(string.format("monopoly bonus: hit rate 1/%.5g, rtp = %.6f%%", 1/qmjm, rtp_mjm*100))
 	print(string.format("RTP = %.5g(sym) + %.5g(mje9) + %.5g(mjm) = %.6f%%",
 		rtp_sym*100, rtp_mje9*100, rtp_mjm*100, rtp_total*100))
 	return rtp_total

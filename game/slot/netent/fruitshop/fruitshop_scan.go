@@ -54,7 +54,7 @@ func (s *StatBon) FGC() (Cfg, Cfs, Qfs float64) {
 
 func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	fmt.Printf("\n(1/2) free games calculations\n")
-	var sb = NewStatBon() // slot.NewStatGeneric(sn, 5) also valid
+	var sb = NewStatBon()
 	{
 		var g = NewGame()
 		g.FSR = 5 // set free spins mode
@@ -69,7 +69,7 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	}
 
 	fmt.Printf("\n(2/2) regular games calculations\n")
-	var sr = NewStatReg() // slot.NewStatGeneric(sn, 5) also valid
+	var sr = NewStatReg()
 	{
 		var g = NewGame()
 		var calc = func(w io.Writer) (float64, float64) {

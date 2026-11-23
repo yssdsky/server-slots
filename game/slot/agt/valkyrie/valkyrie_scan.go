@@ -9,7 +9,7 @@ import (
 	"github.com/slotopol/server/game/slot"
 )
 
-func CalcStatReg(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
+func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	fmt.Printf("\n(1/2) bonus reels calculations\n")
 	var sb = slot.NewStatGeneric(sn, 5)
 	{
