@@ -12,7 +12,7 @@ import (
 func Parsheet(w io.Writer, sp *slot.ScanPar, ss *slot.StatSnap, cost float64) (float64, float64) {
 	var µ, D = slot.EvD(ss, cost)
 	var N = ss.Count()
-	var cbx2, cbx3 = float64(ss.A[0].Cb[bonx2-1]), float64(ss.A[0].Cb[bonx3-1])
+	var cbx2, cbx3 = ss.Cb(bonx2), ss.Cb(bonx3)
 	var HRx2 = cbx2 / N
 	var HRx3 = cbx3 / N
 	var HRxx = (cbx2 + cbx3) / N

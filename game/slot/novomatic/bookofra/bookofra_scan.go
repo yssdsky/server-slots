@@ -59,7 +59,7 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 		var rtp = µr + qr*rtpfs
 		var D = Dsymr + Pfg*(Vbon+(Ebon-µr)*(Ebon-µr))
 		if sp.IsMain() {
-			fmt.Fprintf(w, "RTP(fg) = %.6f%%\n", rtpfs*100)
+			fmt.Fprintf(w, "RTP(fg) = %.8g%%\n", rtpfs*100)
 			fmt.Fprintf(w, "symbols: µ = %.8g%%, sigma(sym) = %.6g\n", µr*100, math.Sqrt(Dsymr))
 			fmt.Fprintf(w, "free: HRfg = 1/%.5g, q = %.5g, sq = 1/(1-q) = %.5g\n", 1/Pfg, qr, sqr)
 			fmt.Fprintf(w, "RTP = %.5g(sym) + %.5g*%.5g(fg) = %.8g%%\n", µr*100, qr, rtpfs*100, rtp*100)

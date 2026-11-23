@@ -91,10 +91,10 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	var calc = func(w io.Writer) (float64, float64) {
 		var N, S, _ = s.NSQ(g.Cost())
 		var µ = S / N
-		var HRmje9 = float64(s.A[0].Cb[mje9-1]) / N
+		var HRmje9 = s.Cb(mje9) / N
 		var qmje9 = HRmje9 / float64(g.Sel)
 		var rtpmje9 = Emje * 9 * qmje9
-		var HRmjm = float64(s.A[0].Cb[mjm-1]) / N
+		var HRmjm = s.Cb(mjm) / N
 		var qmjm = HRmjm / float64(g.Sel)
 		var rtpmjm = Emjm * qmjm
 		var rtp = µ + rtpmje9 + rtpmjm

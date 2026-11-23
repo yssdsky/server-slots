@@ -69,7 +69,7 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	var calc = func(w io.Writer) (float64, float64) {
 		var N, S, _ = s.NSQ(g.Cost())
 		var µ = S / N
-		var HRmjap = float64(s.A[0].Cb[mjap-1]) / N
+		var HRmjap = s.Cb(mjap) / N
 		var qmjap = HRmjap
 		var rtpmjap = Ebon * qmjap
 		var rtp = µ + rtpmjap

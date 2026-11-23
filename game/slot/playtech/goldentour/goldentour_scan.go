@@ -30,7 +30,7 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 	var calc = func(w io.Writer) (float64, float64) {
 		var N, S, _ = s.NSQ(g.Cost())
 		var µ = S / N
-		var HRgolf = float64(s.A[0].Cb[golfbon-1]) / N
+		var HRgolf = s.Cb(golfbon) / N
 		var qgolf = HRgolf / float64(g.Sel)
 		var rtpgolf = Egolfbn * qgolf
 		var rtp = µ + rtpgolf

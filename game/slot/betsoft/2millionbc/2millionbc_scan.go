@@ -73,7 +73,7 @@ func CalcStatReg(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 		var HRac = 1 / r5l
 		var qac = HRac
 		var rtpac = Eacbn * qac
-		var HRdl = float64(s.A[0].Cb[dlbn-1]) / N
+		var HRdl = s.Cb(dlbn) / N
 		var qdl = HRdl / float64(g.Sel)
 		var rtpdl = Edlbn * qdl
 		var rtp = µ + rtpac + rtpdl + q*rtpfs

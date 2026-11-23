@@ -26,7 +26,7 @@ type Cascade5x3 struct {
 // Declare conformity with Cascade interface.
 var _ Cascade = (*Cascade5x3)(nil)
 
-func (s *Cascade5x3) SetColFast(x Pos, reel []Sym, pos int) {
+func (s *Cascade5x3) SetCol(x Pos, reel []Sym, pos int) {
 	copy(s.Grid[x-1][:], reel[pos:])
 	s.Seed[x-1] = pos
 }
@@ -42,7 +42,7 @@ func (s *Cascade5x3) SpinReels(rng *Rand, reels Reelx) {
 func (s *Cascade5x3) BaseRoll(rng *Rand, reels Reelx) {
 	for x, reel := range reels {
 		var hit = rng.N(len(reel) - 2)
-		s.SetColFast(Pos(x+1), reel, hit)
+		s.SetCol(Pos(x+1), reel, hit)
 	}
 }
 
@@ -108,7 +108,7 @@ type Cascade5x4 struct {
 // Declare conformity with Cascade interface.
 var _ Cascade = (*Cascade5x4)(nil)
 
-func (s *Cascade5x4) SetColFast(x Pos, reel []Sym, pos int) {
+func (s *Cascade5x4) SetCol(x Pos, reel []Sym, pos int) {
 	copy(s.Grid[x-1][:], reel[pos:])
 	s.Seed[x-1] = pos
 }
@@ -124,7 +124,7 @@ func (s *Cascade5x4) SpinReels(rng *Rand, reels Reelx) {
 func (s *Cascade5x4) BaseRoll(rng *Rand, reels Reelx) {
 	for x, reel := range reels {
 		var hit = rng.N(len(reel) - 3)
-		s.SetColFast(Pos(x+1), reel, hit)
+		s.SetCol(Pos(x+1), reel, hit)
 	}
 }
 

@@ -14,6 +14,10 @@ func Print_vi(w io.Writer, sp *ScanPar, D float64) {
 	if !sp.IsVI() {
 		return
 	}
+	if math.IsNaN(D) || D == 0 {
+		fmt.Fprintln(w, "volatility is N/A")
+		return
+	}
 	var sigma = math.Sqrt(D)
 	var vi = game.GetZ(sp.Conf) * sigma
 	fmt.Fprintf(w, "sigma = %.6g, VI[%.4g%%] = %.6g (%s)\n", sigma, sp.Conf*100, vi, game.VIname5[game.VIclass5(sigma)])
@@ -26,6 +30,10 @@ func Print_ci(w io.Writer, sp *ScanPar, µ, D float64) {
 	if µ > game.RTPconv {
 		return
 	}
+	if math.IsNaN(D) || D == 0 {
+		fmt.Fprintln(w, "index of convergence is N/A")
+		return
+	}
 	var sigma = math.Sqrt(D)
 	var ci = game.CI(sp.Conf, µ, sigma)
 	var BRci = game.BankrollPlayer(sp.Conf, µ, sigma, ci)
@@ -34,6 +42,10 @@ func Print_ci(w io.Writer, sp *ScanPar, µ, D float64) {
 
 func Print_spread(w io.Writer, sp *ScanPar, µ, D float64) {
 	if !sp.IsSpread() {
+		return
+	}
+	if math.IsNaN(D) || D == 0 {
+		fmt.Fprintln(w, "RTP spread is N/A")
 		return
 	}
 	fmt.Fprintln(w)

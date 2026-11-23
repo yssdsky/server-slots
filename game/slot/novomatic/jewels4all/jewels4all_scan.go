@@ -99,9 +99,9 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (rtp, D float64) {
 	D = (1-Pw)*Dr + Pw*Dw + Pw*(1-Pw)*(µw-µr)*(µw-µr)
 	if sp.IsMain() {
 		fmt.Printf("\n*final calculations*\n")
-		fmt.Printf("euro avr: rtp(eu) = %.6f%%\n", µw*100)
+		fmt.Printf("euro avr: rtp(eu) = %.8g%%\n", µw*100)
 		fmt.Printf("wild hit rate: 1/%.5g\n", 1/Pw)
-		fmt.Printf("RTP = (1-Pw)*%.5g(sym) + Pw*%.5g(eu) = %.6f%%\n", µr*100, µw*100, rtp*100)
+		fmt.Printf("RTP = (1-Pw)*%.5g(sym) + Pw*%.5g(eu) = %.8g%%\n", µr*100, µw*100, rtp*100)
 	}
 	var w = os.Stdout
 	slot.Print_all(w, sp, sr, rtp, D)

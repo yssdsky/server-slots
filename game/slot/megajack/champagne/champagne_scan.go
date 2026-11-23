@@ -49,7 +49,7 @@ func CalcStatBon(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 		var µ = S / N
 		var HRfg, q, _ = slot.Efs(s)
 		var sq = 1 / (1 - q)
-		var HRmjc = float64(s.A[0].Cb[mjc-1]) / N
+		var HRmjc = s.Cb(mjc) / N
 		var qmjc = HRmjc / float64(g.Sel)
 		var rtpmjc = EVmjc * qmjc
 		var rtp = sq * (µ + rtpmjc)
@@ -86,7 +86,7 @@ func CalcStatReg(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 		var µ = S / N
 		var HRfg, q, _ = slot.Efs(s)
 		var sq = 1 / (1 - q)
-		var HRmjc = float64(s.A[0].Cb[mjc-1]) / N
+		var HRmjc = s.Cb(mjc) / N
 		var qmjc = HRmjc / float64(g.Sel)
 		var rtpmjc = EVmjc * qmjc
 		var rtp = µ + rtpmjc + q*rtpfs

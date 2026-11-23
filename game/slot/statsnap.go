@@ -259,8 +259,11 @@ func (ss *StatSnap) Add(as Simulator2) {
 
 // SymPays returns sum of pays for given 1-based symbol.
 func (ss *StatSnap) SymPays(sym Sym) (sum float64) {
-	for cfn := range ss.A {
-		sum += ss.A[cfn].SymPays(sym)
+	for _, sp := range ss.A {
+		if sp.N == 0 {
+			break
+		}
+		sum += sp.SymPays(sym)
 	}
 	return
 }
@@ -303,26 +306,45 @@ func (ss *StatSnap) NSQ(cost float64) (N, S, Q float64) {
 // FGC returns counter of triggering free game series, total count of free spins,
 // and sum of squared free spin series lengths.
 func (ss *StatSnap) FGC() (Cfg, Cfs, Qfs float64) {
+	var cfg, cfs, qfs uint64
 	for _, sp := range ss.A {
-		Cfg += float64(sp.Cfg)
-		Cfs += float64(sp.Cfs)
-		Qfs += float64(sp.Qfs)
+		if sp.N == 0 {
+			break
+		}
+		cfg += sp.Cfg
+		cfs += sp.Cfs
+		qfs += sp.Qfs
 	}
-	return
+	return float64(cfg), float64(cfs), float64(qfs)
+}
+
+// Count of free games.
+func (ss *StatSnap) Cfg() float64 {
+	var sum uint64
+	for _, sp := range ss.A {
+		if sp.N == 0 {
+			break
+		}
+		sum += sp.Cfg
+	}
+	return float64(sum)
+}
+
+// Count of bonus with given 1-based ID.
+func (ss *StatSnap) Cb(bid int) float64 {
+	var sum uint64
+	for _, sp := range ss.A {
+		if sp.N == 0 {
+			break
+		}
+		sum += sp.Cb[bid-1]
+	}
+	return float64(sum)
 }
 
 // Cascade multiplier.
 func (ss *StatSnap) Mcascade() float64 {
-	var pay1 = ss.A[0].SumPays()
-	var pays float64
-	for cfn := range ss.A {
-		var payi = ss.A[cfn].SumPays()
-		pays += payi
-		if payi == 0 {
-			break
-		}
-	}
-	return pays / pay1
+	return ss.SumPays() / ss.A[0].SumPays()
 }
 
 // Average Cascade Length.
@@ -339,8 +361,9 @@ func (ss *StatSnap) Kfading() float64 {
 	var N1 = ss.A[0].N
 	var Nn uint64
 	var cfn int
-	for cfn = range ss.A {
-		var Ni = ss.A[cfn].N
+	var sp *StatPage
+	for cfn, sp = range ss.A {
+		var Ni = sp.N
 		if Ni == 0 {
 			break
 		}
@@ -351,8 +374,8 @@ func (ss *StatSnap) Kfading() float64 {
 
 // Maximum number of cascades in avalanche.
 func (ss *StatSnap) Ncascmax() int {
-	for cfn := range ss.A {
-		if ss.A[cfn].N == 0 {
+	for cfn, sp := range ss.A {
+		if sp.N == 0 {
 			return cfn - 1
 		}
 	}

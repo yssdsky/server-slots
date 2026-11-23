@@ -42,7 +42,7 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 			if sp.IsMain() {
 				fmt.Fprintf(w, "bon symbols: µb = %.8g%%, sigma(sym)b = %.6g\n", µb*100, math.Sqrt(Dsymb))
 				fmt.Fprintf(w, "reg symbols: µr = %.8g%%, sigma(sym)r = %.6g\n", µr*100, math.Sqrt(Dsymr))
-				fmt.Fprintf(w, "RTP = %.5g(reg)*%.5g + %.5g(bm)*%.5g = %.6f%%\n", µr*100, 1-Pbm, µb*100, Pbm, rtp*100)
+				fmt.Fprintf(w, "RTP = %.5g(reg)*%.5g + %.5g(bm)*%.5g = %.8g%%\n", µr*100, 1-Pbm, µb*100, Pbm, rtp*100)
 			}
 			slot.Print_all(w, sp, sr, rtp, D)
 			return rtp, D
