@@ -5,74 +5,58 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"sync"
 
 	"github.com/slotopol/server/game/slot"
 )
 
-func BruteForceEuro(ctx context.Context, s slot.Simulator, g *Game, reels slot.Reelx, x, y slot.Pos) {
-	var wins slot.Wins
-	var r1 = reels.Reel(1)
-	var r2 = reels.Reel(2)
-	var r3 = reels.Reel(3)
-	var r4 = reels.Reel(4)
-	var r5 = reels.Reel(5)
-	var N uint64
-	for i1 := range r1[:len(r1)-2] {
-		g.SetCol(1, r1, i1)
-		for i2 := range r2[:len(r2)-2] {
-			g.SetCol(2, r2, i2)
-			for i3 := range r3[:len(r3)-2] {
-				g.SetCol(3, r3, i3)
-				for i4 := range r4[:len(r4)-2] {
-					g.SetCol(4, r4, i4)
-					for i5 := range r5[:len(r5)-2] {
-						N++
-						if N&0xFFF == 0 {
-							select {
-							case <-ctx.Done():
-								return
-							default:
-							}
-						}
-						g.SetCol(5, r5, i5)
-						var sym slot.Sym
-						if x > 0 {
-							sym = g.At(x, y)
-							g.SetSym(x, y, wild)
-						}
-						s.Simulate(g, &wins, 0)
-						if x > 0 {
-							g.SetSym(x, y, sym)
-						}
-						wins.Reset()
-					}
-				}
-			}
-		}
+type Stat struct {
+	*slot.StatSnap
+	x, y slot.Pos
+}
+
+var _ slot.Simulator2 = (*Stat)(nil)
+
+func NewStat(x, y slot.Pos) *Stat {
+	return &Stat{
+		StatSnap: slot.NewSnapFlat(sn, 5),
+		x:        x, y: y,
 	}
 }
 
-func CalcStatEuro(ctx context.Context, sp *slot.ScanPar, s *slot.StatGeneric, x, y slot.Pos) (float64, float64) {
+func (s *Stat) Clone() slot.Simulator2 {
+	var clone = &Stat{
+		StatSnap: s.StatSnap.Clone().(*slot.StatSnap),
+		x:        s.x, y: s.y,
+	}
+	return clone
+}
+
+func (s *Stat) Clear() {
+	s.StatSnap.Clear()
+	s.x, s.y = 0, 0
+}
+
+func (s *Stat) Add(as slot.Simulator2) {
+	var op = as.(*Stat)
+	s.StatSnap.Add(op.StatSnap)
+}
+
+func (s *Stat) Simulate(g slot.SlotGame, wins *slot.Wins, mrtp float64) {
+	var jj = g.(*Game)
+	var sym = jj.At(s.x, s.y)
+	jj.SetSym(s.x, s.y, wild)
+	s.StatSnap.Simulate(g, wins, mrtp)
+	jj.SetSym(s.x, s.y, sym)
+}
+
+func CalcStatEuro(ctx context.Context, sp *slot.ScanPar, s slot.Simulator2) (float64, float64) {
 	var g = NewGame(sp.Sel)
-	var reels = g.GetReels(sp.MRTP)
 
 	var calc = func(w io.Writer) (float64, float64) {
 		return slot.Parsheet_simple(w, sp, s, g.Cost())
 	}
 
-	var wg sync.WaitGroup
-	wg.Go(func() {
-		var ctx2, cancel2 = context.WithCancel(ctx)
-		defer cancel2()
-		wg.Go(func() {
-			sp.Total = reels.Reshuffles(3)
-			slot.ProgressBF(ctx2, sp, s, calc)
-		})
-		BruteForceEuro(ctx2, s, g, reels, x, y)
-	})
-	wg.Wait()
-	return calc(os.Stdout)
+	return slot.ScanReelsCommon2(ctx, sp, s, g, calc)
 }
 
 // custom parsheet
@@ -84,8 +68,8 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (rtp, D float64) {
 		var x = slot.Pos(i/3 + 1)
 		var y = slot.Pos(i%3 + 1)
 		fmt.Printf("\n(%d/16) calculations of euro at [%d,%d]\n", i+1, x, y)
-		var s = slot.NewStatGeneric(sn, 5)
-		var µ, D = CalcStatEuro(ctx, sp, s, x, y)
+		var s = NewStat(x, y)
+		var µ, D = CalcStatEuro(ctx, sp, s)
 		Σµ += µ
 		Σµ2 += µ * µ
 		ΣD += D
@@ -93,8 +77,8 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (rtp, D float64) {
 	var µw = Σµ / 15
 	var Dw = ΣD/15 + Σµ2/15 - µw*µw
 	fmt.Printf("\n(16/16) regular games calculations\n")
-	var sr = slot.NewStatGeneric(sn, 5)
-	var µr, Dr = CalcStatEuro(ctx, sp, sr, 0, 0)
+	var sr = slot.NewSnapFlat(sn, 5)
+	var µr, Dr = CalcStatEuro(ctx, sp, sr)
 	rtp = (1-Pw)*µr + Pw*µw // Pw = (rtp-µr)/(µw - µr)
 	D = (1-Pw)*Dr + Pw*Dw + Pw*(1-Pw)*(µw-µr)*(µw-µr)
 	if sp.IsMain() {

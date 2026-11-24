@@ -37,12 +37,12 @@ func ReporterBF(ctx context.Context, snapch []chan Simulator2,
 		for i, ch := range snapch {
 			if !closed[i] {
 				select {
-				case snap, ok := <-ch:
+				case local, ok := <-ch:
 					if !ok {
 						closed[i] = true
 						activeCount--
 					} else {
-						latest[i] = snap
+						latest[i] = local
 					}
 				default:
 				}
@@ -93,6 +93,9 @@ func WorkerBF(ctx context.Context, outch chan Simulator2, ti, tn uint64,
 	var rlen = make([]int, sx)
 	for x = range sx {
 		rlen[x] = len(reels[x]) - int(sy-1)
+	}
+	if sp.TN%rlen[0] == 0 {
+		panic("BruteForcex: thread number equals to 1-st reel length")
 	}
 	// Precompute delimiters for position calculation.
 	var delim = make([]uint64, sx)
@@ -148,11 +151,6 @@ func WorkerBF(ctx context.Context, outch chan Simulator2, ti, tn uint64,
 
 func BruteForcex2(ctx context.Context,
 	sp *ScanPar, ss Simulator2, mgame SlotGeneric, calc CalcFunc) {
-	var reels = mgame.GetReels(sp.MRTP)
-	if sp.TN%len(reels[0]) == 0 {
-		panic("BruteForcex: thread number equals to 1-st reel length")
-	}
-
 	var snapch = make([]chan Simulator2, sp.TN)
 	for i := range snapch {
 		snapch[i] = make(chan Simulator2, 1)

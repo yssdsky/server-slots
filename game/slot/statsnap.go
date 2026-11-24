@@ -54,7 +54,7 @@ func (sp *StatPage) MakeSym(sym Sym, rn int) *StatPage {
 }
 
 func (sp *StatPage) Clone() *StatPage {
-	var dub = &StatPage{
+	var clone = &StatPage{
 		N:   sp.N,
 		C:   make([][]uint64, len(sp.C)),
 		S:   make([][]float64, len(sp.C)),
@@ -66,12 +66,12 @@ func (sp *StatPage) Clone() *StatPage {
 		Cj:  slices.Clone(sp.Cj),
 	}
 	for sym, c := range sp.C {
-		dub.C[sym] = slices.Clone(c)
+		clone.C[sym] = slices.Clone(c)
 	}
 	for sym, c := range sp.S {
-		dub.S[sym] = slices.Clone(c)
+		clone.S[sym] = slices.Clone(c)
 	}
-	return dub
+	return clone
 }
 
 func (sp *StatPage) Clear() {
@@ -221,15 +221,15 @@ func (ss *StatSnap) MakeSym(sym Sym, rn int) *StatSnap {
 }
 
 func (ss *StatSnap) Clone() Simulator2 {
-	var dub = &StatSnap{
+	var clone = &StatSnap{
 		EC: ss.EC,
 		Q:  ss.Q,
 		A:  make([]*StatPage, len(ss.A)),
 	}
 	for cfn, sp := range ss.A {
-		dub.A[cfn] = sp.Clone()
+		clone.A[cfn] = sp.Clone()
 	}
-	return dub
+	return clone
 }
 
 func (ss *StatSnap) Clear() {
