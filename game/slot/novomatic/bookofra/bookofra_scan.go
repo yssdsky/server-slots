@@ -9,7 +9,7 @@ import (
 	"github.com/slotopol/server/game/slot"
 )
 
-func CalcStatBon(ctx context.Context, sp *slot.ScanPar, s slot.Simulator2, es slot.Sym) (float64, float64) {
+func CalcStatBon(ctx context.Context, sp *slot.ScanPar, s slot.Simulator, es slot.Sym) (float64, float64) {
 	var g = NewGame(sp.Sel)
 	g.FSR = 10 // set free spins mode
 	g.ES = es

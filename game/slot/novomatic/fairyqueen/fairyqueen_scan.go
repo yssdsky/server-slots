@@ -10,13 +10,13 @@ import (
 	"github.com/slotopol/server/game/slot"
 )
 
-func BruteForce5x3es2(ctx context.Context, sp *slot.ScanPar, s slot.Simulator2, g *Game, reels slot.Reelx) {
+func BruteForce5x3es2(ctx context.Context, sp *slot.ScanPar, s slot.Simulator, g *Game, reels slot.Reelx) {
 	var tn64 = uint64(sp.TN)
 	var r3 = reels.Reel(3)
 	var r4 = reels.Reel(4)
 	var r5 = reels.Reel(5)
 
-	var final = make(chan slot.Simulator2)
+	var final = make(chan slot.Simulator)
 	defer close(final)
 
 	for ti := range tn64 {
@@ -50,7 +50,6 @@ func BruteForce5x3es2(ctx context.Context, sp *slot.ScanPar, s slot.Simulator2, 
 			final <- local
 		}()
 	}
-	s.Clear()
 	for range tn64 {
 		select {
 		case <-ctx.Done():
@@ -61,12 +60,12 @@ func BruteForce5x3es2(ctx context.Context, sp *slot.ScanPar, s slot.Simulator2, 
 	}
 }
 
-func BruteForce5x3es3(ctx context.Context, sp *slot.ScanPar, s slot.Simulator2, g *Game, reels slot.Reelx) {
+func BruteForce5x3es3(ctx context.Context, sp *slot.ScanPar, s slot.Simulator, g *Game, reels slot.Reelx) {
 	var tn64 = uint64(sp.TN)
 	var r4 = reels.Reel(4)
 	var r5 = reels.Reel(5)
 
-	var final = make(chan slot.Simulator2)
+	var final = make(chan slot.Simulator)
 	defer close(final)
 
 	for ti := range tn64 {
@@ -97,7 +96,6 @@ func BruteForce5x3es3(ctx context.Context, sp *slot.ScanPar, s slot.Simulator2, 
 			final <- local
 		}()
 	}
-	s.Clear()
 	for range tn64 {
 		select {
 		case <-ctx.Done():

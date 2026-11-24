@@ -94,7 +94,7 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (rtp, D float64) {
 	var p2, p3, p4 = wc, wc, wc
 
 	var mu, d [8]float64
-	var sr slot.Simulator2
+	var sr slot.Simulator
 	for mask := range mu {
 		var wc2, wc3, wc4 = mask&4 > 0, mask&2 > 0, mask&1 > 0
 

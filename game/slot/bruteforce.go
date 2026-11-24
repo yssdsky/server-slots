@@ -5,14 +5,13 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"slices"
 	"sync"
 	"time"
 )
 
 // Function to report about progress of calculation by brute force
-func ReporterBF(ctx context.Context, snapch []chan Simulator2,
-	sp *ScanPar, ss Simulator2, g SlotGeneric, calc CalcFunc) {
+func ReporterBF(ctx context.Context, snapch []chan Simulator,
+	sp *ScanPar, ss Simulator, g SlotGeneric, calc CalcFunc) {
 	var t0 = time.Now()
 	const stepdur = 1000 * time.Millisecond
 	var steps = time.Tick(stepdur)
@@ -25,7 +24,7 @@ func ReporterBF(ctx context.Context, snapch []chan Simulator2,
 		dur time.Duration
 		N   float64
 	)
-	var latest = make([]Simulator2, len(snapch))
+	var latest = make([]Simulator, len(snapch))
 	var closed = make([]bool, len(snapch))
 	var activeCount = len(snapch)
 	for activeCount > 0 {
@@ -80,8 +79,8 @@ func ReporterBF(ctx context.Context, snapch []chan Simulator2,
 	calc(os.Stdout)
 }
 
-func WorkerBF(ctx context.Context, outch chan Simulator2, ti, tn uint64,
-	sp *ScanPar, local Simulator2, wgame SlotGeneric) {
+func WorkerBF(ctx context.Context, outch chan Simulator, ti, tn uint64,
+	sp *ScanPar, local Simulator, wgame SlotGeneric) {
 	// Grid dimension.
 	var sx, sy = wgame.Dim()
 	var reels = wgame.GetReels(sp.MRTP)
@@ -149,11 +148,11 @@ func WorkerBF(ctx context.Context, outch chan Simulator2, ti, tn uint64,
 	outch <- local
 }
 
-func BruteForcex2(ctx context.Context,
-	sp *ScanPar, ss Simulator2, mgame SlotGeneric, calc CalcFunc) {
-	var snapch = make([]chan Simulator2, sp.TN)
+func BruteForcex(ctx context.Context,
+	sp *ScanPar, ss Simulator, mgame SlotGeneric, calc CalcFunc) {
+	var snapch = make([]chan Simulator, sp.TN)
 	for i := range snapch {
-		snapch[i] = make(chan Simulator2, 1)
+		snapch[i] = make(chan Simulator, 1)
 	}
 
 	var wg1, wg2 sync.WaitGroup
@@ -178,128 +177,19 @@ func BruteForcex2(ctx context.Context,
 	wg2.Wait()
 }
 
-// Function to report about progress of calculation by brute force
-func ProgressBF(ctx context.Context, sp *ScanPar, s Simulator, calc func(io.Writer) (float64, float64)) {
-	const stepdur = 1000 * time.Millisecond
-	var t0 = time.Now()
-	var steps = time.Tick(stepdur)
-	fmt.Printf("calculation started...\r")
-	var total = float64(sp.Total)
-	var (
-		dur time.Duration
-		N   float64
-		RTP float64
-	)
-	var param = func() {
-		dur = time.Since(t0)
-		N = s.Count()
-		RTP, _ = calc(io.Discard)
-	}
-loop:
-	for {
-		select {
-		case <-ctx.Done():
-			break loop
-		case <-steps:
-			param()
-			var exp = time.Duration(float64(dur) * total / N)
-			fmt.Printf("processed %.1fm/%.1fm, ready %2.2f%% (%v / %v), RTP = %2.2f%%  \r",
-				N/1e6, total/1e6, N/total*100,
-				dur.Truncate(stepdur), exp.Truncate(stepdur),
-				RTP*100)
-		}
-	}
-
-	// report results
-	param()
-	fmt.Printf("completed %.5g%% (%d), time spent %v                    \n",
-		N/total*100, int(N), dur)
-}
-
-func BruteForcex(ctx context.Context, sp *ScanPar, s Simulator, g SlotGeneric) {
-	// Grid dimension.
-	var sx, sy = g.Dim()
-	var reels = g.GetReels(sp.MRTP)
-	var total = reels.Reshuffles(sy)
+func BruteForce5x3Big(ctx context.Context, sp *ScanPar, ss Simulator, g SlotGeneric, r1, rb, r5 []Sym) {
+	//sp.Total = uint64(len(r1)-2) * uint64(len(rb)) * uint64(len(r5)-2)
 	var tn64 = uint64(sp.TN)
-	if sp.TN%(len(reels[0])-int(sy-1)) == 0 {
-		panic("BruteForcex: thread number equals to 1-st reel length")
-	}
-	// Precompute reel lengths.
-	var rlen = make([]int, sx)
-	var x Pos
-	for x = range sx {
-		rlen[x] = len(reels[x]) - int(sy-1)
-	}
-	// Precompute delimiters for position calculation.
-	var delim = make([]uint64, sx)
-	delim[0] = 1
-	for x = 1; x < sx; x++ {
-		delim[x] = delim[x-1] * uint64(rlen[x-1])
-	}
 
-	var wg sync.WaitGroup
-	wg.Add(sp.TN)
-	for ti := range tn64 {
-		var gt = g.Clone()
-		var _, iscascade = gt.(SlotCascade)
-		go func() {
-			defer wg.Done()
-			var wins Wins
-			var rpos = make([]int, sx)
-			for x := range sx {
-				rpos[x] = -1
-			}
-			var i, N uint64
-			var x Pos
-			var pos int
-			// Using one general loop instead of five nested loops
-			// gives ~30% performance increase.
-			for i = ti; i < total; i += tn64 {
-				N++
-				if N&0xFFF == 0 {
-					select {
-					case <-ctx.Done():
-						return
-					default:
-					}
-				}
-				for x = range sx {
-					pos = int(i/delim[x]) % rlen[x]
-					if rpos[x] != pos {
-						gt.SetCol(x+1, reels[x], pos)
-						rpos[x] = pos
-					} else {
-						break
-					}
-				}
-				s.Simulate(gt, &wins, sp.MRTP)
-				if iscascade && len(wins) > 0 {
-					for x = range sx {
-						rpos[x] = -1
-					}
-				}
-				wins.Reset()
-			}
-		}()
-	}
-	wg.Wait()
-}
+	var final = make(chan Simulator)
+	defer close(final)
 
-func BruteForce5x3Big(ctx context.Context, sp *ScanPar, s Simulator, g SlotGeneric, r1, rb, r5 []Sym) {
-	// var total = uint64(len(r1)) * uint64(len(rb)) * uint64(len(r5))
-	r1 = append(slices.Clone(r1), r1[:2]...)
-	r5 = append(slices.Clone(r5), r5[:2]...)
-	var tn64 = uint64(sp.TN)
-	var wg sync.WaitGroup
-	wg.Add(sp.TN)
 	for ti := range tn64 {
+		var local = ss.Clone()
 		var gt = g.Clone()
 		var cb = gt.(Bigger)
 		var N uint64
 		go func() {
-			defer wg.Done()
-
 			var wins Wins
 			for i1 := range len(r1) - 2 {
 				gt.SetCol(1, r1, i1)
@@ -318,12 +208,20 @@ func BruteForce5x3Big(ctx context.Context, sp *ScanPar, s Simulator, g SlotGener
 							continue
 						}
 						gt.SetCol(5, r5, i5)
-						s.Simulate(gt, &wins, sp.MRTP)
+						local.Simulate(gt, &wins, sp.MRTP)
 						wins.Reset()
 					}
 				}
 			}
+			final <- local
 		}()
 	}
-	wg.Wait()
+	for range tn64 {
+		select {
+		case <-ctx.Done():
+			return
+		case local := <-final:
+			ss.Add(local)
+		}
+	}
 }

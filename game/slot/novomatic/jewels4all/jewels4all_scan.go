@@ -14,7 +14,7 @@ type Stat struct {
 	x, y slot.Pos
 }
 
-var _ slot.Simulator2 = (*Stat)(nil)
+var _ slot.Simulator = (*Stat)(nil)
 
 func NewStat(x, y slot.Pos) *Stat {
 	return &Stat{
@@ -23,7 +23,7 @@ func NewStat(x, y slot.Pos) *Stat {
 	}
 }
 
-func (s *Stat) Clone() slot.Simulator2 {
+func (s *Stat) Clone() slot.Simulator {
 	var clone = &Stat{
 		StatSnap: s.StatSnap.Clone().(*slot.StatSnap),
 		x:        s.x, y: s.y,
@@ -36,7 +36,7 @@ func (s *Stat) Clear() {
 	s.x, s.y = 0, 0
 }
 
-func (s *Stat) Add(as slot.Simulator2) {
+func (s *Stat) Add(as slot.Simulator) {
 	var op = as.(*Stat)
 	s.StatSnap.Add(op.StatSnap)
 }
@@ -49,7 +49,7 @@ func (s *Stat) Simulate(g slot.SlotGame, wins *slot.Wins, mrtp float64) {
 	jj.SetSym(s.x, s.y, sym)
 }
 
-func CalcStatEuro(ctx context.Context, sp *slot.ScanPar, s slot.Simulator2) (float64, float64) {
+func CalcStatEuro(ctx context.Context, sp *slot.ScanPar, s slot.Simulator) (float64, float64) {
 	var g = NewGame(sp.Sel)
 
 	var calc = func(w io.Writer) (float64, float64) {

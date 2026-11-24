@@ -37,7 +37,7 @@ func Print_ci(w io.Writer, sp *ScanPar, µ, D float64) {
 	var sigma = math.Sqrt(D)
 	var ci = game.CI(sp.Conf, µ, sigma)
 	var BRci = game.BankrollPlayer(sp.Conf, µ, sigma, ci)
-	fmt.Fprintf(w, "CI[%.4g%%] = %d, bankroll[CI] = %.6g\n", sp.Conf*100, int(ci+0.5), BRci)
+	fmt.Fprintf(w, "CI[%.4g%%] = %d, bankroll[CI] = %.8g\n", sp.Conf*100, int(ci+0.5), BRci)
 }
 
 func Print_spread(w io.Writer, sp *ScanPar, µ, D float64) {
@@ -64,34 +64,39 @@ func Print_spread(w io.Writer, sp *ScanPar, µ, D float64) {
 	}
 }
 
+func Print_casc_metrics(w io.Writer, sp *ScanPar, ss *StatSnap) {
+	if !sp.IsCM() {
+		return
+	}
+	if len(ss.A) <= 1 {
+		return // no cascades
+	}
+	fmt.Fprintln(w)
+	fmt.Fprintf(w, "cascade metrics:\n")
+	var N = ss.Count()
+	var Nc = float64(ss.A[1].N) // current number
+	fmt.Fprintf(w, "N[1] = %.10g, Ec1 = Kf1 = 1/%.5g\n", Nc, N/Nc)
+	var Np float64 // previous number
+	for cfn := 2; cfn < len(ss.A); cfn++ {
+		Np = Nc
+		Nc = float64(ss.A[cfn].N)
+		if Nc == 0 {
+			break
+		}
+		if N/Nc < 1e5 {
+			fmt.Fprintf(w, "N[%d] = %.10g, Ec%d = 1/%.5g, Kf%d = 1/%.5g\n", cfn, Nc, cfn, N/Nc, cfn, Np/Nc)
+		} else {
+			fmt.Fprintf(w, "N[%d] = %.10g, Ec%d = 1/%d, Kf%d = 1/%.5g\n", cfn, Nc, cfn, int(N/Nc), cfn, Np/Nc)
+		}
+	}
+	fmt.Fprintf(w, "Mcascade = %.5g, ACL = %.5g, Kfading = 1/%.5g, Ncascmax = %d\n", ss.Mcascade(), ss.ACL(), ss.Kfading(), ss.Ncascmax())
+}
+
 func p5f(p float64) string {
 	if p != 0 {
 		return fmt.Sprintf("%5.2f", p)
 	} else {
 		return "    0"
-	}
-}
-
-func Print_symbols_generic(w io.Writer, sp *ScanPar, s *StatGeneric, µ float64) {
-	if !sp.IsSym() {
-		return
-	}
-	fmt.Fprintln(w)
-	fmt.Fprintf(w, "symbols contribution to payouts:\n")
-	fmt.Fprintf(w, "sym rate%%  rtp%% |")
-	for x := range s.S[0] {
-		fmt.Fprintf(w, " %5d", x+1)
-	}
-	fmt.Fprintf(w, "\n")
-	var sum = s.SumPays()
-	for sym, pays := range s.S {
-		var cs = s.SymPays(Sym(sym+1)) / sum
-		fmt.Fprintf(w, "%2d: %s %s |", sym+1, p5f(cs*100), p5f(µ*cs*100))
-		for x := range pays {
-			var cx = pays[x].Load() / sum
-			fmt.Fprintf(w, " %s", p5f(cx*100))
-		}
-		fmt.Fprintf(w, "\n")
 	}
 }
 
@@ -142,7 +147,7 @@ func Print_falls_contrib(w io.Writer, sp *ScanPar, ss *StatSnap, µ float64) {
 	}
 }
 
-func Print_raw(w io.Writer, sp *ScanPar, s Simulator) {
+func Print_raw(w io.Writer, sp *ScanPar, s MathSimulator) {
 	if !sp.IsRaw() {
 		return
 	}
@@ -156,52 +161,22 @@ func Print_raw(w io.Writer, sp *ScanPar, s Simulator) {
 	fmt.Fprintln(w, util.B2S(b))
 }
 
-func Print_casc_metrics(w io.Writer, sp *ScanPar, ss *StatSnap) {
-	if !sp.IsCM() {
-		return
-	}
-	if len(ss.A) <= 1 {
-		return // no cascades
-	}
-	fmt.Fprintln(w)
-	fmt.Fprintf(w, "cascade metrics:\n")
-	var N = ss.Count()
-	var Nc = float64(ss.A[1].N) // current number
-	fmt.Fprintf(w, "N[1] = %.10g, Ec1 = Kf1 = 1/%.5g\n", Nc, N/Nc)
-	var Np float64 // previous number
-	for cfn := 2; cfn < len(ss.A); cfn++ {
-		Np = Nc
-		Nc = float64(ss.A[cfn].N)
-		if Nc == 0 {
-			break
-		}
-		if N/Nc < 1e5 {
-			fmt.Fprintf(w, "N[%d] = %.10g, Ec%d = 1/%.5g, Kf%d = 1/%.5g\n", cfn, Nc, cfn, N/Nc, cfn, Np/Nc)
-		} else {
-			fmt.Fprintf(w, "N[%d] = %.10g, Ec%d = 1/%d, Kf%d = 1/%.5g\n", cfn, Nc, cfn, int(N/Nc), cfn, Np/Nc)
-		}
-	}
-	fmt.Fprintf(w, "Mcascade = %.5g, ACL = %.5g, Kfading = 1/%.5g, Ncascmax = %d\n", ss.Mcascade(), ss.ACL(), ss.Kfading(), ss.Ncascmax())
-}
-
 // Print_all assembles all print functions of parsheets.
-func Print_all(w io.Writer, sp *ScanPar, s Simulator, µ, D float64) {
+func Print_all(w io.Writer, sp *ScanPar, s MathSimulator, µ, D float64) {
 	Print_vi(w, sp, D)
 	Print_ci(w, sp, µ, D)
 	Print_spread(w, sp, µ, D)
-	switch stat := s.(type) {
-	case *StatGeneric:
-		Print_symbols_generic(w, sp, stat, µ)
+	switch snap := s.(type) {
 	case *StatSnap:
-		Print_casc_metrics(w, sp, stat)
-		Print_symbols_contrib(w, sp, stat, µ)
-		Print_falls_contrib(w, sp, stat, µ)
+		Print_casc_metrics(w, sp, snap)
+		Print_symbols_contrib(w, sp, snap, µ)
+		Print_falls_contrib(w, sp, snap, µ)
 	}
 	Print_raw(w, sp, s)
 }
 
 // Parsheet for simple slot model (without free games and bonuses).
-func Parsheet_simple(w io.Writer, sp *ScanPar, s Simulator, cost float64) (float64, float64) {
+func Parsheet_simple(w io.Writer, sp *ScanPar, s MathSimulator, cost float64) (float64, float64) {
 	var µ, D = EvD(s, cost)
 	if sp.IsMain() {
 		fmt.Fprintf(w, "RTP = %.8g%%\n", µ*100)
@@ -213,7 +188,7 @@ func Parsheet_simple(w io.Writer, sp *ScanPar, s Simulator, cost float64) (float
 // Parsheet for model with identical rules and symbol payout structures
 // between base paid spins and free bonus spins, recursive re-triggers
 // during free spins, and a global multiplier `m` applied during bonus rounds.
-func Parsheet_solereelrecur(w io.Writer, sp *ScanPar, s Simulator, cost float64, m float64) (float64, float64) {
+func Parsheet_solereelrecur(w io.Writer, sp *ScanPar, s MathSimulator, cost float64, m float64) (float64, float64) {
 	var EVbase, Dbase = EvD(s, cost)
 	var HRfg, EK, EK2 = Efs(s)
 	var VarK = EK2 - EK*EK
@@ -236,7 +211,7 @@ func Parsheet_solereelrecur(w io.Writer, sp *ScanPar, s Simulator, cost float64,
 }
 
 // Parsheet to calculate bonus reel in dual-reel set model on simple case.
-func Parsheet_affixsimple(w io.Writer, sp *ScanPar, s Simulator, cost float64) (float64, float64) {
+func Parsheet_affixsimple(w io.Writer, sp *ScanPar, s MathSimulator, cost float64) (float64, float64) {
 	var µ, D = EvD(s, cost)
 	if sp.IsFG() {
 		fmt.Fprintf(w, "RTP = %.8g%%\n", µ*100)
@@ -247,7 +222,7 @@ func Parsheet_affixsimple(w io.Writer, sp *ScanPar, s Simulator, cost float64) (
 }
 
 // Parsheet to calculate bonus reel in dual-reel set model with recursive re-triggers.
-func Parsheet_affixrecur(w io.Writer, sp *ScanPar, s Simulator, cost float64) (float64, float64) {
+func Parsheet_affixrecur(w io.Writer, sp *ScanPar, s MathSimulator, cost float64) (float64, float64) {
 	const m = 1
 	var EVbase, Dbase = EvD(s, cost)
 	var HRfg, EK, EK2 = Efs(s)
@@ -274,7 +249,7 @@ func Parsheet_affixrecur(w io.Writer, sp *ScanPar, s Simulator, cost float64) (f
 // Parsheet for model with different reel lengths, independent counters
 // for each set, recursive re-triggers within bonus spins (which evaluate
 // on the bonus reel set), and a multiplier `m` applied to bonus spins.
-func Parsheet_dualreelrecur(w io.Writer, sp *ScanPar, sr Simulator, sb Simulator, cost float64) (float64, float64) {
+func Parsheet_dualreelrecur(w io.Writer, sp *ScanPar, sr MathSimulator, sb MathSimulator, cost float64) (float64, float64) {
 	const m = 1
 	// regular reels parameters
 	var EVr, Dr = EvD(sr, cost)
@@ -300,7 +275,7 @@ func Parsheet_dualreelrecur(w io.Writer, sp *ScanPar, sr Simulator, sb Simulator
 }
 
 // Parsheet to calculate bonus reel in dual-reel set model.
-func Parsheet_affixonce(w io.Writer, sp *ScanPar, s Simulator, cost float64, Lr, Lb float64) (float64, float64) {
+func Parsheet_affixonce(w io.Writer, sp *ScanPar, s MathSimulator, cost float64, Lr, Lb float64) (float64, float64) {
 	const m = 1
 	var EVbase, Dbase = EvD(s, cost)
 	var HRfg, EK, EK2 = Efs(s)
@@ -322,7 +297,7 @@ func Parsheet_affixonce(w io.Writer, sp *ScanPar, s Simulator, cost float64, Lr,
 
 // Parsheet for model utilizing two independent reel sets under the constraint
 // that Free Spins can re-trigger at most once during a bonus feature.
-func Parsheet_dualreelonce(w io.Writer, sp *ScanPar, sr Simulator, sb Simulator, cost float64, Lr, Lb float64) (float64, float64) {
+func Parsheet_dualreelonce(w io.Writer, sp *ScanPar, sr MathSimulator, sb MathSimulator, cost float64, Lr, Lb float64) (float64, float64) {
 	const m = 1
 	// regular reels parameters
 	var EVr, Dr = EvD(sr, cost)

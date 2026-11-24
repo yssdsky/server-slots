@@ -188,7 +188,7 @@ type StatSnap struct {
 }
 
 // StatSnap implements Simulator interface.
-var _ Simulator2 = (*StatSnap)(nil)
+var _ Simulator = (*StatSnap)(nil)
 
 // NewStatSnap creates a new StatSnap object with a specified number
 // of pages (corresponding to avalanche cascades), where each page
@@ -220,7 +220,7 @@ func (ss *StatSnap) MakeSym(sym Sym, rn int) *StatSnap {
 	return ss
 }
 
-func (ss *StatSnap) Clone() Simulator2 {
+func (ss *StatSnap) Clone() Simulator {
 	var clone = &StatSnap{
 		EC: ss.EC,
 		Q:  ss.Q,
@@ -241,7 +241,7 @@ func (ss *StatSnap) Clear() {
 }
 
 // Add adds all counters and sums from given StatSnap to this StatSnap.
-func (ss *StatSnap) Add(as Simulator2) {
+func (ss *StatSnap) Add(as Simulator) {
 	var op *StatSnap
 	var ok bool
 	if op, ok = as.(*StatSnap); !ok {

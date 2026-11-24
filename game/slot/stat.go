@@ -2,32 +2,29 @@ package slot
 
 import (
 	"context"
-	"encoding/xml"
 	"errors"
 	"fmt"
 	"io"
-	"os"
-	"strconv"
-	"sync"
 
 	"github.com/slotopol/server/game"
-
-	"go.uber.org/atomic"
-	"go.yaml.in/yaml/v3"
 )
 
-type Simulator2 interface {
+type Simulator interface {
 	// Clone returns a full deep copy of the statistics.
-	Clone() Simulator2
+	Clone() Simulator
 	// Clear resets the statistics to zero.
 	Clear()
 	// Add updates the statistics with given simulator data with same type.
 	// It helps to parallelize the simulation and then merge the results.
-	Add(s Simulator2)
-	Simulator
+	Add(s Simulator)
+	// Returns free games hit rate, expectation of initial freespins,
+	// second moment of initial freespins calculated by dedicated counters.
+	Simulate(SlotGame, *Wins, float64)
+
+	MathSimulator
 }
 
-type Simulator interface {
+type MathSimulator interface {
 	// Count returns number of processed grid reshuffles, including with no wins.
 	Count() float64
 	// NSQ returns number of spins, sum of pays, sum of squares of pays by spin,
@@ -36,13 +33,12 @@ type Simulator interface {
 	// FGC returns counter of triggering free game series, total count of free spins,
 	// and sum of squared free spin series lengths.
 	FGC() (Cfg, Cfs, Qfs float64)
-	// Returns free games hit rate, expectation of initial freespins,
-	// second moment of initial freespins calculated by dedicated counters.
-	Simulate(SlotGame, *Wins, float64)
 }
 
+type ScanPar = game.ScanPar
+
 // Returns plain math expectation (µ = S/N) and plain dispersion (D = Q/N - µ*µ).
-func EvD(s Simulator, cost float64) (float64, float64) {
+func EvD(s MathSimulator, cost float64) (float64, float64) {
 	var N, S, Q = s.NSQ(cost)
 	var µ = S / N
 	var D = Q/N - µ*µ
@@ -51,7 +47,7 @@ func EvD(s Simulator, cost float64) (float64, float64) {
 
 // Returns free games hit rate, expectation of initial freespins,
 // second moment of initial freespins calculated by dedicated counters.
-func Efs(s Simulator) (HRfg, EK, EK2 float64) {
+func Efs(s MathSimulator) (HRfg, EK, EK2 float64) {
 	var N = s.Count()
 	var Cfg, Cfs, Qfs = s.FGC()
 	HRfg = Cfg / N
@@ -60,307 +56,9 @@ func Efs(s Simulator) (HRfg, EK, EK2 float64) {
 	return
 }
 
-type ScanPar = game.ScanPar
-
-type Uint64 struct {
-	atomic.Uint64
-}
-
-func (x Uint64) String() string {
-	return strconv.FormatUint(x.Load(), 10)
-}
-
-func (x Uint64) IsZero() bool {
-	return x.Load() == 0
-}
-
-// MarshalXML encodes the wrapped uint64 into XML.
-func (x *Uint64) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
-	return e.EncodeElement(x.Load(), start)
-}
-
-// UnmarshalXML decodes a uint64 from XML.
-func (x *Uint64) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
-	var v uint64
-	if err := d.DecodeElement(&v, &start); err != nil {
-		return err
-	}
-	x.Store(v)
-	return nil
-}
-
-// MarshalYAML encodes the wrapped uint64 into YAML.
-func (x Uint64) MarshalYAML() (any, error) {
-	return x.Load(), nil
-}
-
-// UnmarshalYAML decodes a uint64 from YAML.
-func (x *Uint64) UnmarshalYAML(value *yaml.Node) error {
-	var v uint64
-	if err := value.Decode(&v); err != nil {
-		return err
-	}
-	x.Store(v)
-	return nil
-}
-
-type Float64 struct {
-	atomic.Float64
-}
-
-func (x Float64) String() string {
-	return strconv.FormatFloat(x.Load(), 'f', -1, 64)
-}
-
-func (x Float64) IsZero() bool {
-	return x.Load() == 0
-}
-
-// MarshalXML encodes the wrapped float64 into XML.
-func (x *Float64) MarshalXML(e *xml.Encoder, start xml.StartElement) error {
-	return e.EncodeElement(x.String(), start)
-}
-
-// UnmarshalXML decodes a float64 from XML.
-func (x *Float64) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
-	var v float64
-	if err := d.DecodeElement(&v, &start); err != nil {
-		return err
-	}
-	x.Store(v)
-	return nil
-}
-
-// MarshalYAML encodes the wrapped float64 into YAML.
-func (x Float64) MarshalYAML() (any, error) {
-	return &yaml.Node{
-		Kind:  yaml.ScalarNode,
-		Value: x.String(),
-	}, nil
-}
-
-// UnmarshalYAML decodes a float64 from YAML.
-func (x *Float64) UnmarshalYAML(value *yaml.Node) error {
-	var v float64
-	if err := value.Decode(&v); err != nil {
-		return err
-	}
-	x.Store(v)
-	return nil
-}
-
-type Counts[T fmt.Stringer] [][]T
-
-func (c Counts[T]) MarshalYAML() (any, error) {
-	var node1 = &yaml.Node{
-		Kind:  yaml.SequenceNode,
-		Style: yaml.FoldedStyle,
-	}
-	for sym, line := range c {
-		var node2 = &yaml.Node{
-			Kind:  yaml.SequenceNode,
-			Style: yaml.FlowStyle,
-		}
-		node2.LineComment = strconv.Itoa(sym + 1)
-
-		for _, v := range line {
-			node2.Content = append(node2.Content, &yaml.Node{
-				Kind:  yaml.ScalarNode,
-				Value: v.String(),
-			})
-		}
-
-		node1.Content = append(node1.Content, node2)
-	}
-	return node1, nil
-}
-
-type SlotCounter struct {
-	N   Uint64          // number of processed grid reshuffles, including with no wins
-	C   Counts[Uint64]  // hit counter
-	S   Counts[Float64] // sum of pays by symbols
-	Cfg Uint64          `yaml:",omitempty"`      // free games hits count
-	Cfs Uint64          `yaml:",omitempty"`      // free spins count
-	Qfs Uint64          `yaml:",omitempty"`      // squares count of free spins
-	Cb  []Uint64        `yaml:",flow,omitempty"` // bonus hits count
-	Sb  []Float64       `yaml:",flow,omitempty"` // sum of bonuses pays
-	Cj  []Uint64        `yaml:",flow,omitempty"` // progressive jackpot hits count
-}
-
-func (c *SlotCounter) IsZero() bool {
-	return c.N.Load() == 0 // N can not be zero for non-empty structure
-}
-
-// Reserves memory for counters and sums for given symbol by
-// maximum number of this symbol in win.
-func (c *SlotCounter) SymDim(sym Sym, pn int) {
-	c.C[sym-1] = make([]Uint64, pn)
-	c.S[sym-1] = make([]Float64, pn)
-}
-
-// Reserves memory for counters and sums for all symbols
-// by maximum number of symbols in win.
-func (c *SlotCounter) CntDim(sn, pn int) {
-	c.C = make([][]Uint64, sn)
-	c.S = make([][]Float64, sn)
-	for sym := range c.S {
-		c.SymDim(Sym(sym+1), pn)
-	}
-}
-
-// Reserves memory for bonus hits counters and sums.
-func (c *SlotCounter) BonDim(n int) {
-	c.Cb = make([]Uint64, n)
-	c.Sb = make([]Float64, n)
-}
-
-// Reserves memory for progressive jackpot hits counters.
-func (c *SlotCounter) JackDim(n int) {
-	c.Cj = make([]Uint64, n)
-}
-
-func (c *SlotCounter) Update(wins Wins) (pay float64) {
-	for _, wi := range wins {
-		if wi.Sym > 0 && wi.Num > 0 {
-			c.C[wi.Sym-1][wi.Num-1].Inc()
-		}
-		if wi.Pay != 0 {
-			var p = wi.Pay * wi.MP
-			if wi.Sym > 0 { // symbols pay
-				c.S[wi.Sym-1][wi.Num-1].Add(p)
-			} else { // bonus pay, only 2 cases can be
-				c.Sb[wi.BID-1].Add(p)
-			}
-			pay += p
-		}
-		if wi.FS != 0 {
-			c.Cfg.Inc()
-			c.Cfs.Add(uint64(wi.FS))
-			c.Qfs.Add(uint64(wi.FS * wi.FS))
-		}
-		if wi.BID != 0 {
-			c.Cb[wi.BID-1].Inc()
-		}
-		if wi.JID != 0 {
-			c.Cj[wi.JID-1].Inc()
-		}
-	}
-	c.N.Inc()
-	return
-}
-
-// SymPays returns sum of pays by given symbol.
-func (c *SlotCounter) SymPays(sym Sym) (sum float64) {
-	var pays = c.S[sym-1]
-	for i := range pays {
-		sum += pays[i].Load()
-	}
-	return
-}
-
-// SumPays returns sum of pays by all symbols and bonuses.
-func (c *SlotCounter) SumPays() (sum float64) {
-	for _, pays := range c.S {
-		for i := range pays {
-			sum += pays[i].Load()
-		}
-	}
-	for i := range c.Sb {
-		sum += c.Sb[i].Load()
-	}
-	return
-}
-
-type StatGeneric struct {
-	SlotCounter `yaml:",inline"`
-	Q           Float64 // sum of squares of pays by symbols
-	EC          Uint64  `yaml:",omitempty"` // errors count
-}
-
-// Declare conformity with Simulator interface.
-var _ Simulator = (*StatGeneric)(nil)
-
-func NewStatGeneric(sn, pn int) *StatGeneric {
-	var s StatGeneric
-	s.CntDim(sn, pn)
-	return &s
-}
-
-// Count returns number of processed grid reshuffles, including with no wins.
-func (s *StatGeneric) Count() float64 {
-	return float64(s.N.Load())
-}
-
-// Deprecated: does not usefull for parsheet calculations
-func (s *StatGeneric) RTPsym(cost float64, scat Sym) (lrtp, srtp float64) {
-	for sym, pays := range s.S {
-		for i := range pays {
-			if Sym(sym) != scat {
-				lrtp += pays[i].Load()
-			} else {
-				srtp += pays[i].Load()
-			}
-		}
-	}
-	var N = s.Count()
-	lrtp /= N * cost
-	srtp /= N * cost
-	return
-}
-
-// NSQ returns number of spins, sum of pays, sum of squares of pays by spin,
-// normalized by spin cost.
-func (s *StatGeneric) NSQ(cost float64) (N, S, Q float64) {
-	N = s.Count()
-	S = s.SumPays() / cost
-	Q = s.Q.Load() / cost / cost
-	return
-}
-
-// FGC returns counter of triggering free game series, total count of free spins,
-// and sum of squared free spin series lengths.
-func (s *StatGeneric) FGC() (Cfg, Cfs, Qfs float64) {
-	Cfg = float64(s.Cfg.Load())
-	Cfs = float64(s.Cfs.Load())
-	Qfs = float64(s.Qfs.Load())
-	return
-}
-
-// Deprecated: does not usefull for parsheet calculations, use Efs() instead.
-// Returns free spins quantifier.
-func (s *StatGeneric) FSQ() float64 {
-	return float64(s.Cfs.Load()) / s.Count()
-}
-
-// Deprecated: does not usefull for parsheet calculations, use Efs() instead.
-// Quantifier of free games per reshuffles.
-func (s *StatGeneric) FGQ() float64 {
-	return float64(s.Cfg.Load()) / s.Count()
-}
-
-func (s *StatGeneric) BonusHits(bid int) float64 {
-	return float64(s.Cb[bid-1].Load())
-}
-
-func (s *StatGeneric) JackHits(jid int) float64 {
-	return float64(s.Cj[jid-1].Load())
-}
-
-// Simulate performs spin simulation, calculates results, update statistics.
-func (s *StatGeneric) Simulate(g SlotGame, wins *Wins, mrtp float64) {
-	if g.Scanner(wins) != nil {
-		s.EC.Inc()
-		return
-	}
-	if pay := s.Update(*wins); pay != 0 {
-		s.Q.Add(pay * pay)
-	}
-}
-
 type (
 	CalcFunc = func(io.Writer) (float64, float64)
-	CalcAlg  = func(ctx context.Context, sp *ScanPar, s Simulator, g SlotGeneric)
-	CalcAlg2 = func(ctx context.Context, sp *ScanPar, s Simulator2, g SlotGeneric, calc CalcFunc)
+	CalcAlg  = func(ctx context.Context, sp *ScanPar, s Simulator, g SlotGeneric, calc CalcFunc)
 )
 
 const (
@@ -372,8 +70,8 @@ var (
 	ErrReelCount = errors.New("unexpected number of reels")
 )
 
-func ScanReels2(ctx context.Context, sp *ScanPar, ss Simulator2, g SlotGeneric,
-	bruteforce, montecarlo CalcAlg2, calc CalcFunc) (float64, float64) {
+func ScanReelsCommon2(ctx context.Context,
+	sp *ScanPar, ss Simulator, g SlotGeneric, calc CalcFunc) (float64, float64) {
 	var reels = g.GetReels(sp.MRTP)
 	var sx, sy = g.Dim()
 	if len(reels) != int(sx) {
@@ -382,54 +80,9 @@ func ScanReels2(ctx context.Context, sp *ScanPar, ss Simulator2, g SlotGeneric,
 	switch sp.Method {
 	case game.CMbruteforce:
 		sp.Total = reels.Reshuffles(sy)
-		bruteforce(ctx, sp, ss, g, calc)
+		BruteForcex(ctx, sp, ss, g, calc)
 	case game.CMmontecarlo:
-		montecarlo(ctx, sp, ss, g, calc)
+		MonteCarlo(ctx, sp, ss, g, calc)
 	}
 	return calc(io.Discard)
-}
-
-func ScanReelsCommon2(ctx context.Context,
-	sp *ScanPar, ss Simulator2, g SlotGeneric, calc CalcFunc) (float64, float64) {
-	return ScanReels2(ctx, sp, ss, g, BruteForcex2, MonteCarlo2, calc)
-}
-
-func ScanReels(ctx context.Context, sp *ScanPar, s Simulator, g SlotGeneric,
-	bruteforce, montecarlo CalcAlg, calc CalcFunc) (float64, float64) {
-	var reels = g.GetReels(sp.MRTP)
-	var sx, sy = g.Dim()
-	if len(reels) != int(sx) {
-		panic(fmt.Errorf("%w: %d reels provided for %dx%d slot", ErrReelCount, len(reels), sx, sy))
-	}
-	if sel := g.GetSel(); sel > 0 {
-		fmt.Printf("selected %d lines\n", sel)
-	}
-	var wg sync.WaitGroup
-	wg.Go(func() {
-		var ctx2, cancel2 = context.WithCancel(ctx)
-		defer cancel2()
-		switch sp.Method {
-		case game.CMbruteforce:
-			wg.Go(func() {
-				sp.Total = reels.Reshuffles(sy)
-				ProgressBF(ctx2, sp, s, calc)
-			})
-			bruteforce(ctx2, sp, s, g)
-		case game.CMmontecarlo:
-			wg.Go(func() {
-				ProgressMC(ctx2, sp, s, calc, g.Cost())
-			})
-			montecarlo(ctx2, sp, s, g)
-		}
-	})
-	wg.Wait()
-
-	fmt.Println()
-	fmt.Printf("reels lengths %s, total reshuffles %d\n", reels.String(sy), reels.Reshuffles(sy))
-	return calc(os.Stdout)
-}
-
-func ScanReelsCommon(ctx context.Context,
-	sp *ScanPar, s Simulator, g SlotGeneric, calc CalcFunc) (float64, float64) {
-	return ScanReels(ctx, sp, s, g, BruteForcex, MonteCarlo, calc)
 }
