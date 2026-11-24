@@ -10,6 +10,23 @@ import (
 	"github.com/slotopol/server/util"
 )
 
+func Print_delta(w io.Writer, sp *ScanPar, ss MathSimulator, µ, D float64) {
+	if !sp.IsVI() {
+		return
+	}
+	if math.IsNaN(D) || D == 0 {
+		return
+	}
+	if sp.Method == game.CMbruteforce {
+		return
+	}
+	var sigma = math.Sqrt(D)
+	var vi = game.GetZ(sp.Conf) * sigma
+	var N = ss.Count()
+	var Δ = vi / math.Sqrt(N)
+	fmt.Fprintf(w, "Δ[%.4g%%] = %.4g%%, [%.8g ... %.8g]\n", sp.Conf*100, Δ*100, (µ-Δ)*100, (µ+Δ)*100)
+}
+
 func Print_vi(w io.Writer, sp *ScanPar, D float64) {
 	if !sp.IsVI() {
 		return
@@ -163,6 +180,7 @@ func Print_raw(w io.Writer, sp *ScanPar, s MathSimulator) {
 
 // Print_all assembles all print functions of parsheets.
 func Print_all(w io.Writer, sp *ScanPar, s MathSimulator, µ, D float64) {
+	Print_delta(w, sp, s, µ, D)
 	Print_vi(w, sp, D)
 	Print_ci(w, sp, µ, D)
 	Print_spread(w, sp, µ, D)
@@ -216,6 +234,7 @@ func Parsheet_affixsimple(w io.Writer, sp *ScanPar, s MathSimulator, cost float6
 	if sp.IsFG() {
 		fmt.Fprintf(w, "RTP = %.8g%%\n", µ*100)
 	}
+	Print_delta(w, sp, s, µ, D)
 	Print_vi(w, sp, D)
 	Print_ci(w, sp, µ, D)
 	return µ, D
@@ -241,6 +260,7 @@ func Parsheet_affixrecur(w io.Writer, sp *ScanPar, s MathSimulator, cost float64
 			fmt.Fprintf(w, "RTP = %.5g*(1 + %.5g) = %.8g%%\n", EVbase*100, q, EV*100)
 		}
 	}
+	Print_delta(w, sp, s, EV, D)
 	Print_vi(w, sp, D)
 	Print_ci(w, sp, EV, D)
 	return EV, D
@@ -290,6 +310,7 @@ func Parsheet_affixonce(w io.Writer, sp *ScanPar, s MathSimulator, cost float64,
 		fmt.Fprintf(w, "free: HRfg = 1/%.5g, E[K] = %.5g, E[K2] = %.5g\n", 1/HRfg, EK, EK2)
 		fmt.Fprintf(w, "RTP = %.5g*(1+%.5g) = %.8g%%\n", EVbase*100, Pre*Lb/Lr, EV*100)
 	}
+	Print_delta(w, sp, s, EV, D)
 	Print_vi(w, sp, D)
 	Print_ci(w, sp, EV, D)
 	return EVbase, Dbase

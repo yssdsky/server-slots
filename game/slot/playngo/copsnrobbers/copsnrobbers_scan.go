@@ -19,7 +19,7 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 		var calc = func(w io.Writer) (float64, float64) {
 			return slot.Parsheet_simple(w, sp, sb, g.Cost())
 		}
-		slot.ScanReelsCommon2(ctx, sp, sb, g, calc)
+		slot.ScanReels(ctx, sp, sb, g, calc)
 	}
 
 	if ctx.Err() != nil {
@@ -69,5 +69,5 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 		return rtp, D
 	}
 
-	return slot.ScanReelsCommon2(ctx, sp, sr, g, calc)
+	return slot.ScanReels(ctx, sp, sr, g, calc)
 }

@@ -118,7 +118,7 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (rtp, D float64) {
 			}
 			return µ, D
 		}
-		mu[mask], d[mask] = slot.ScanReelsCommon2(ctx, sp, s, g, calc)
+		mu[mask], d[mask] = slot.ScanReels(ctx, sp, s, g, calc)
 		if mask == 0 {
 			sr = s
 			// break

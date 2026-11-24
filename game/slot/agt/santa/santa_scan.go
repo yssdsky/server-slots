@@ -15,5 +15,5 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 		return slot.Parsheet_solereelrecur(w, sp, s, g.Cost(), 1)
 	}
 
-	return slot.ScanReelsCommon2(ctx, sp, s, g, calc)
+	return slot.ScanReels(ctx, sp, s, g, calc)
 }

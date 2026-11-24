@@ -70,7 +70,7 @@ var (
 	ErrReelCount = errors.New("unexpected number of reels")
 )
 
-func ScanReelsCommon2(ctx context.Context,
+func ScanReels(ctx context.Context,
 	sp *ScanPar, ss Simulator, g SlotGeneric, calc CalcFunc) (float64, float64) {
 	var reels = g.GetReels(sp.MRTP)
 	var sx, sy = g.Dim()

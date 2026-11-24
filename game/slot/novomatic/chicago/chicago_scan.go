@@ -40,5 +40,5 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 		return rtp, D
 	}
 
-	return slot.ScanReelsCommon2(ctx, sp, s, g, calc)
+	return slot.ScanReels(ctx, sp, s, g, calc)
 }

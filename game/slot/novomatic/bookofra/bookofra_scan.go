@@ -16,7 +16,7 @@ func CalcStatBon(ctx context.Context, sp *slot.ScanPar, s slot.Simulator, es slo
 	var calc = func(w io.Writer) (float64, float64) {
 		return slot.Parsheet_solereelrecur(w, sp, s, g.Cost(), 1)
 	}
-	return slot.ScanReelsCommon2(ctx, sp, s, g, calc)
+	return slot.ScanReels(ctx, sp, s, g, calc)
 }
 
 // custom parsheet
@@ -67,5 +67,5 @@ func CalcStat(ctx context.Context, sp *slot.ScanPar) (float64, float64) {
 		slot.Print_all(w, sp, sr, rtp, D)
 		return rtp, D
 	}
-	return slot.ScanReelsCommon2(ctx, sp, sr, g, calc)
+	return slot.ScanReels(ctx, sp, sr, g, calc)
 }
